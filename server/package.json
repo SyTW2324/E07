@@ -33,6 +33,8 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "@types/mongodb": "^4.0.7",
+    "express": "^4.18.2",
+    "mongodb": "^6.2.0"
   }
 }
