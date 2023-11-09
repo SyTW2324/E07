@@ -9,6 +9,6 @@
  */
 export function add(firstNumber: number, secondNumber: number) {
   return firstNumber + secondNumber;
-}
+}marco rata
 
 console.log(`add(1, 7): ${add(1, 7)}`);
