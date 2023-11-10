@@ -1,30 +1,64 @@
+<template>
+
+
+<v-app>
+
+  <v-app-bar>
+      
+    
+    <v-app-bar-title></v-app-bar-title>
+
+    <v-btn density="default" color="teal">Acceso restaurantes</v-btn>
+
+  </v-app-bar>
+
+  <v-main>
+
+    <v-card
+    class="mx-auto my-16"
+    
+    width="900"
+    height="300"
+    
+   
+    color="teal"
+    
+    >
+    <v-card-title> Bienvenido a sientate a la mesa</v-card-title>
+    <v-card-text>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua.
+    </v-card-text>
+      
+    </v-card>
+    <v-divider></v-divider>
+    <v-container>
+    <v-row justify="center" align="center">
+      <v-col cols="auto">
+        <v-btn density="default" color="teal">Iniciar sesión</v-btn>
+      </v-col>
+
+      <v-col cols="auto">
+        <v-btn density="default" color="teal">Registrate</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
+
+
+  </v-main>
+
+  <Footer> </Footer>
+
+
+</v-app>
+
+
+
+</template>
+
 
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import Home from './Home.vue'
-import About from './About.vue'
-import NotFound from './NotFound.vue'
-
-const routes = {
-  '/': Home,
-  '/about': About
-}
-
-const currentPath = ref(window.location.hash)
-
-window.addEventListener('hashchange', () => {
-  currentPath.value = window.location.hash
-})
-
-const currentView = computed(() => {
-  return routes[currentPath.value.slice(1) || '/'] || NotFound
-})
+import Barnav from './components/Barnav.vue';
+import Footer from './components/Footer.vue'
 </script>
-
-<template>
-  <a href="#/">Home</a> |
-  <a href="#/about">About</a> |
-  <a href="#/non-existent-path">Broken Link</a>
-  <component :is="currentView" />
-</template>
