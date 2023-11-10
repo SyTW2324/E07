@@ -1,15 +1,16 @@
 import { MongoClient } from 'mongodb';
 
-const uri = 'mongodb://localhost:27017'; // Cambia esto si tu servidor de MongoDB se encuentra en un lugar diferente
+import { uri_bbdd } from './env-variables.js'
+
 
 async function run() {
-  const client = new MongoClient(uri);
+  const client = new MongoClient(uri_bbdd);
 
   try {
     await client.connect();
 
-    const database = client.db('miBasedeDatos');
-    const collection = database.collection('miColeccion');
+    const database = client.db('sientateMesa');
+    const collection = database.collection('coleccionPrueba');
 
     // Realiza las operaciones de MongoDB que necesites aquí
     // Por ejemplo:
