@@ -7,6 +7,7 @@
 
 import express from 'express';
 import { usersRouter } from './routers/users/users-routes.js';
+import './database/mongoose.js';
 
 
 
