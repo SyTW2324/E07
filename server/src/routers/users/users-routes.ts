@@ -5,6 +5,8 @@
  */
 import express from 'express';
 
+import { createUser } from '../../database/database-users.js';
+
 
 export const usersRouter = express.Router();
 
