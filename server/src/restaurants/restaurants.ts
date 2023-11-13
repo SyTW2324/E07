@@ -33,6 +33,22 @@ export interface restaurantInterface {
 export class restaurantClass {
   constructor(
     private userName: string,
+    private passwdd: string,
+    private email: string,
+
+    private restaurantName: string,
+    private restaurantAddress: string,
+    private description:string,
+    private timeTable: string,
+    private category: string,
+
+    private phoneNumber: string,
+    private pictures: [Buffer | null],
     
-  )
+    private menu: Buffer | null,
+  // private availability: [available];
+  // private nextReservations: [reservation];
+  // private historicReservations: [reservation];
+    private _id?: mongodb.ObjectId
+  ) {}
 }
