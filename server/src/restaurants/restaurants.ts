@@ -8,6 +8,31 @@ import * as mongodb from 'mongodb';
 
 
 export interface restaurantInterface {
-  name: string;
+  userName: string;
+  passwd: string;
+  email: string;
+
   _id?: mongodb.ObjectId;
+  restaurantName: string;
+  restaurantAddress: string;
+  description:string;
+  timeTable: string;
+  category: string;
+
+  phoneNumber: string;
+  pictures: [Buffer | null];
+
+  menu: Buffer | null;
+  // availability: [available];
+  // nextReservations: [reservation];
+  // historicReservations: [reservation];
+}
+
+
+
+export class restaurantClass {
+  constructor(
+    private userName: string,
+    
+  )
 }
