@@ -38,7 +38,7 @@
         <v-btn density="default" color="teal">Iniciar sesión</v-btn>
       </v-col>
 
-      <router-link to="/about">
+      <router-link to="/register-main">
          <v-col cols="auto">
         <v-btn density="default" color="teal">Registrate</v-btn>
       </v-col>
