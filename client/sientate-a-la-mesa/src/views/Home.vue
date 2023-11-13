@@ -38,9 +38,12 @@
         <v-btn density="default" color="teal">Iniciar sesión</v-btn>
       </v-col>
 
-      <v-col cols="auto">
+      <router-link to="/about">
+         <v-col cols="auto">
         <v-btn density="default" color="teal">Registrate</v-btn>
       </v-col>
+      </router-link>
+     
     </v-row>
   </v-container>
 
@@ -59,5 +62,5 @@
 
 
 <script setup lang="ts">
-import Footer from './components/Footer.vue'
+import Footer from '../components/Footer.vue'
 </script>

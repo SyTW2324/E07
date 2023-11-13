@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Barnav from './components/Barnav.vue';
-import Footer from './components/Footer.vue'
+import Barnav from '../components/Barnav.vue';
+import Footer from '../components/Footer.vue'
 </script>
 
 <template>
@@ -20,8 +20,12 @@ import Footer from './components/Footer.vue'
       <br>
       <br>
       <br>
-      aod
-      Main Content
+         
+      <router-link to="/">
+         <v-col cols="auto">
+        <v-btn density="default" color="teal">ATRAS</v-btn>
+      </v-col>
+      </router-link>
       <br>
       <br>
       <br>
