@@ -16,6 +16,7 @@ export const usersRouter = express.Router();
 usersRouter.post('/users', async (req, res) => {
 
   try {
+    console.log('Petición POST a /users');
     if(req.body.name && req.body.surname && req.body.userName && req.body.password && req.body.email && req.body.phoneNumber && req.body.address) {
       const user: userInterface = {
         name: req.body.name,
