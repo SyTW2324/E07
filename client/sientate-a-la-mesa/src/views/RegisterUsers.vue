@@ -104,6 +104,9 @@
       </v-alert>
 
     </v-container>
+    <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
+      <div ref="textContainer"></div>
+    </v-container>
   </v-main>
 
   <Footer></Footer>
@@ -123,7 +126,6 @@ import Footer from '../components/Footer.vue'
 import axios from 'axios';
 
 //CORS
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
   export default {
     data: () => ({
@@ -204,6 +206,11 @@ axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
     async RegisterUserApi() {
       try {
+        const textContainer = this.$refs.textContainer as HTMLElement;
+    
+        // Crea un elemento de imagen
+        const textElement = document.createElement('h3');
+        textElement.innerText = ' ';
         // Realiza la llamada a la API utilizando Axios
         //   "name": "John",
         //   "surname": "Doe",
@@ -214,21 +221,74 @@ axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
         //   "address": "123 Main St",
         //   "profilePhoto": null
         // }
-        // const newUserJson = {
-        //   name: this.firstname,
-        //   surname: this.lastname,
-        //   userName: this.username,
-        //   password: this.password,
-        //   email: this.email,
-        //   phoneNumber: this.phone,
-        //   address: this.address,
-        //   profilePhoto: null,
-        // };
-        //const response = await axios.post('http://10.6.128.143:3000/users/', newUserJson);
-        const response = await axios.get('http://10.6.128.143:3000/users/');
+        let profilePhotoBase64 = null;
+        if (this.profilePhoto.length > 0) {
+          const file = this.profilePhoto[0];
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          profilePhotoBase64 = await new Promise((resolve, reject) => {
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+          });
+        }
+        const newUserJson = {
+          name: this.firstname,
+          surname: this.lastname,
+          userName: this.username,
+          password: this.password,
+          email: this.email,
+          phoneNumber: this.phone,
+          address: this.address,
+          profilePhoto: profilePhotoBase64
+        };
+        const response = await axios.post('http://10.6.129.207/api/users/', newUserJson);
+        // const response = await axios.get('http://10.6.129.207/api/users/');
         console.log('Datos obtenidos de la API', response.data);
+        //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
+
+        // Añade la imagen al contenedor
+        if (response.status === 201) {
+          //this.$router.push('/login');
+          console.log('Usuario registrado correctamente');
+
+          textElement.innerText = 'Usuario registrado correctamente';
+          textContainer.innerHTML = '';
+          textContainer.appendChild(textElement);
+          
+        }
       } catch (error) {
-        console.error('Error al obtener datos de la API', error);
+        if (axios.isAxiosError(error) && error.response) {
+        const response = error.response;
+        const textContainer = this.$refs.textContainer as HTMLElement;
+        const textElement = document.createElement('h3');
+
+        if (response.status === 400) {
+        if (response.data.code === 1) {
+        console.error('Faltan campos obligatorios');
+        textElement.innerText = 'Faltan campos obligatorios';
+        } else if (response.data.code === 2) {
+        console.error('El nombre de usuario ya existe');
+        textElement.innerText = 'El nombre de usuario ya existe elige otro';
+        } else if (response.data.code === 3) {
+        console.error('El correo ya existe');
+        textElement.innerText = 'El correo ya existe';
+        } else if (response.data.code === 4) {
+        console.error('El teléfono ya existe');
+        textElement.innerText = 'El teléfono ya existe';
+        } else {
+        console.error('Error desconocido:', response.status);
+        textElement.innerText = 'Error desconocido';
+        }
+        } else {
+        console.error('Error al realizar la solicitud:', error.message);
+        // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+        }
+
+        // Añade el elemento de texto al contenedor
+        textContainer.innerHTML = '';
+        textContainer.appendChild(textElement);
+        }
+
       }
     },
 

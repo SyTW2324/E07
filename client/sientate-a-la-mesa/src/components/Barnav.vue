@@ -2,7 +2,7 @@
   
       <v-app-bar color="teal" density="compact">
         <template v-slot:prepend>
-          <v-app-bar-nav-icon> <img src="./img/icoWeb.png" alt="Logo">  </v-app-bar-nav-icon>
+          <v-app-bar-nav-icon> <img src="../img/icoWeb.png" alt="Logo">  </v-app-bar-nav-icon>
         </template>
 
         <v-app-bar-title>Sientate a la mesa</v-app-bar-title>
