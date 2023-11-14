@@ -33,7 +33,7 @@ export interface restaurantInterface {
 export class restaurantClass {
   constructor(
     private userName: string,
-    private passwdd: string,
+    private passwd: string,
     private email: string,
 
     private restaurantName: string,
@@ -51,4 +51,65 @@ export class restaurantClass {
   // private historicReservations: [reservation];
     private _id?: mongodb.ObjectId
   ) {}
+
+  getUserName() {
+    return this.userName;
+  }
+
+  getPasswd() {
+    return this.passwd;
+  }
+
+  getEmail() {
+    return this.email;
+  }
+
+  getId() {
+    return this._id;
+  }
+
+  getRestaurantName() {
+    return this.restaurantName;
+  }
+
+  getRestaurantAddress() {
+    return this.restaurantAddress;
+  }
+
+  getDescription() {
+    return this.description;
+  }
+
+  getTimeTable() {
+    return this.timeTable;
+  }
+
+  getCategory() {
+    return this.category;
+  }
+  
+  getPhoneNumber() {
+    return this.phoneNumber;
+  }
+
+  getPictures() {
+    return this.pictures;
+  }
+
+  getMenu() {
+    return this.menu;
+  }
+
+  // getAvailability() {
+  //   return this.availability;
+  // }
+
+  // getNextReservations() {
+  //   return this.nextReservations;
+  // }
+
+  // getHistoricReservations() {
+  //   return this.historicReservations;
+  // }
+
 }
