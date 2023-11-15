@@ -110,6 +110,29 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
 
 export const RestaurantModel = model<restaurantsDocumentInterface>('Restaurant', RestaurantSchema);
 
-// export async function validateRestaurantSchema(restaurant: restaurantsDocumentInterface): Promise<{ code: number, errors: string }> {
-  // const existingRestaurant = await RestaurantModel.findOne({
-// }
+export async function validateRestaurantSchema(restaurant: restaurantsDocumentInterface): Promise<{ code: number, errors: string }> {
+  const existingRestaurant = await RestaurantModel.findOne({
+    $or: [
+      { restaurantName: restaurant.restaurantName },
+      { userName: restaurant.userName },
+      { email: restaurant.email },
+      { phoneNumber: restaurant.phoneNumber }
+    ]
+  });
+
+  if (existingRestaurant) {
+    if (existingRestaurant.userName === existingRestaurant.userName) {
+      return { code: 2, errors: 'Ya existe un restaurante con ese nombre de usuario' };
+    }
+    else if (existingRestaurant.email === existingRestaurant.email) {
+      return { code: 3, errors: 'Ya existe un restaurante con ese correo electrónico' };
+    }
+    else if (existingRestaurant.phoneNumber === existingRestaurant.phoneNumber) {
+      return { code: 4, errors: 'Ya existe un restaurante con ese número de teléfono' };
+    }
+  }
+
+  return { code: 0, errors: '' };
+
+
+}
