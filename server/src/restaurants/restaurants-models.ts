@@ -113,7 +113,6 @@ export const RestaurantModel = model<restaurantsDocumentInterface>('Restaurant',
 export async function validateRestaurantSchema(restaurant: restaurantsDocumentInterface): Promise<{ code: number, errors: string }> {
   const existingRestaurant = await RestaurantModel.findOne({
     $or: [
-      { restaurantName: restaurant.restaurantName },
       { userName: restaurant.userName },
       { email: restaurant.email },
       { phoneNumber: restaurant.phoneNumber }
