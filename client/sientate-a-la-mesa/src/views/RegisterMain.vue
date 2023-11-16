@@ -28,7 +28,12 @@ import Footer from '../components/Footer.vue'
           </v-col>
         </router-link>
       </v-row>
-    </v-container>
+
+     
+    </v-container> 
+
+   
+    
   </v-main>
 
 

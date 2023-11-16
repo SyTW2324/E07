@@ -8,7 +8,7 @@
     
     <v-app-bar-title></v-app-bar-title>
 
-    <v-btn density="default" color="teal">Acceso restaurantes</v-btn>
+    <!-- <v-btn density="default" color="teal">Acceso restaurantes</v-btn> -->
 
   </v-app-bar>
 
@@ -34,10 +34,12 @@
     <v-divider></v-divider>
     <v-container>
     <v-row justify="center" align="center">
-      <v-col cols="auto">
-        <v-btn density="default" color="teal">Iniciar sesión</v-btn>
-      </v-col>
-
+      <router-link to="/login">
+        <v-col cols="auto">
+          <v-btn density="default" color="teal">Iniciar sesión</v-btn>
+        </v-col>
+      </router-link>
+      
       <router-link to="/register-main">
          <v-col cols="auto">
         <v-btn density="default" color="teal">Registrate</v-btn>

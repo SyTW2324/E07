@@ -3,6 +3,8 @@ import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import RegisterMain from '../views/RegisterMain.vue';
 import RegisterUsers from '../views/RegisterUsers.vue';
+import RecuperarContraseña from '../views/RecuperarContraseña.vue';
+import Login from '../views/Login.vue';
 
 
 
@@ -23,6 +25,16 @@ const routes: RouteRecordRaw[] = [
     name: 'register-users',
     component: RegisterUsers
   },
+  {
+    path: '/password-recovery',
+    name: 'password-recovery',
+    component: RecuperarContraseña
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  }
 
 ];
 
