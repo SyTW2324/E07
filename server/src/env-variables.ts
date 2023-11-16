@@ -6,4 +6,4 @@ export const uri_bbdd: string = 'mongodb://adminProyecto:1234@172.16.131.2:27017
 
 export const port: number = 3000;
 
-export const ip_express: string = 'localhost';
+export const ip_express: string = '10.6.128.143';
