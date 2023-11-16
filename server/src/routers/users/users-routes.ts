@@ -55,9 +55,19 @@ usersRouter.post('/users', async (req, res) => {
 
 // Mostrar perfil de un usuario
 usersRouter.get('/users', async (req, res) => {
-  const filter = req.query.name?{name: req.query.name.toString()}:{};
   try{
-    return res.status(200).send("Hola get");
+    if(req.body.userName){
+      const user = await UserModel.findOne({userName: req.body.userName});
+      if(user){
+        return res.status(200).send(user);
+      }
+      else{
+        return res.status(404).send({code: 1, error: "Usuario no encontrado"});
+      }
+    }
+    else{
+      return res.status(400).send({code: 3, error: "Falta el nombre de usuario"});
+    }
   }  
   catch{
     return res.status(500).send();

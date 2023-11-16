@@ -7,8 +7,9 @@
 import { app } from './app.js';
 
 import {port} from './env-variables.js';
+import { ip_express } from './env-variables.js';
 
-app.listen(port, '172.16.102.4', () => {
-  console.log(`Server is up on port ${port}`);
+app.listen(port, ip_express, () => {
+  console.log(`Server is up on ip ${ip_express} and port ${port}`);
 });
 
