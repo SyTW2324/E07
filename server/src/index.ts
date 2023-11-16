@@ -8,7 +8,7 @@ import { app } from './app.js';
 
 import {port} from './env-variables.js';
 
-app.listen(port, () => {
+app.listen(port, '172.16.102.4', () => {
   console.log(`Server is up on port ${port}`);
 });
 

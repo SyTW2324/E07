@@ -12,7 +12,7 @@ import { UserModel } from '../../users/users-model.js';
 
 export const usersRouter = express.Router();
 
-
+// Ruta asociada con el registro de un nuevo usuario
 usersRouter.post('/users', async (req, res) => {
 
   try {
@@ -53,7 +53,7 @@ usersRouter.post('/users', async (req, res) => {
   }
 });
 
-
+// Mostrar perfil de un usuario
 usersRouter.get('/users', async (req, res) => {
   const filter = req.query.name?{name: req.query.name.toString()}:{};
   try{

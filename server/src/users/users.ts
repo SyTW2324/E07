@@ -15,6 +15,8 @@ export interface userInterface {
     phoneNumber: string;
     address: string;
     profilePhoto?: Buffer | null; // Buffer para almacenar los datos binarios de la foto de perfil
+    //nextReservations?: Array<mongodb.ObjectId>;
+    //previousReservations?: Array<mongodb.ObjectId>;
     _id?: mongodb.ObjectId;
 }
 
@@ -28,6 +30,8 @@ export class userClass {
     private phoneNumber: string,
     private address: string,
     private profilePhoto: Buffer | null,
+    //private nextReservations: Array<mongodb.ObjectId>,
+    //private previousReservations: Array<mongodb.ObjectId>,
     private _id?: mongodb.ObjectId) {
   }
 
@@ -47,6 +51,10 @@ export class userClass {
     return this.password;
   }
 
+  setPassword(newPassword: string) {
+    this.password = newPassword;
+  }
+
   getEmail() {
     return this.email;
   }
@@ -63,8 +71,44 @@ export class userClass {
     return this.profilePhoto;
   }
 
+  setProfilePhoto(newProfilePhoto: Buffer | null) {
+    this.profilePhoto = newProfilePhoto;
+  }
+
   getId() {
     return this._id;
+  }
+
+  //getNextReservations() {
+  //  return this.nextReservations;
+  //}
+
+  //addNextReservation(newReservation: mongodb.ObjectId) {
+  //  this.nextReservations.push(newReservation);
+  //}
+
+  //getPreviousReservations() {
+  //  return this.previousReservations;
+  //}
+
+  //addPreviousReservation(newReservation: mongodb.ObjectId) {
+  //  this.previousReservations.push(newReservation);
+  //}
+
+  getJSON() {
+    return {
+      name: this.name,
+      surname: this.surname,
+      userName: this.userName,
+      password: this.password,
+      email: this.email,
+      phoneNumber: this.phoneNumber,
+      address: this.address,
+      profilePhoto: this.profilePhoto,
+      //_id: this._id,
+      //nextReservations: this.nextReservations,
+      //previousReservations: this.previousReservations
+    };
   }
 
 }
