@@ -5,7 +5,7 @@ import RegisterMain from '../views/RegisterMain.vue';
 import RegisterUsers from '../views/RegisterUsers.vue';
 import RecuperarContraseña from '../views/RecuperarContraseña.vue';
 import Login from '../views/Login.vue';
-
+import MyProfile from '../views/MyProfile.vue'
 
 
 
@@ -34,6 +34,11 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     name: 'login',
     component: Login
+  },
+  {
+    path: '/my-profile',
+    name: 'my-profile',
+    component: MyProfile
   }
 
 ];
