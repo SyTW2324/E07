@@ -84,8 +84,7 @@ import Footer from '../components/Footer.vue'
 <script lang="ts">
 
 import axios from 'axios';
-
-//CORS
+import {useUserStore} from '../stores/UserStore';
 
   export default {
     data: () => ({
@@ -124,6 +123,10 @@ import axios from 'axios';
         } else {
           console.log(data.data);
           //si es valido redirigir a la pagina de inicio
+          useUserStore().setUserName(data.data.userName);
+          useUserStore().setPassword(data.data.password);
+          useUserStore().setEmail(data.data.email);
+          useUserStore().setProfilePicture(data.data.profilePicture);
           this.$router.push('/home-base');
         }
       },
