@@ -241,8 +241,8 @@ import axios from 'axios';
           address: this.address,
           profilePhoto: profilePhotoBase64
         };
-        const response = await axios.post('http://10.6.129.207/api/users/', newUserJson);
-        // const response = await axios.get('http://10.6.129.207/api/users/');
+        const response = await axios.post('http://localhost:3000/users/', newUserJson);
+       //const response = await axios.get('http://localhost:3000/users/');
         console.log('Datos obtenidos de la API', response.data);
         //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
 

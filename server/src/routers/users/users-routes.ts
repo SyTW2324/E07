@@ -16,6 +16,9 @@ export const usersRouter = express.Router();
 usersRouter.post('/users', async (req, res) => {
 
   try {
+    // res.header('Access-Control-Allow-Origin', '*');
+    // res.header('Access-Control-Allow-Headers', 'GET, POST, OPTIONS, PUT, DELETE, PATCH, HEAD, CONNECT');
+
     console.log('Petición POST a /users');
     if(req.body.name && req.body.surname && req.body.userName && req.body.password && req.body.email && req.body.phoneNumber && req.body.address) {
       const user: userInterface = {
@@ -73,4 +76,13 @@ usersRouter.get('/users', async (req, res) => {
     return res.status(500).send();
   }
 });
+
+
+// usersRouter.options('/users' , (req, res) => {
+//   console.log('Petición OPTIONS a /users');
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH, HEAD, CONNECT');
+//   //res.header('Access-Control-Allow-Headers', 'GET, POST, OPTIONS, PUT, DELETE, PATCH, HEAD, CONNECT');
+//   res.send(200);
+// });
 
