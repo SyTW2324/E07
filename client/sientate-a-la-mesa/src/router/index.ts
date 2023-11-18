@@ -6,6 +6,7 @@ import RegisterUsers from '../views/RegisterUsers.vue';
 import RecuperarContraseña from '../views/RecuperarContraseña.vue';
 import Login from '../views/Login.vue';
 import MyProfile from '../views/MyProfile.vue'
+import HomeBase from '../views/HomeBase.vue'
 
 
 
@@ -39,6 +40,12 @@ const routes: RouteRecordRaw[] = [
     path: '/my-profile',
     name: 'my-profile',
     component: MyProfile
+  },
+  {
+    path: '/home-base',
+    name: 'home-base',
+    component: HomeBase
+
   }
 
 ];

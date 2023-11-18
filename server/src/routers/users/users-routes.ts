@@ -16,8 +16,6 @@ export const usersRouter = express.Router();
 usersRouter.post('/users', async (req, res) => {
 
   try {
-    // res.header('Access-Control-Allow-Origin', '*');
-    // res.header('Access-Control-Allow-Headers', 'GET, POST, OPTIONS, PUT, DELETE, PATCH, HEAD, CONNECT');
 
     console.log('Petición POST a /users');
     if(req.body.name && req.body.surname && req.body.userName && req.body.password && req.body.email && req.body.phoneNumber && req.body.address) {
@@ -59,16 +57,20 @@ usersRouter.post('/users', async (req, res) => {
 // Mostrar perfil de un usuario
 usersRouter.get('/users', async (req, res) => {
   try{
-    if(req.body.userName){
-      const user = await UserModel.findOne({userName: req.body.userName});
-      if(user){
+    
+    if(req.query.userName){
+      const user = await UserModel.findOne({userName: req.query.userName});
+      if(user && user.password === req.query.password){
+        
         return res.status(200).send(user);
       }
       else{
+        console.log("Usuario no encontrado");
         return res.status(404).send({code: 1, error: "Usuario no encontrado"});
       }
     }
     else{
+      console.log("Falta el nombre de usuario");
       return res.status(400).send({code: 3, error: "Falta el nombre de usuario"});
     }
   }  
@@ -76,13 +78,4 @@ usersRouter.get('/users', async (req, res) => {
     return res.status(500).send();
   }
 });
-
-
-// usersRouter.options('/users' , (req, res) => {
-//   console.log('Petición OPTIONS a /users');
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH, HEAD, CONNECT');
-//   //res.header('Access-Control-Allow-Headers', 'GET, POST, OPTIONS, PUT, DELETE, PATCH, HEAD, CONNECT');
-//   res.send(200);
-// });
 
