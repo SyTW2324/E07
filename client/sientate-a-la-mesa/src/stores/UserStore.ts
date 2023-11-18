@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia';
+import { th } from 'vuetify/locale';
 
 
 
@@ -8,7 +9,7 @@ export const useUserStore = defineStore('User', {
     userName: "userName",
     password: "password",
     email: "email",
-    profilePicture: Buffer.from(" ")
+    profilePicture: ""
   }),
   actions: {
     setUserName(userName: string) {
@@ -21,7 +22,24 @@ export const useUserStore = defineStore('User', {
       this.email = email;
     },
     setProfilePicture(profilePicture: Buffer) {
-      this.profilePicture = profilePicture;
+      const image64: string = profilePicture.toString('base64');
+      const dataURL: string = `data:image/png;base64,${image64}`;
+      this.profilePicture = dataURL;
+    }
+  },
+  getters: {
+    getUserName(): string {
+      return this.userName;
+    },
+    getPassword(): string {
+      return this.password;
+    },
+    getEmail(): string {
+      return this.email;
+    },
+    getProfilePicture(): string {
+      const dataURL: string = `data:image/png;base64,${this.profilePicture}`;
+      return dataURL;
     }
   }
 })

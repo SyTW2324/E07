@@ -123,11 +123,14 @@ import {useUserStore} from '../stores/UserStore';
         } else {
           console.log(data.data);
           //si es valido redirigir a la pagina de inicio
-          useUserStore().setUserName(data.data.userName);
-          useUserStore().setPassword(data.data.password);
-          useUserStore().setEmail(data.data.email);
-          useUserStore().setProfilePicture(data.data.profilePicture);
           this.$router.push('/home-base');
+          useUserStore().setUserName(data.data.userName);
+          // useUserStore().setPassword(data.data.password);
+          // useUserStore().setEmail(data.data.email);
+          if (data.data.profilePhoto !== null) {
+            console.log(data.data.profilePhoto);
+            useUserStore().setProfilePicture(data.data.profilePhoto);
+          }
         }
       },
       validateForm() {
