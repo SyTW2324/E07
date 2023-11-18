@@ -1,0 +1,43 @@
+{
+  "name": "sientate-a-la-mesa",
+  "version": "1.0.0",
+  "description": "Aplicacion para la gestión de reservas en restaurantes",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run prepare && concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:server": "cd server && npm start",
+    "start:client": "cd client/sientate-a-la-mesa && npm dev",
+    "prepare": "concurrently \"npm run prepare:server\" \"npm run prepare:client\"",
+    "prepare:server": "cd server && npm install",
+    "prepare:client": "cd client/sientate-a-la-mesa && npm install",
+    "build": "npm run prepare && concurrently \"npm run build:server\" \"npm run build:client\"",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client/sientate-a-la-mesa && npm run build",
+    "test": "npm run prepare && concurrently \"npm run test:client\" \"npm run test:server\"",
+    "test:client": "cd client/sientate-a-la-mesa && npm test",
+    "test:server": "cd server && npm test"
+  },
+  "contributors": [
+    {
+      "name": "Alberto Zarza",
+      "url": "https://github.com/AlbertoZarzaM"
+    },
+    {
+      "name": "Marco Barroso",
+      "url": "https://github.com/sis0k0"
+    },
+    {
+      "name": "Ismael Martín",
+      "url": "https://github.com/imh-02"
+    }
+  ],
+  "license": "Apache 2.0",
+  "homepage": "https://github.com/SyTW2324/E07#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SyTW2324/E07.git"
+  },
+  "devDependencies": {
+    "concurrently": "^7.1.0"
+  }
+}
