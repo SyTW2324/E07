@@ -57,10 +57,13 @@ import Footer from '../components/Footer.vue'
           <p style="color: teal;">  Iniciar sesión</p>
         </v-btn>
       </v-form>
-    </v-card>
-  
-    </v-container>  
     
+      
+      </v-card>
+    </v-container>  
+       <v-alert v-if="!valid" type="error">
+          Error! Usuario o contraseña incorrectos!.
+        </v-alert>
 
     <v-container style="padding-top: 4em; text-align: center;">
       
@@ -117,10 +120,13 @@ import axios from 'axios';
             password: this.password,
           },
         });
+        console.log(data);
         //comprobar si devuelve el usuario es login correcto, si devuleve en el json un codigo 1 o 3 es invalido 
         if (data.data.code === 1 || data.data.code === 3) {
           //si es invalido mostrar un mensaje de error
-          alert('Usuario o contraseña incorrectos');
+          this.valid = false;
+          
+          console.log('Usuario o contraseña incorrectos');
         } else {
           console.log(data.data);
           //si es valido redirigir a la pagina de inicio
