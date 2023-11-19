@@ -90,23 +90,23 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
     type: Buffer,
     required: false,
     trim: true
+  },
+  availability: {
+    type: [Object],
+    required: false,
+    trim: true
+
+  },
+  nextReservations: {
+    type: [Object],
+    required: false,
+    trim: true
+  },
+  historicReservations: {
+    type: [Object],
+    required: false,
+    trim: true
   }
-  // ,
-  // availability: { // cambiar interior
-  //   type: String,
-  //   required: true,
-  //   trim: true
-  // },
-  // nextReservations: { // cambiar interior
-  //   type: String,
-  //   required: true,
-  //   trim: true
-  // },
-  // historicReservations: { // cambiar interior
-  //   type: String,
-  //   required: true,
-  //   trim: true
-  // }
 
 });
 
