@@ -5,6 +5,8 @@
  */
 
 import * as mongodb from 'mongodb';
+import { Available } from '../available.js';
+import { Reservation } from '../reservation.js';
 
 
 export interface restaurantInterface {
@@ -20,12 +22,12 @@ export interface restaurantInterface {
   category: string;
 
   phoneNumber: string;
-  pictures: [Buffer | null];
+  pictures: (Buffer | null)[]; // Array of pictures
 
   menu: Buffer | null;
-  // availability: [available];
-  // nextReservations: [reservation];
-  // historicReservations: [reservation];
+  availability: Reservation[];
+  nextReservations: Reservation[];
+  historicReservations: Reservation[];
 }
 
 
@@ -43,12 +45,12 @@ export class restaurantClass {
     private category: string,
 
     private phoneNumber: string,
-    private pictures: [Buffer | null],
+    private pictures: (Buffer | null)[],
     
     private menu: Buffer | null,
-  // private availability: [available];
-  // private nextReservations: [reservation];
-  // private historicReservations: [reservation];
+    private availability: Available[],
+    private nextReservations: Reservation[],
+    private historicReservations: Reservation[],
     private _id?: mongodb.ObjectId
   ) {}
 
@@ -100,16 +102,16 @@ export class restaurantClass {
     return this.menu;
   }
 
-  // getAvailability() {
-  //   return this.availability;
-  // }
+  getAvailability() {
+    return this.availability;
+  }
 
-  // getNextReservations() {
-  //   return this.nextReservations;
-  // }
+  getNextReservations() {
+    return this.nextReservations;
+  }
 
-  // getHistoricReservations() {
-  //   return this.historicReservations;
-  // }
+  getHistoricReservations() {
+    return this.historicReservations;
+  }
 
 }
