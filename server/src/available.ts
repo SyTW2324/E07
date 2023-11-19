@@ -9,7 +9,7 @@
 // Por ejemplo:
 // 01/01/2024 hasta 31/06/2024 de 12:30 a 15:30 se permiten reservas, disponibilidad para 100 personas, dentro del horario del restaurante.
 
-export type Availability = {
+export type Available = {
   start: Date;
   finish: Date;
   startingHour: string;
@@ -17,7 +17,7 @@ export type Availability = {
   numberOfPeople: number;
 };
 
-export function validateAvailability(avail: Availability): boolean {
+export function validateAvailable(avail: Available): boolean {
   // Verificar si la fecha de inicio es anterior a la fecha de finalización
   return avail.start < avail.finish;
 }
