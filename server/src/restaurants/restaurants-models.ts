@@ -20,12 +20,12 @@ interface restaurantsDocumentInterface {
   category: string;
 
   phoneNumber: string;
-  pictures: [Buffer | null];
+  pictures: (Buffer | null)[];
 
   menu: Buffer | null;
-  availability: [Available];
-  nextReservations: [Reservation];
-  historicReservations: [Reservation];
+  availability: Available[];
+  nextReservations: Reservation[];
+  historicReservations: Reservation[];
 }
 
 
