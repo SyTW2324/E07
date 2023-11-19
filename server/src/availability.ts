@@ -21,5 +21,3 @@ export function validateAvailability(avail: Availability): boolean {
   // Verificar si la fecha de inicio es anterior a la fecha de finalización
   return avail.start < avail.finish;
 }
-
-// comprobar que la fecha de finalización es posterior a la de inicio.
