@@ -5,6 +5,8 @@
  */
 
 import {Document, Schema, model} from 'mongoose';
+import { Available } from '../available.js';
+import { Reservation } from '../reservation.js';
 
 interface restaurantsDocumentInterface {
   userName: string;
@@ -21,9 +23,9 @@ interface restaurantsDocumentInterface {
   pictures: [Buffer | null];
 
   menu: Buffer | null;
-  // availability: [available];
-  // nextReservations: [reservation];
-  // historicReservations: [reservation];
+  availability: [Available];
+  nextReservations: [Reservation];
+  historicReservations: [Reservation];
 }
 
 
