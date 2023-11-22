@@ -22,7 +22,7 @@ import Footer from '../components/Footer.vue'
           </v-col>
         </router-link>
 
-        <router-link to="/register-main">
+        <router-link to="/register-restaurants">
           <v-col cols="auto">
           <v-btn density="default" color="teal">Registarme como establecimiento</v-btn>
           </v-col>
