@@ -8,7 +8,7 @@ import Login from '../views/Login.vue';
 import MyProfile from '../views/MyProfile.vue'
 import HomeBase from '../views/HomeBase.vue'
 
-
+import { useAuthStore } from '../stores/useAuthStore';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -60,12 +60,21 @@ router.beforeEach( async (to) => {
 
   const publicPages = ['/login', '/register-main', '/password-recovery', '/'];
   const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('user');
-
-  if (authRequired && !loggedIn) {
-    return '/login';
+  const auth = useAuthStore();
+  // no funciona correctamente
+  if (authRequired && !auth.user) {
+      //auth.returnUrl = to.fullPath;
+      return '/login';
   }
 }
 );
 
 export default router
+
+
+/**
+ * Notas:
+ * - Al logear no funciona correctamente
+ * - Algunos arreglos en el data devuelto en fethc-wrapper.ts
+ * - En lo que devuelve data se podría guardar el token en el store
+ */

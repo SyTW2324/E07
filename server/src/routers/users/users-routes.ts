@@ -41,7 +41,7 @@ usersRouter.post('/users', async (req, res) => {
         return res.status(201).send(userMessage);
 
     } else {
-      return res.status(400).send({code: 1, error: "Faltan campos obligatorios"});
+      return res.status(400).send({code: 1, message: "Faltan campos obligatorios"});
     }
   }
   catch(error) {
@@ -65,13 +65,13 @@ usersRouter.get('/users', async (req, res) => {
         return res.status(200).send(user);
       }
       else{
-        console.log("Usuario no encontrado");
-        return res.status(404).send({code: 1, error: "Usuario no encontrado"});
+        console.log("Contraseña incorrecta");
+        return res.status(404).send({code: 4, message: "Contraseña incorrecta"});
       }
     }
     else{
       console.log("Falta el nombre de usuario");
-      return res.status(400).send({code: 3, error: "Falta el nombre de usuario"});
+      return res.status(400).send({code: 3, message: "Falta el nombre de usuario"});
     }
   }  
   catch{

@@ -62,6 +62,8 @@ function handleResponse(response: Response): Promise<any> {
             return Promise.reject(error);
         }
 
-        return data;
+        const user = {username: data.message.userName, password: data.message.password};
+        // aquí se guarda el token en el store
+        return user;
     });
 }
