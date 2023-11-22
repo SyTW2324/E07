@@ -4,7 +4,6 @@
  * Grado en Ingeniería Informática
  */
 
-import { Available } from "./available.js";
 
 export type Reservation = {
   restaurant: string; // Nombre del establecimiento

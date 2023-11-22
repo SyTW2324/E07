@@ -25,7 +25,7 @@ export interface restaurantInterface {
   pictures: (Buffer | null)[]; // Array of pictures
 
   menu: Buffer | null;
-  availability: Reservation[];
+  availability: Available[];
   nextReservations: Reservation[];
   historicReservations: Reservation[];
 }
