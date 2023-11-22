@@ -131,16 +131,6 @@
               ></v-text-field>
             </v-col>
 
-
-            <!-- <v-spacer></v-spacer>
-            <v-col cols="12" md="4">
-              <v-file-input
-                label="Foto de perfil"
-                v-model="profilePhoto"
-                accept="image/*"
-                placeholder="Seleccione una imagen"
-              ></v-file-input>
-            </v-col> -->
   
           </v-row>
   
@@ -265,7 +255,7 @@
         if (isValid) {
           // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
           console.log('Formulario válido. Enviar datos.');
-          this.RegisterUserApi();
+          this.RegisterRestaurantApi();
         } else {
           // al usuario debe mostrarle en la web el problema 
           // y no enviar el formulario hasta que no lo corrija
@@ -275,7 +265,7 @@
       },
   
 
-      // ! CORREGIR DE AQUÍ EN ADELANTE
+      
       async RegisterRestaurantApi() {
         try {
           const textContainer = this.$refs.textContainer as HTMLElement;
@@ -284,18 +274,26 @@
           const textElement = document.createElement('h3');
           textElement.innerText = ' ';
           // Realiza la llamada a la API utilizando Axios
-          //   "name": "John",
-          //   "surname": "Doe",
-          //   "userName": "johndoe10",
-          //   "password": "MiContraseña1",
-          //   "email": "john10@example.es",
-          //   "phoneNumber": "123456789",
-          //   "address": "123 Main St",
-          //   "profilePhoto": null
-          // }
+          // "userName": "AsadorLaMatanza";
+          // "passwd": "Hola1234";
+          // "email": "asadormatanza@gmail.com";
+
+          // "restaurantName": "Asador La Matanza";
+          // "restaurantAddress": "La Matanza, Tenerife";
+          // "description": "Asador de pollos en la Matanza, carne de primera calidad";
+          // "timeTable": "";
+          // "category": "asador";
+
+          // "phoneNumber": "666666666";
+          // "pictures": "null";
+
+          // "menu": "null";
+          // "availability": Available[];
+
           let profilePhotoBase64 = null;
-          if (this.profilePhoto.length > 0) {
-            const file = this.profilePhoto[0];
+          // ! Habría que hacer un bucle para subir todas las imágenes
+          if (this.pictures.length > 0) {
+            const file = this.pictures[0]; 
             const reader = new FileReader();
             reader.readAsDataURL(file);
             profilePhotoBase64 = await new Promise((resolve, reject) => {
@@ -303,17 +301,21 @@
               reader.onerror = error => reject(error);
             });
           }
-          const newUserJson = {
-            name: this.firstname,
-            surname: this.lastname,
-            userName: this.username,
-            password: this.password,
-            email: this.email,
-            phoneNumber: this.phone,
-            address: this.address,
-            profilePhoto: profilePhotoBase64
+          const newRestaurantJson = {
+            "userName": this.username,
+            "passwd": this.password,
+            "email": this.email,
+            "restaurantName": this.restaurantname,
+            "restaurantAddress": this.address,
+            "description": this.description,
+            "timeTable": this.timetable,
+            "category": this.category,
+            "phoneNumber": this.phone,
+            "pictures": profilePhotoBase64,
+            "menu": this.menu,
+            "availability": this.availability,
           };
-          const response = await axios.post('http://localhost:3000/users/', newUserJson);
+          const response = await axios.post('http://localhost:3000/restaurant/', newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
           console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
@@ -321,9 +323,9 @@
           // Añade la imagen al contenedor
           if (response.status === 201) {
             //this.$router.push('/login');
-            console.log('Usuario registrado correctamente');
+            console.log('Restaurante registrado correctamente');
   
-            textElement.innerText = 'Usuario registrado correctamente';
+            textElement.innerText = 'Restaurante registrado correctamente';
             textContainer.innerHTML = '';
             textContainer.appendChild(textElement);
             
@@ -335,22 +337,23 @@
           const textElement = document.createElement('h3');
   
           if (response.status === 400) {
-          if (response.data.code === 1) {
-          console.error('Faltan campos obligatorios');
-          textElement.innerText = 'Faltan campos obligatorios';
-          } else if (response.data.code === 2) {
-          console.error('El nombre de usuario ya existe');
-          textElement.innerText = 'El nombre de usuario ya existe elige otro';
-          } else if (response.data.code === 3) {
-          console.error('El correo ya existe');
-          textElement.innerText = 'El correo ya existe';
-          } else if (response.data.code === 4) {
-          console.error('El teléfono ya existe');
-          textElement.innerText = 'El teléfono ya existe';
-          } else {
-          console.error('Error desconocido:', response.status);
-          textElement.innerText = 'Error desconocido';
-          }
+            console.error('Faltan campos obligatorios'); // Hay que definir los códigos de error.
+            // if (response.data.code === 1) {
+            // console.error('Faltan campos obligatorios');
+            // textElement.innerText = 'Faltan campos obligatorios';
+            // } else if (response.data.code === 2) {
+            // console.error('El nombre de usuario ya existe');
+            // textElement.innerText = 'El nombre de usuario ya existe elige otro';
+            // } else if (response.data.code === 3) {
+            // console.error('El correo ya existe');
+            // textElement.innerText = 'El correo ya existe';
+            // } else if (response.data.code === 4) {
+            // console.error('El teléfono ya existe');
+            // textElement.innerText = 'El teléfono ya existe';
+            // } else {
+            // console.error('Error desconocido:', response.status);
+            // textElement.innerText = 'Error desconocido';
+            // }
           } else {
           console.error('Error al realizar la solicitud:', error.message);
           // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
@@ -368,15 +371,10 @@
         // Lógica para validar cada campo según las reglas definidas
         // Devuelve true si el formulario es válido, false de lo contrario
         // También puedes actualizar el estado "valid" si es necesario
-        this.nameError = '';
+        
         this.emailError = '';
         this.phoneError = '';
         this.passwordError = '';
-        const isNameValid = this.nameRules.every(rule => {
-          const isValid = rule(this.firstname) === true;
-          if (!isValid) this.nameError = rule(this.firstname) as string;
-          return isValid;
-        });
   
         const isEmailValid = this.emailRules.every(rule => {
           const isValid = rule(this.email) === true;
@@ -397,7 +395,7 @@
         });
   
         // Actualizar el estado "valid" si es necesario
-        this.valid = isNameValid && isEmailValid && isPhoneValid && isPasswordValid;
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid;
   
         return this.valid;
       },
