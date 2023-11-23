@@ -124,6 +124,7 @@ import Footer from '../components/Footer.vue'
 <script lang="ts">
 
 import axios from 'axios';
+import { useAuthStore } from '../stores/useAuthStore';
 
 //CORS
 
@@ -250,10 +251,13 @@ import axios from 'axios';
         if (response.status === 201) {
           //this.$router.push('/login');
           console.log('Usuario registrado correctamente');
-
+          
           textElement.innerText = 'Usuario registrado correctamente';
           textContainer.innerHTML = '';
           textContainer.appendChild(textElement);
+
+          const authStore = useAuthStore();
+          return authStore.login(this.username, this.password).catch(error => console.log(error));
           
         }
       } catch (error) {

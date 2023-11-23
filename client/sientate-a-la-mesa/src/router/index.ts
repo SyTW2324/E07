@@ -58,15 +58,15 @@ const router =  createRouter({
 
 router.beforeEach( async (to) => {
 
-  const publicPages = ['/login', '/register-main', '/password-recovery', '/'];
+  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users'];
   const authRequired = !publicPages.includes(to.path);
   const auth = useAuthStore();
   const expired = auth.isExpired();
   console.log('expired', expired);
   if (authRequired && (!auth.user || expired === false))  {
-      //auth.returnUrl = to.fullPath;
-      auth.logout();
-      return '/login';
+    //auth.returnUrl = to.fullPath;
+    auth.logout();
+    return '/login';
   }
 }
 );
