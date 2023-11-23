@@ -73,6 +73,8 @@ router.beforeEach( async (to) => {
     //auth.returnUrl = to.fullPath;
     auth.logout();
     return '/login';
+  } else if (to.path === '/login' && auth.user != null && expired === true) {
+    return '/my-profile';
   }
 }
 );

@@ -1,15 +1,90 @@
 <template>
   
-      <v-app-bar color="teal" density="compact">
+      <v-app-bar color="teal"  scroll-behavior="elevate">
         <template v-slot:prepend>
-          <v-app-bar-nav-icon> <img src="../img/icoWeb.png" alt="Logo">  </v-app-bar-nav-icon>
+          <router-link to="/">
+            <v-app-bar-nav-icon> <img :src="icoWeb" alt="Logo">  </v-app-bar-nav-icon>
+          </router-link>
+          
         </template>
 
-        <v-app-bar-title>Sientate a la mesa</v-app-bar-title>
+        <v-app-bar-title> <router-link to="/" style="text-decoration: none; color: #ffffff;"><p>Sientate a la mesa</p></router-link>  </v-app-bar-title>
 
-        <template v-slot:append>
-          <v-btn icon="mdi-dots-vertical"></v-btn>
-        </template>
+      
+
+        <v-btn icon v-if="userLogged.user == null">
+          <v-avatar size="40">
+            <img :src="usuario" alt="Profile Photo">
+          </v-avatar>
+        </v-btn>
+        <v-btn v-else>
+          {{ userLogged.user.username }}
+          <v-menu activator="parent">
+          <v-list>
+          <v-list-item>
+            <v-btn
+ 
+              block
+              color="wihite"
+              size="large"
+              type="submit"
+      
+              variant="elevated"
+              >
+              <router-link to="/my-profile" style="text-decoration: none;">
+              <p style="color: teal;">  Mi perfil</p>
+              </router-link>
+              </v-btn>
+          </v-list-item>
+        <v-list-item @click="userLogged.logout()">
+            <v-btn
+ 
+              block
+              color="wihite"
+              size="large"
+              type="submit"
+              
+              variant="elevated"
+              >
+              <p style="color: teal;"> Salir</p>
+              </v-btn>
+          </v-list-item>
+          </v-list>
+          </v-menu>  
+        </v-btn>
+        
+        <v-btn icon>
+        <v-icon>mdi-dots-vertical</v-icon>
+          <v-menu activator="parent">
+          <v-list>
+          <v-list-item>
+            <v-btn
+ 
+              block
+              color="wihite"
+              size="large"
+              type="submit"
+      
+              variant="elevated"
+              >
+              <p style="color: teal;">  Salir!</p>
+              </v-btn>
+          </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-btn>
       </v-app-bar>
   
 </template>
+
+<script setup lang="ts">
+
+import icoWeb from '../img/icoWeb.png'
+import usuario from '../img/usuario.png'
+import { useAuthStore } from '../stores/useAuthStore';
+
+const userLogged = useAuthStore();
+
+
+
+</script>

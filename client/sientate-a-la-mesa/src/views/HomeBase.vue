@@ -2,19 +2,11 @@
 
 
   <v-app>
-  
-    <v-app-bar>
-        
-      
-      <v-app-bar-title></v-app-bar-title>
-  
-      <!-- <v-btn density="default" color="teal">Acceso restaurantes</v-btn> -->
-  
-    </v-app-bar>
-  
+    
+    <Barnav></Barnav>
+    
     <v-main>
   
-      <v-divider></v-divider>
       <v-card
       class="mx-auto my-16"
       
@@ -25,7 +17,7 @@
       color="teal"
       
       >
-      <v-card-title> RESERVA YA! SIMPLEMENTE ME DABA PEREZA MIRAR EL MOCKUP DE ESTO </v-card-title>
+      <v-card-title> RESERVA YA! Home-Base </v-card-title>
       <v-card-text>
         <p> Nombre de usuario: {{ user.user.username }}</p>
         
@@ -49,6 +41,7 @@
   
   <script setup lang="ts">
   import Footer from '../components/Footer.vue'
+  import Barnav from '../components/Barnav.vue';
   import { useAuthStore } from '../stores/useAuthStore';
 
   const user = useAuthStore();

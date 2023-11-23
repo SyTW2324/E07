@@ -5,6 +5,7 @@ import Barnav from '../components/Barnav.vue';
 import Footer from '../components/Footer.vue'
 import { useAuthStore } from '../stores/useAuthStore';
 
+
 // import { Form, Field } from 'vee-validate';
 // import * as Yup from 'yup';
 
@@ -42,9 +43,11 @@ function loginOne() {
       <h1 style="font-size: 3em; font-weight: bold; color: teal; border-bottom: 1px solid rgb(100, 100, 100);">Inicia Sesión</h1>
     
     </v-container>
+    <v-container style="  display: flex; align-items: center;  justify-content: center; "  > 
+      <img style=" max-width: 400px; max-height: 400px;" src="../img/icoWeb.png" alt="Logo"> 
+    </v-container>
 
-
-   <v-container style="padding-top: 4em">
+   <v-container >
 
       <v-card class="mx-auto px-6 py-8" max-width="400" style="padding: ;"    >
       <v-form
@@ -91,7 +94,7 @@ function loginOne() {
     <v-container style="padding-top: 4em; text-align: center;">
       
       <router-link to="password-recovery" >
-      <p >Olvidaste la contraseña?</p>
+      <p >¿Olvidaste la contraseña?</p>
       </router-link>
     </v-container>  
     
