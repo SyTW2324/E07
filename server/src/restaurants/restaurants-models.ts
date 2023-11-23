@@ -5,6 +5,8 @@
  */
 
 import {Document, Schema, model} from 'mongoose';
+import { Available } from '../available.js';
+import { Reservation } from '../reservation.js';
 
 interface restaurantsDocumentInterface {
   userName: string;
@@ -18,12 +20,12 @@ interface restaurantsDocumentInterface {
   category: string;
 
   phoneNumber: string;
-  pictures: [Buffer | null];
+  pictures: (Buffer | null)[];
 
   menu: Buffer | null;
-  // availability: [available];
-  // nextReservations: [reservation];
-  // historicReservations: [reservation];
+  availability: Available[];
+  nextReservations: Reservation[];
+  historicReservations: Reservation[];
 }
 
 
@@ -88,23 +90,23 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
     type: Buffer,
     required: false,
     trim: true
+  },
+  availability: {
+    type: [Object],
+    required: false,
+    trim: true
+
+  },
+  nextReservations: {
+    type: [Object],
+    required: false,
+    trim: true
+  },
+  historicReservations: {
+    type: [Object],
+    required: false,
+    trim: true
   }
-  // ,
-  // availability: { // cambiar interior
-  //   type: String,
-  //   required: true,
-  //   trim: true
-  // },
-  // nextReservations: { // cambiar interior
-  //   type: String,
-  //   required: true,
-  //   trim: true
-  // },
-  // historicReservations: { // cambiar interior
-  //   type: String,
-  //   required: true,
-  //   trim: true
-  // }
 
 });
 
