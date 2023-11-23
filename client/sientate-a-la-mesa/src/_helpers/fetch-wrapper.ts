@@ -50,7 +50,7 @@ function authHeader(url: string): Record<string, string> {
 function handleResponse(response: Response): Promise<any> {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
-        
+        console.log(response);
         if (!response.ok) {
             const { user, logout } = useAuthStore();
             if ([401, 403].includes(response.status) && user) {
@@ -61,8 +61,7 @@ function handleResponse(response: Response): Promise<any> {
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
-
-        const user = {username: data.message.userName, password: data.message.password};
+        const user = {username: data.message.username, token: data.message.accessToken};
         // aquí se guarda el token en el store
         return user;
     });

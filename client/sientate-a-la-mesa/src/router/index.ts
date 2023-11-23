@@ -61,9 +61,11 @@ router.beforeEach( async (to) => {
   const publicPages = ['/login', '/register-main', '/password-recovery', '/'];
   const authRequired = !publicPages.includes(to.path);
   const auth = useAuthStore();
-  // no funciona correctamente
-  if (authRequired && !auth.user) {
+  const expired = auth.isExpired();
+  console.log('expired', expired);
+  if (authRequired && (!auth.user || expired === false))  {
       //auth.returnUrl = to.fullPath;
+      auth.logout();
       return '/login';
   }
 }

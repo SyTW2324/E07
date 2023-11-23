@@ -7,3 +7,5 @@ export const uri_bbdd: string = 'mongodb+srv://adminProyecto:XrGAiCeGbROwlsPv@cl
 export const port: number = 3000;
 
 export const ip_express: string = 'localhost';
+
+export const secretKey: string = 'secretKey';

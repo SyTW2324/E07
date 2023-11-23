@@ -27,10 +27,10 @@
       >
       <v-card-title> RESERVA YA! SIMPLEMENTE ME DABA PEREZA MIRAR EL MOCKUP DE ESTO </v-card-title>
       <v-card-text>
-        <p> Nombre de usuario: {{ user.userName }}</p>
+        <p> Nombre de usuario: {{ user.user.username }}</p>
         
       </v-card-text>
-      <img :src="user.profilePicture" alt="Imagen de perfil" />
+
       </v-card>
       
   
@@ -49,9 +49,7 @@
   
   <script setup lang="ts">
   import Footer from '../components/Footer.vue'
-  import { useUserStore } from '../stores/UserStore';
+  import { useAuthStore } from '../stores/useAuthStore';
 
-  const user = useUserStore();
-  const profilePicture = user.profilePicture // Obtén la imagen de perfil
-  console.log(profilePicture)
+  const user = useAuthStore();
   </script>

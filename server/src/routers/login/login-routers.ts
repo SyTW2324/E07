@@ -9,6 +9,8 @@ import express from 'express';
 // import { loginInterface } from '../../login/login.js';
 // import { LoginModel } from '../../login/login-model.js';
 import { UserModel } from '../../users/users-model.js';
+import jsonwebtoken from 'jsonwebtoken';
+import { secretKey } from '../../env-variables.js';
 
 
 export const loginRouter = express.Router();
@@ -34,7 +36,12 @@ export const loginRouter = express.Router();
           if(user && user.password === req.body.password){
             // const newLogin = new LoginModel(login);
             // const loginMessage = await newLogin.save();
-            return res.status(201).send({code: 0, message: user});
+            const userToken = jsonwebtoken.sign({ username: user.userName, password: user.password }, secretKey, { expiresIn: 30 });
+            const resMessage = {
+              username: user.userName,
+              accessToken: userToken
+            }
+            return res.status(200).send({ code: 0, message: resMessage});
           } else{
             console.log("Contraseña incorrecta");
             return res.status(404).send({code: 4, message: "Contraseña incorrecta"});

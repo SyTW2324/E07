@@ -1,10 +1,19 @@
 import { defineStore } from 'pinia';
 
-import  {fetchWrapper}  from '../_helpers/fetch-wrapper.ts'; 
-  
-  import router from "../router/index.ts";
+import  {fetchWrapper}  from '../_helpers/fetch-wrapper.ts';
 
-  const baseUrl = `http://localhost:3000/login`;
+import { jwtDecode } from 'jwt-decode';
+
+
+  
+import router from "../router/index.ts";
+
+const baseUrl = `http://localhost:3000/login`;
+
+
+
+
+
 
 export const useAuthStore = defineStore({
     id: 'auth',
@@ -24,12 +33,34 @@ export const useAuthStore = defineStore({
             localStorage.setItem('user', JSON.stringify(user));
 
             // redirect to previous url or default to home page
-            router.push(this.returnUrl || '/');
+            router.push(this.returnUrl || '/home-base'); // cambio para que lleve a la home-base
         },
         logout() {
             this.user = null;
             localStorage.removeItem('user');
             router.push('/login');
+        },
+        isExpired() {
+            const user = JSON.parse(localStorage.getItem('user') ?? 'null');
+            let exp = 0;
+
+            console.log(user);
+            if (user) {
+                console.log(user.token);
+                const decoded = jwtDecode(user.token);
+                console.log(decoded);
+                if (decoded) {
+                    exp = Number(decoded.exp);
+                } 
+                const now = Date.now() / 1000;
+                console.log(now);
+                console.log(exp);
+                if (now < exp) {
+                    return true;
+                }
+            }
+            return false;
         }
+        
     }
 });
