@@ -64,7 +64,7 @@ const router =  createRouter({
 
 router.beforeEach( async (to) => {
 
-  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users'];
+  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants'];
   const authRequired = !publicPages.includes(to.path);
   const auth = useAuthStore();
   const expired = auth.isExpired();
