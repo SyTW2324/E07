@@ -7,6 +7,7 @@
 
 import express from 'express';
 import { usersRouter } from './routers/users/users-routes.js';
+import { restaurantsRouter } from './routers/restaurants/restaurants-routes.js';
 import './database/mongoose.js';
 
 
@@ -29,3 +30,4 @@ app.use((req, res, next) => {
 
 
 app.use(usersRouter);
+app.use(restaurantsRouter)

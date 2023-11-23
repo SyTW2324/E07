@@ -14,6 +14,8 @@ export const restaurantsRouter = express.Router();
 
 // Ruta asociada con el registro de un nuevo restaurante
 restaurantsRouter.post('/restaurants', async (req, res) => {
+  console.log("POST /restaurants recibido fuera del try")
+  console.log(req.body);
 
   try {
     // "userName": "AsadorLaMatanza";

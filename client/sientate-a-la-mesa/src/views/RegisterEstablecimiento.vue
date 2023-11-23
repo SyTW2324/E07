@@ -268,6 +268,7 @@
       
       async RegisterRestaurantApi() {
         try {
+          console.log('Enviando datos a la API'); 
           const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -277,16 +278,13 @@
           // "userName": "AsadorLaMatanza";
           // "passwd": "Hola1234";
           // "email": "asadormatanza@gmail.com";
-
           // "restaurantName": "Asador La Matanza";
           // "restaurantAddress": "La Matanza, Tenerife";
           // "description": "Asador de pollos en la Matanza, carne de primera calidad";
           // "timeTable": "";
           // "category": "asador";
-
           // "phoneNumber": "666666666";
           // "pictures": "null";
-
           // "menu": "null";
           // "availability": Available[];
 
@@ -315,7 +313,8 @@
             "menu": this.menu,
             "availability": this.availability,
           };
-          const response = await axios.post('http://localhost:3000/restaurant/', newRestaurantJson);
+          console.log('Datos a enviar', newRestaurantJson);
+          const response = await axios.post('http://localhost:3000/restaurants/', newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
           console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
@@ -338,22 +337,22 @@
   
           if (response.status === 400) {
             console.error('Faltan campos obligatorios'); // Hay que definir los códigos de error.
-            // if (response.data.code === 1) {
-            // console.error('Faltan campos obligatorios');
-            // textElement.innerText = 'Faltan campos obligatorios';
-            // } else if (response.data.code === 2) {
-            // console.error('El nombre de usuario ya existe');
-            // textElement.innerText = 'El nombre de usuario ya existe elige otro';
-            // } else if (response.data.code === 3) {
-            // console.error('El correo ya existe');
-            // textElement.innerText = 'El correo ya existe';
-            // } else if (response.data.code === 4) {
-            // console.error('El teléfono ya existe');
-            // textElement.innerText = 'El teléfono ya existe';
-            // } else {
-            // console.error('Error desconocido:', response.status);
-            // textElement.innerText = 'Error desconocido';
-            // }
+            if (response.data.code === 1) {
+            console.error('Faltan campos obligatorios');
+            textElement.innerText = 'Faltan campos obligatorios';
+            } else if (response.data.code === 2) {
+            console.error('El nombre de usuario ya existe');
+            textElement.innerText = 'El nombre de usuario ya existe elige otro';
+            } else if (response.data.code === 3) {
+            console.error('El correo ya existe');
+            textElement.innerText = 'El correo ya existe';
+            } else if (response.data.code === 4) {
+            console.error('El teléfono ya existe');
+            textElement.innerText = 'El teléfono ya existe';
+            } else {
+            console.error('Error desconocido:', response.status);
+            textElement.innerText = 'Error desconocido';
+            }
           } else {
           console.error('Error al realizar la solicitud:', error.message);
           // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
