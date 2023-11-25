@@ -8,6 +8,8 @@ import RecuperarContraseña from '../views/RecuperarContraseña.vue';
 import Login from '../views/Login.vue';
 import MyProfile from '../views/MyProfile.vue'
 import HomeBase from '../views/HomeBase.vue'
+import MyProfileRestaurants from '../views/MiEstablecimiento.vue'
+import Establecimiento from '../views/establecimientos.vue'
 
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -46,6 +48,16 @@ const routes: RouteRecordRaw[] = [
     path: '/my-profile',
     name: 'my-profile',
     component: MyProfile
+  },
+  {
+    path: '/my-profile-restaurants',
+    name: 'my-profile-restaurants',
+    component: MyProfileRestaurants
+  },
+  {
+    path: '/establecimientos',
+    name: 'establecimientos',
+    component: Establecimiento
   },
   {
     path: '/home-base',

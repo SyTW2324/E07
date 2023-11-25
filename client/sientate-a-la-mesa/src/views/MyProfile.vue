@@ -4,7 +4,7 @@
 <v-app>
   <Barnav></Barnav>
   <v-main>
-    <v-container class="d-flex align-center justify-center">
+    <v-container class="d-flex align-center justify-center" >
       <h1>Mi perfil</h1>
     </v-container>
     <v-container class="d-flex align-center justify-center">
@@ -89,20 +89,24 @@
 <script setup lang="ts">
 import Barnav from '../components/Barnav.vue';
 import Footer from '../components/Footer.vue'
-import axios  from 'axios';
+//import axios  from 'axios';
 
-async function getUser() {
-  const requiredUserJSON = {
-    username: "user1"
+// import { useAuthStore } from '../stores/useAuthStore';
 
-  }
-  const response = await axios.get('http://10.6.129.207/api/users/', 
-  {params: requiredUserJSON});
-  console.log(response.data);
+// const userLogged = useAuthStore();
+
+// async function getUser() {
+//   const requiredUserJSON = {
+//     username: "user1"
+
+//   }
+//   const response = await axios.get('http://10.6.129.207/api/users/', 
+//   {params: requiredUserJSON});
+//   console.log(response.data);
   
-}
+// }
 
-getUser();
+// getUser();
 
 
 </script>

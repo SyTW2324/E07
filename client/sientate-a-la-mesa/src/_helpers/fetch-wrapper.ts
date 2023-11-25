@@ -51,6 +51,7 @@ function handleResponse(response: Response): Promise<any> {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         console.log(response);
+        console.log(data);
         if (!response.ok) {
             const { user, logout } = useAuthStore();
             if ([401, 403].includes(response.status) && user) {
@@ -61,7 +62,7 @@ function handleResponse(response: Response): Promise<any> {
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
-        const user = {username: data.message.username, token: data.message.accessToken};
+        const user = {username: data.message.username, token: data.message.accessToken, tipo: data.message.tipo};
         // aquí se guarda el token en el store
         return user;
     });
