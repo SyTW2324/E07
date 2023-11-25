@@ -314,7 +314,7 @@
             "availability": this.availability,
           };
           console.log('Datos a enviar', newRestaurantJson);
-          const response = await axios.post('http://localhost:3000/restaurants/', newRestaurantJson);
+          const response = await axios.post('http://10.6.128.143:8081/restaurants/', newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
           console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar

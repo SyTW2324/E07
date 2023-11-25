@@ -4,18 +4,12 @@
   "description": "Aplicacion para la gestión de reservas en restaurantes",
   "main": "index.js",
   "scripts": {
-    "start": "npm run prepare && concurrently \"npm run start:server\" \"npm run start:client\"",
-    "start:server": "cd server && npm start",
-    "start:client": "cd client/sientate-a-la-mesa && npm dev",
-    "prepare": "concurrently \"npm run prepare:server\" \"npm run prepare:client\"",
-    "prepare:server": "cd server && npm install",
-    "prepare:client": "cd client/sientate-a-la-mesa && npm install",
-    "build": "npm run prepare && concurrently \"npm run build:server\" \"npm run build:client\"",
-    "build:server": "cd server && npm run build",
-    "build:client": "cd client/sientate-a-la-mesa && npm run build",
-    "test": "npm run prepare && concurrently \"npm run test:client\" \"npm run test:server\"",
-    "test:client": "cd client/sientate-a-la-mesa && npm test",
-    "test:server": "cd server && npm test"
+    "start": "npm run start:server && npm run start:client",
+    "start:server": "cd server && pm2 start dist/index.js",
+    "start:client": "cd client/sientate-a-la-mesa && nohup http-server dist/ -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
+    "stop": "npm run stop:server && npm run stop:client",
+    "stop:server": "cd server && pm2 stop dist/index.js && pm2 delete dist/index.js",
+    "stop:client": "cd client/sientate-a-la-mesa && kill -15 $(cat .http-server-pid) && rm .http-server-pid"
   },
   "contributors": [
     {

@@ -7,10 +7,10 @@ interface RequestOptions {
     body?: string;
 }
 
-interface User {
-    token: string;
-    // Add other user properties if needed
-}
+// interface User {
+//     token: string;
+//     // Add other user properties if needed
+// }
 
 export const fetchWrapper = {
     get: request('GET'),

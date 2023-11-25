@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
   
 import router from "../router/index.ts";
 
-const baseUrl = `http://localhost:3000/login`;
+const baseUrl = `http://10.6.128.143:8081/login`;
 
 
 
