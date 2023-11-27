@@ -53,25 +53,15 @@
                 </v-col>
 
                 <!-- Hora de inicio -->
-                <v-col cols="12">
+                <v-col cols="6"> <!-- Usa la mitad del ancho para colocar dos elementos en una fila -->
                   <label>Hora de inicio:</label>
                   <v-time-picker v-model="timetable.startingHour"></v-time-picker>
                 </v-col>
 
                 <!-- Hora de finalización -->
-                <v-col cols="12">
+                <v-col cols="6"> <!-- Usa la mitad del ancho para colocar dos elementos en una fila -->
                   <label>Hora de finalización:</label>
                   <v-time-picker v-model="timetable.finishingHour"></v-time-picker>
-                </v-col>
-
-                <!-- Número de personas -->
-                <v-col cols="12">
-                  <label>Número de personas:</label>
-                  <v-text-field v-model="timetable.numberOfPeople" type="number" required></v-text-field>
-                </v-col>
-
-                <v-col cols="12">
-                  <v-btn type="submit" color="primary">Guardar Horario</v-btn>
                 </v-col>
               </v-row>
             </v-col>
@@ -157,13 +147,13 @@
               ></v-file-input>
             </v-col>
 
-            <!-- <v-col cols="12" md="4">
+            <v-col cols="12" md="4">
               <v-text-field
                 v-model="availability"
-                label="Disponibilidad*"
+                label="Disponibilidad"
                 hide-details
               ></v-text-field>
-            </v-col> -->
+            </v-col>
             
   
           </v-row>
@@ -219,7 +209,6 @@
           selectedDays: [],
           startingHour: null,
           finishingHour: null,
-          numberOfPeople: 0,
         },
         daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
     

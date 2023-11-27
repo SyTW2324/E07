@@ -7,6 +7,7 @@
 import {Document, Schema, model} from 'mongoose';
 import { Available } from '../available.js';
 import { Reservation } from '../reservation.js';
+import { Timetable } from '../timeTable.js';
 
 interface restaurantsDocumentInterface {
   userName: string;
@@ -16,7 +17,7 @@ interface restaurantsDocumentInterface {
   restaurantName: string;
   restaurantAddress: string;
   description:string;
-  timeTable: string;
+  timeTable: Timetable;
   category: string;
 
   phoneNumber: string;
@@ -65,7 +66,7 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
     trim: true
   },
   timeTable: {
-    type: String,
+    type: [Object],
     required: true,
     trim: true
   },
