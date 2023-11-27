@@ -99,13 +99,28 @@
         </v-container>
       </v-form>
 
-      <v-alert v-if="!valid" type="error">
-        Por favor, corrija los errores en el formulario.
-      </v-alert>
 
     </v-container>
     <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
-      <div ref="textContainer"></div>
+      <v-alert v-if="!valid" type="error" closable class="my-custom-alert">
+        Por favor, corrija los errores en el formulario.
+      </v-alert>
+
+      <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
+        El nombre de usuario ya existe elige otro.
+      </v-alert>
+
+      <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
+        El correo ya existe.
+      </v-alert>
+
+      <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
+        El teléfono ya existe.
+      </v-alert>
+
+      <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
+        Usuario registrado correctamente.
+      </v-alert>
     </v-container>
   </v-main>
 
@@ -128,10 +143,17 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 
 //CORS
+  // let validUserNameVar: boolean = true;
+  // let validEmailVar: boolean = true;
+  // let validPhoneVar: boolean = true;
 
   export default {
     data: () => ({
       valid: true,
+      validUserName: true,
+      validEmail: true,
+      validPhone: true,
+      userRegistered: false,
       firstname: '',
       lastname: '',
       username: '',
@@ -208,21 +230,12 @@ import { baseUrl } from '../env/env-variables';
 
     async RegisterUserApi() {
       try {
-        const textContainer = this.$refs.textContainer as HTMLElement;
-    
-        // Crea un elemento de imagen
-        const textElement = document.createElement('h3');
-        textElement.innerText = ' ';
-        // Realiza la llamada a la API utilizando Axios
-        //   "name": "John",
-        //   "surname": "Doe",
-        //   "userName": "johndoe10",
-        //   "password": "MiContraseña1",
-        //   "email": "john10@example.es",
-        //   "phoneNumber": "123456789",
-        //   "address": "123 Main St",
-        //   "profilePhoto": null
-        // }
+
+        // Inicializa las variables de error
+        this.validUserName = true;
+        this.validEmail = true;
+        this.validPhone = true;
+  
         let profilePhotoBase64 = null;
         if (this.profilePhoto.length > 0) {
           const file = this.profilePhoto[0];
@@ -253,9 +266,7 @@ import { baseUrl } from '../env/env-variables';
           //this.$router.push('/login');
           console.log('Usuario registrado correctamente');
           
-          textElement.innerText = 'Usuario registrado correctamente';
-          textContainer.innerHTML = '';
-          textContainer.appendChild(textElement);
+          this.userRegistered = true;
 
           const authStore = useAuthStore();
           return authStore.login(this.username, this.password).catch(error => console.log(error));
@@ -264,34 +275,27 @@ import { baseUrl } from '../env/env-variables';
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
         const response = error.response;
-        const textContainer = this.$refs.textContainer as HTMLElement;
-        const textElement = document.createElement('h3');
 
         if (response.status === 400) {
-        if (response.data.code === 1) {
-        console.error('Faltan campos obligatorios');
-        textElement.innerText = 'Faltan campos obligatorios';
-        } else if (response.data.code === 2) {
-        console.error('El nombre de usuario ya existe');
-        textElement.innerText = 'El nombre de usuario ya existe elige otro';
-        } else if (response.data.code === 3) {
-        console.error('El correo ya existe');
-        textElement.innerText = 'El correo ya existe';
-        } else if (response.data.code === 4) {
-        console.error('El teléfono ya existe');
-        textElement.innerText = 'El teléfono ya existe';
-        } else {
-        console.error('Error desconocido:', response.status);
-        textElement.innerText = 'Error desconocido';
-        }
+          if (response.data.code === 1) {
+          console.error('Faltan campos obligatorios');
+          } else if (response.data.code === 2) {
+          console.error('El nombre de usuario ya existe');
+          this.validUserName = false;
+
+          } else if (response.data.code === 3) {
+          console.error('El correo ya existe');
+          this.validEmail = false;
+
+          } else if (response.data.code === 4) {
+          console.error('El teléfono ya existe');
+          this.validPhone = false;
+
+          }
         } else {
         console.error('Error al realizar la solicitud:', error.message);
         // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
         }
-
-        // Añade el elemento de texto al contenedor
-        textContainer.innerHTML = '';
-        textContainer.appendChild(textElement);
         }
 
       }
@@ -334,6 +338,21 @@ import { baseUrl } from '../env/env-variables';
 
       return this.valid;
     },
+    // validUserName() {
+    //   if (validUserNameVar == false) {
+    //     return false
+    //   }
+    // },
+    // validEmail() {
+    //   if (validEmailVar == false) {
+    //     return false
+    //   }
+    // },
+    // validPhone() {
+    //   if (validPhoneVar == false) {
+    //     return false
+    //   }
+    // },
   },
   };
 </script>
