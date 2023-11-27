@@ -47,9 +47,11 @@
                 <!-- Días de la semana -->
                 <v-col cols="12">
                   <label>Días de la semana:</label>
-                  <v-checkbox-group v-model="timetable.selectedDays">
-                    <v-checkbox v-for="day in daysOfWeek" :key="day" :label="day" :value="day"></v-checkbox>
-                  </v-checkbox-group>
+                  <v-row>
+                    <v-col v-for="day in daysOfWeek" :key="day" cols="6">
+                      <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
+                    </v-col>
+                  </v-row>
                 </v-col>
 
                 <!-- Hora de inicio -->
