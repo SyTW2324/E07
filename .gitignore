@@ -1,2 +1,4 @@
 server/dist/index.js
 node_modules
+.http-server-pid
+client/sientate-a-la-mesa/nohup.out

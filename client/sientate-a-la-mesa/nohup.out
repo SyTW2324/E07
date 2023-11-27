@@ -30,3 +30,5 @@ Node.js v20.8.0
 (Use `node --trace-deprecation ...` to show where the warning was created)
 (node:149627) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
 (Use `node --trace-deprecation ...` to show where the warning was created)
+(node:150173) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+(Use `node --trace-deprecation ...` to show where the warning was created)
