@@ -68,17 +68,6 @@
               </v-row>
             </v-col>
 
-            <!-- <v-col cols="12" md="4">
-              <v-text-field
-                v-model="timetable"
-                :rules="timetableRules"
-
-                label="Horario*"
-                required
-                hide-details
-              ></v-text-field>
-            </v-col> -->
-
 
             <v-col cols="12" md="4">
               <v-text-field
@@ -150,11 +139,20 @@
             </v-col>
 
             <v-col cols="12" md="4">
-              <v-text-field
-                v-model="availability"
-                label="Disponibilidad"
-                hide-details
-              ></v-text-field>
+              <v-row>
+                <!-- Número de minutos -->
+                <v-col cols="12">
+                  <label>Tiempo de franja de reserva (minutos):</label>
+                  <v-text-field v-model="available.timePeriod" type="number"></v-text-field>
+                </v-col>
+
+                <!-- Número de personas -->
+                <v-col cols="12">
+                  <label>Número de personas por reserva:</label>
+                  <v-text-field v-model="available.numberOfPeople" type="number"></v-text-field>
+                </v-col>
+              </v-row>
+
             </v-col>
             
   
@@ -277,7 +275,10 @@
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
         pictures: [],
         menu: [], // es un pdf
-        availability: [],
+        available: {
+          timePeriod: null,
+          numberOfPeople: null,
+        },
         
       }),
       methods: {
@@ -343,7 +344,7 @@
             "phoneNumber": this.phone,
             "pictures": profilePhotoBase64,
             "menu": this.menu,
-            "availability": this.availability,
+            "availability": this.available,
           };
           console.log('Datos a enviar', newRestaurantJson);
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
