@@ -9,7 +9,7 @@ import Login from '../views/Login.vue';
 import MyProfile from '../views/MyProfile.vue'
 import HomeBase from '../views/HomeBase.vue'
 import MyProfileRestaurants from '../views/MiEstablecimiento.vue'
-import Establecimiento from '../views/establecimientos.vue'
+import Establecimiento from '../views/EstablecimientoVista.vue'
 
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -76,7 +76,7 @@ const router =  createRouter({
 
 router.beforeEach( async (to) => {
 
-  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants'];
+  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants', '/establecimientos'];
   const authRequired = !publicPages.includes(to.path);
   const auth = useAuthStore();
   const expired = auth.isExpired();

@@ -33,7 +33,26 @@
             <v-card>
               <v-card-title>{{ restaurant }}</v-card-title>
               <v-card-subtitle>{{ restaurant }}</v-card-subtitle>
-              <v-card-text>{{ restaurant }}</v-card-text>
+              <v-card-text class="d-flex justify-space-between">
+                  <v-chip
+                    prepend-icon="mdi-brightness-5"
+                    @click=""
+                  >
+                    Se
+                  </v-chip>
+                  <v-chip
+                    prepend-icon="mdi-alarm-check"
+                    @click=""
+                  >
+                    vienen
+                  </v-chip>
+                  <v-chip
+                    icon="mdi-blinds"
+                    @click=""
+                  >
+                    cositas
+                  </v-chip>
+               </v-card-text>
               <v-btn
  
                 block
@@ -43,7 +62,9 @@
                 
                 variant="elevated"
                 >
+                <RouterLink to="/establecimientos">
                 <p style="color: teal;"> More info</p>
+                </RouterLink>
                 </v-btn>
             </v-card>
           </v-col>
