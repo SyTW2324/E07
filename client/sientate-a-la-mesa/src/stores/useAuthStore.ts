@@ -4,11 +4,11 @@ import  {fetchWrapper}  from '../_helpers/fetch-wrapper.ts';
 
 import { jwtDecode } from 'jwt-decode';
 
-
+import { baseUrl } from '../env/env-variables.ts';
   
 import router from "../router/index.ts";
 
-const baseUrl = `http://10.6.128.143:8081/login`;
+//const baseUrl = `http://10.6.128.143:8081/login`;
 
 
 
@@ -24,7 +24,7 @@ export const useAuthStore = defineStore({
     }),
     actions: {
         async login(username: string, passwordInput: string) {
-            const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { userName: username, password: passwordInput });
+            const user = await fetchWrapper.post(`${baseUrl}/login/authenticate`, { userName: username, password: passwordInput });
 
             // update pinia state
             this.user = user;

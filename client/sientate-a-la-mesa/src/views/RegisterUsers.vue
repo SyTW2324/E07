@@ -125,6 +125,7 @@ import Footer from '../components/Footer.vue'
 
 import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
+import { baseUrl } from '../env/env-variables';
 
 //CORS
 
@@ -242,7 +243,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           address: this.address,
           profilePhoto: profilePhotoBase64
         };
-        const response = await axios.post('http://10.6.128.143:8081/users/', newUserJson);
+        const response = await axios.post(`${baseUrl}users/`, newUserJson);
        //const response = await axios.get('http://localhost:3000/users/');
         console.log('Datos obtenidos de la API', response.data);
         //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
