@@ -123,14 +123,41 @@
               ></v-file-input>
             </v-col>
 
-            <v-col cols="12" md="4">
+            <!-- <v-col cols="12" md="4">
               <v-text-field
                 v-model="availability"
                 label="Disponibilidad*"
                 hide-details
               ></v-text-field>
-            </v-col>
+            </v-col> -->
+            <v-col cols="12" md="4">
+                <v-row>
+                  <v-col cols="12">
+                    <label>Fecha de inicio:</label>
+                    <v-date-picker v-model="availability.start" required></v-date-picker>
+                  </v-col>
 
+                  <v-col cols="12">
+                    <label>Hora de inicio:</label>
+                    <v-text-field v-model="availability.startingHour" required></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12">
+                    <label>Fecha de finalización:</label>
+                    <v-date-picker v-model="availability.finish" required></v-date-picker>
+                  </v-col>
+
+                  <v-col cols="12">
+                    <label>Hora de finalización:</label>
+                    <v-text-field v-model="availability.finishingHour" required></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12">
+                    <label>Número de personas:</label>
+                    <v-text-field v-model="availability.numberOfPeople" type="number" required></v-text-field>
+                  </v-col>
+                </v-row>
+            </v-col>
   
           </v-row>
   
@@ -245,7 +272,18 @@
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
         pictures: [],
         menu: [], // es un pdf
-        availability: [],
+        availability: {
+          start: null,
+          finish: null,
+          startingHour: "",
+          finishingHour: "",
+          numberOfPeople: 0,
+        },
+        // availability: [],
+        availabilityRules: [
+          // debe seguir el formato [[L-V: 12:00-16:00, 20:00-23:00], [S-D: 12:00-16:00, 20:00-23:00]]
+          
+        ]
         
       }),
       methods: {
@@ -264,7 +302,6 @@
           console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
-  
 
       
       async RegisterRestaurantApi() {
@@ -337,7 +374,7 @@
           const textElement = document.createElement('h3');
   
           if (response.status === 400) {
-            console.error('Faltan campos obligatorios'); // Hay que definir los códigos de error.
+            console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
             console.error('Faltan campos obligatorios');
             textElement.innerText = 'Faltan campos obligatorios';
@@ -355,8 +392,7 @@
             textElement.innerText = 'Error desconocido';
             }
           } else {
-          console.error('Error al realizar la solicitud:', error.message);
-          // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+            console.error('Error al realizar la solicitud:', error.message);
           }
   
           // Añade el elemento de texto al contenedor

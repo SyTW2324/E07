@@ -132,8 +132,6 @@ export async function validateRestaurantSchema(restaurant: restaurantsDocumentIn
       return { code: 4, errors: 'Ya existe un restaurante con ese número de teléfono' };
     }
   }
-
   return { code: 0, errors: '' };
-
 
 }
