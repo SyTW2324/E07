@@ -43,7 +43,7 @@
             </v-col>
 
             <v-col cols="12" md="4">
-              <v-row>
+              <v-row class="d-flex">
                 <!-- Días de la semana -->
                 <v-col cols="12">
                   <label>Días de la semana:</label>
@@ -53,13 +53,13 @@
                 </v-col>
 
                 <!-- Hora de inicio -->
-                <v-col cols="6"> <!-- Usa la mitad del ancho para colocar dos elementos en una fila -->
+                <v-col cols="6">
                   <label>Hora de inicio:</label>
                   <v-time-picker v-model="timetable.startingHour"></v-time-picker>
                 </v-col>
 
                 <!-- Hora de finalización -->
-                <v-col cols="6"> <!-- Usa la mitad del ancho para colocar dos elementos en una fila -->
+                <v-col cols="6">
                   <label>Hora de finalización:</label>
                   <v-time-picker v-model="timetable.finishingHour"></v-time-picker>
                 </v-col>
