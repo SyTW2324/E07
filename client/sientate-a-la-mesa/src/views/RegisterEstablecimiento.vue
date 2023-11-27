@@ -55,13 +55,13 @@
                 <!-- Hora de inicio -->
                 <v-col cols="6">
                   <label>Hora de inicio:</label>
-                  <v-time-picker v-model="timetable.startingHour"></v-time-picker>
+                  <v-text-field v-model="timetable.startingHour" type="time"></v-text-field>
                 </v-col>
 
                 <!-- Hora de finalización -->
                 <v-col cols="6">
                   <label>Hora de finalización:</label>
-                  <v-time-picker v-model="timetable.finishingHour"></v-time-picker>
+                  <v-text-field v-model="timetable.finishingHour" type="time"></v-text-field>
                 </v-col>
               </v-row>
             </v-col>
