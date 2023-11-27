@@ -43,6 +43,40 @@
             </v-col>
 
             <v-col cols="12" md="4">
+              <v-row>
+                <!-- Días de la semana -->
+                <v-col cols="12">
+                  <label>Días de la semana:</label>
+                  <v-checkbox-group v-model="timetable.selectedDays">
+                    <v-checkbox v-for="day in daysOfWeek" :key="day" :label="day" :value="day"></v-checkbox>
+                  </v-checkbox-group>
+                </v-col>
+
+                <!-- Hora de inicio -->
+                <v-col cols="12">
+                  <label>Hora de inicio:</label>
+                  <v-time-picker v-model="timetable.startingHour"></v-time-picker>
+                </v-col>
+
+                <!-- Hora de finalización -->
+                <v-col cols="12">
+                  <label>Hora de finalización:</label>
+                  <v-time-picker v-model="timetable.finishingHour"></v-time-picker>
+                </v-col>
+
+                <!-- Número de personas -->
+                <v-col cols="12">
+                  <label>Número de personas:</label>
+                  <v-text-field v-model="timetable.numberOfPeople" type="number" required></v-text-field>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-btn type="submit" color="primary">Guardar Horario</v-btn>
+                </v-col>
+              </v-row>
+            </v-col>
+
+            <!-- <v-col cols="12" md="4">
               <v-text-field
                 v-model="timetable"
                 :rules="timetableRules"
@@ -51,7 +85,7 @@
                 required
                 hide-details
               ></v-text-field>
-            </v-col>
+            </v-col> -->
 
 
             <v-col cols="12" md="4">
@@ -130,34 +164,7 @@
                 hide-details
               ></v-text-field>
             </v-col> -->
-            <v-col cols="12" md="4">
-                <v-row>
-                  <v-col cols="12">
-                    <label>Fecha de inicio:</label>
-                    <v-date-picker v-model="availability.start" required></v-date-picker>
-                  </v-col>
-
-                  <v-col cols="12">
-                    <label>Hora de inicio:</label>
-                    <v-text-field v-model="availability.startingHour" required></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12">
-                    <label>Fecha de finalización:</label>
-                    <v-date-picker v-model="availability.finish" required></v-date-picker>
-                  </v-col>
-
-                  <v-col cols="12">
-                    <label>Hora de finalización:</label>
-                    <v-text-field v-model="availability.finishingHour" required></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12">
-                    <label>Número de personas:</label>
-                    <v-text-field v-model="availability.numberOfPeople" type="number" required></v-text-field>
-                  </v-col>
-                </v-row>
-            </v-col>
+            
   
           </v-row>
   
@@ -208,7 +215,14 @@
         ] as ((value: string) => true | string)[], // Asigna un tipo a restaurantnameRules
         address: '',
         description: '',
-        timetable: '',
+        timetable: {
+          selectedDays: [],
+          startingHour: null,
+          finishingHour: null,
+          numberOfPeople: 0,
+        },
+        daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+    
         timetableRules: [
           (value: string) => {
             if (value) return true;
@@ -272,18 +286,7 @@
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
         pictures: [],
         menu: [], // es un pdf
-        availability: {
-          start: null,
-          finish: null,
-          startingHour: "",
-          finishingHour: "",
-          numberOfPeople: 0,
-        },
-        // availability: [],
-        availabilityRules: [
-          // debe seguir el formato [[L-V: 12:00-16:00, 20:00-23:00], [S-D: 12:00-16:00, 20:00-23:00]]
-          
-        ]
+        availability: [],
         
       }),
       methods: {
