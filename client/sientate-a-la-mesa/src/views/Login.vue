@@ -88,7 +88,9 @@ import { useAuthStore } from '../stores/useAuthStore';
           clearable
           label="Contraseña"
           placeholder="Introduce tu contraseña"
-        ></v-text-field>
+          type="password"
+        >
+      </v-text-field>
 
         <br>
 
