@@ -3,7 +3,7 @@
 <script setup lang="ts">
 import Barnav from '../components/Barnav.vue';
 import Footer from '../components/Footer.vue'
-import { useAuthStore } from '../stores/useAuthStore';
+
 
 
 // import { Form, Field } from 'vee-validate';
@@ -16,19 +16,38 @@ import { useAuthStore } from '../stores/useAuthStore';
 //     password: Yup.string().required('Password is required')
 // });
 
-let username: string = '';
-let password: string = '';
+// let username: string = '';
+// let password: string = '';
 
 
 
 
-function loginOne() {
-    const authStore = useAuthStore();
+// function loginOne() {
+//     const authStore = useAuthStore();
 
-    return authStore.login(username, password)
-        .catch(error => console.log(error));
-}
+//     return authStore.login(username, password)
+//         .catch(error => console.log(error));
+// }
 
+</script>
+
+<script lang="ts">
+import { useAuthStore } from '../stores/useAuthStore';
+
+  export default {
+    data: () => ({
+      username: '',
+      password: '',
+    }),
+    methods: {
+      loginOne(): boolean {
+        const authStore = useAuthStore();
+    
+        authStore.login(this.username, this.password).catch(error => console.log(error));
+        return true;
+      }
+    },
+  };
 </script>
 
 <template>
@@ -52,15 +71,15 @@ function loginOne() {
       <v-card class="mx-auto px-6 py-8" max-width="400" style="padding: ;"    >
       <v-form
         
-        @submit.prevent="loginOne()"
+        @submit.prevent="loginOne"
       >
         
         <v-text-field
           name="username"
           v-model="username"
           class="mb-2"
-          clearable
           label="Usuario"
+
         ></v-text-field>
 
         <v-text-field
