@@ -40,20 +40,27 @@ import { useAuthStore } from '../stores/useAuthStore';
       password: '',
       loggedIn: true,
       serverError: false,
+      requiredField: false,
     }),
     methods: {
-      loginOne(): void {
-        const authStore = useAuthStore();
-        this.loggedIn = true;
-        this.serverError = false;
-        authStore.login(this.username, this.password).catch(
-          error => {
-            console.log(error);
-            this.serverError = true;
+      async loginOne(): Promise<void> {
+        try {
+          this.requiredField = false;
+          if (this.username === '' || this.password === '') {
+            this.requiredField = true;
+            return;
           }
-        );
-        if (authStore.user == null && this.username != '' && this.password != '') {
-          this.loggedIn = false;
+          const authStore = useAuthStore();
+          const result = await authStore.login(this.username, this.password);
+          if (result.code) {
+            if (result.code === 4 || result.code === 1) {
+              this.loggedIn = false;
+            } else if (result.code === 5){
+              this.serverError = true;
+            }
+          }
+        }catch(error) {
+          console.log(error);
         }
       }
     },
@@ -124,9 +131,14 @@ import { useAuthStore } from '../stores/useAuthStore';
         Nombre de usuario o contraseña incorrectos
       </v-alert>
 
-      <!-- <v-alert v-if="serverError" type="warning" closable class="my-custom-alert">
+      <v-alert v-if="serverError" type="error" closable class="my-custom-alert">
         Ha ocurrido un error en el servidor
-      </v-alert> -->
+      </v-alert>
+
+      <v-alert v-if="requiredField" type="warning" closable class="my-custom-alert">
+        Faltan campos obligatorios
+      </v-alert>
+
 
       </v-card>
     </v-container>  

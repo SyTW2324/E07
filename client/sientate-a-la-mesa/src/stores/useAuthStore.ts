@@ -23,18 +23,30 @@ export const useAuthStore = defineStore({
         returnUrl: null
     }),
     actions: {
-        async login(username: string, passwordInput: string) {
-            const user = await fetchWrapper.post(`${baseUrl}login/authenticate`, { userName: username, password: passwordInput });
+        async login(username: string, passwordInput: string): Promise<{code: number, message: string}> {
+            try {
 
-            // update pinia state
-            this.user = user;
+                const result = await fetchWrapper.post(`${baseUrl}login/authenticate`, { userName: username, password: passwordInput });
+    
+                // update pinia state
+                if (result.username) {
+                    this.user = result;
+        
+                    // store user details and jwt in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('user', JSON.stringify(result));
+        
+                    // redirect to previous url or default to home page
+                    
+                    router.push(this.returnUrl || '/home-base'); // cambio para que lleve a la home-base
+                    return {code: 0, message: "Usuario logeado"};
+                } else {
+                    return result;
+                }
+            } catch (error) {
+                console.log(error);
 
-            // store user details and jwt in local storage to keep user logged in between page refreshes
-            localStorage.setItem('user', JSON.stringify(user));
-
-            // redirect to previous url or default to home page
-            
-            router.push(this.returnUrl || '/home-base'); // cambio para que lleve a la home-base
+                return {code: 5, message: error as string};
+            }
         },
         logout() {
             this.user = null;

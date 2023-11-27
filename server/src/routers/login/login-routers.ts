@@ -49,7 +49,7 @@ export const loginRouter = express.Router();
           else if(restaurant && restaurant.passwd === req.body.password){
             // const newLogin = new LoginModel(login);
             // const loginMessage = await newLogin.save();
-            const userToken = jsonwebtoken.sign({ username: restaurant.userName, password: restaurant.passwd }, secretKey, { expiresIn: 30 });
+            const userToken = jsonwebtoken.sign({ username: restaurant.userName, password: restaurant.passwd }, secretKey, { expiresIn: '1h' });
             const resMessage = {
               username: restaurant.userName,
               accessToken: userToken,

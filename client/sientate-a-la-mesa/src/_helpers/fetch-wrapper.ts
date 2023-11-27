@@ -58,9 +58,15 @@ function handleResponse(response: Response): Promise<any> {
                 // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
                 logout();
             }
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
+            let error = {"code": 0, "message": ""};
+            if (data.code) {
+                error.code = data.code;
+                error.message = data.message;
+            } else {
+                error.code = response.status;
+                error.message = response.statusText;
+            }
+            return error
         }
         const user = {username: data.message.username, token: data.message.accessToken, tipo: data.message.tipo};
         // aquí se guarda el token en el store
