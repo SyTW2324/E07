@@ -105,11 +105,11 @@
       <v-alert v-if="!valid" type="warning" closable class="my-custom-alert">
         Por favor, corrija los errores en el formulario.
         <br>
-        Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+        - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
         <br>
-        Correo: El correo debe ser válido.
+        - Correo: El correo debe ser válido.
         <br>
-        Teléfono: El teléfono debe tener 9 dígitos.
+        - Teléfono: El teléfono debe tener 9 dígitos.
       </v-alert>
 
       <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
