@@ -38,13 +38,23 @@ import { useAuthStore } from '../stores/useAuthStore';
     data: () => ({
       username: '',
       password: '',
+      loggedIn: true,
+      serverError: false,
     }),
     methods: {
-      loginOne(): boolean {
+      loginOne(): void {
         const authStore = useAuthStore();
-    
-        authStore.login(this.username, this.password).catch(error => console.log(error));
-        return true;
+        this.loggedIn = true;
+        this.serverError = false;
+        authStore.login(this.username, this.password).catch(
+          error => {
+            console.log(error);
+            this.serverError = true;
+          }
+        );
+        if (authStore.user == null && this.username != '' && this.password != '') {
+          this.loggedIn = false;
+        }
       }
     },
   };
@@ -107,8 +117,17 @@ import { useAuthStore } from '../stores/useAuthStore';
           <p style="color: teal;">  Iniciar sesión</p>
         </v-btn>
       </v-form>
-    
-      
+        
+      <br>
+
+      <v-alert v-if="!loggedIn" type="warning" closable class="my-custom-alert">
+        Nombre de usuario o contraseña incorrectos
+      </v-alert>
+
+      <!-- <v-alert v-if="serverError" type="warning" closable class="my-custom-alert">
+        Ha ocurrido un error en el servidor
+      </v-alert> -->
+
       </v-card>
     </v-container>  
 

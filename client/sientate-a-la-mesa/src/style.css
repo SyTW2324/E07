@@ -1,3 +1,8 @@
 .my-custom-alert {
   max-width: 50rem; /* Puedes ajustar este valor según tus preferencias */
 }
+
+.my-custom-card-home {
+  width:80em;
+  height: 20em;
+}
