@@ -9,6 +9,7 @@ import express from 'express';
 // import { loginInterface } from '../../login/login.js';
 // import { LoginModel } from '../../login/login-model.js';
 import { UserModel } from '../../users/users-model.js';
+import { RestaurantModel } from '../../restaurants/restaurants-models.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
 
@@ -29,6 +30,7 @@ export const loginRouter = express.Router();
         // }
           //const loginSchemaValidation = await validateLoginSchema(login);
           const user = await UserModel.findOne({userName: req.body.userName});
+          const restaurant = await RestaurantModel.findOne({userName: req.body.userName});
           // if (loginSchemaValidation.code !== 0) {
           //   return res.status(400).send(loginSchemaValidation);
           // }
@@ -39,7 +41,19 @@ export const loginRouter = express.Router();
             const userToken = jsonwebtoken.sign({ username: user.userName, password: user.password }, secretKey, { expiresIn: 30 });
             const resMessage = {
               username: user.userName,
-              accessToken: userToken
+              accessToken: userToken,
+              tipo: "user"
+            }
+            return res.status(200).send({ code: 0, message: resMessage});
+          } 
+          else if(restaurant && restaurant.passwd === req.body.password){
+            // const newLogin = new LoginModel(login);
+            // const loginMessage = await newLogin.save();
+            const userToken = jsonwebtoken.sign({ username: restaurant.userName, password: restaurant.passwd }, secretKey, { expiresIn: 30 });
+            const resMessage = {
+              username: restaurant.userName,
+              accessToken: userToken,
+              tipo: "restaurant"
             }
             return res.status(200).send({ code: 0, message: resMessage});
           } else{

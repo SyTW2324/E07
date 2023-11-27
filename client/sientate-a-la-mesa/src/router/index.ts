@@ -8,6 +8,8 @@ import RecuperarContraseña from '../views/RecuperarContraseña.vue';
 import Login from '../views/Login.vue';
 import MyProfile from '../views/MyProfile.vue'
 import HomeBase from '../views/HomeBase.vue'
+import MyProfileRestaurants from '../views/MiEstablecimiento.vue'
+import Establecimiento from '../views/EstablecimientoVista.vue'
 
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -48,6 +50,16 @@ const routes: RouteRecordRaw[] = [
     component: MyProfile
   },
   {
+    path: '/my-profile-restaurants',
+    name: 'my-profile-restaurants',
+    component: MyProfileRestaurants
+  },
+  {
+    path: '/establecimientos',
+    name: 'establecimientos',
+    component: Establecimiento
+  },
+  {
     path: '/home-base',
     name: 'home-base',
     component: HomeBase
@@ -64,7 +76,7 @@ const router =  createRouter({
 
 router.beforeEach( async (to) => {
 
-  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants'];
+  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants', '/establecimientos'];
   const authRequired = !publicPages.includes(to.path);
   const auth = useAuthStore();
   const expired = auth.isExpired();
