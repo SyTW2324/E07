@@ -60,15 +60,15 @@ function loginOne() {
           v-model="username"
           class="mb-2"
           clearable
-          label="User"
+          label="Usuario"
         ></v-text-field>
 
         <v-text-field
           v-model="password"
           name="password"
           clearable
-          label="Password"
-          placeholder="Enter your password"
+          label="Contraseña"
+          placeholder="Introduce tu contraseña"
         ></v-text-field>
 
         <br>
