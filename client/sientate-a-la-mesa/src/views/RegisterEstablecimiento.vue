@@ -43,14 +43,29 @@
             </v-col>
 
             <v-col cols="12" md="4">
-              <v-text-field
-                v-model="timetable"
-                :rules="timetableRules"
+              <v-row class="d-flex">
+                <!-- Días de la semana -->
+                <v-col cols="12">
+                  <label>Días de la semana:</label>
+                  <v-row>
+                    <v-col v-for="day in daysOfWeek" :key="day" cols="6">
+                      <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
+                    </v-col>
+                  </v-row>
+                </v-col>
 
-                label="Horario*"
-                required
-                hide-details
-              ></v-text-field>
+                <!-- Hora de inicio -->
+                <v-col cols="6">
+                  <label>Hora de inicio:</label>
+                  <v-text-field v-model="timetable.startingHour" type="time"></v-text-field>
+                </v-col>
+
+                <!-- Hora de finalización -->
+                <v-col cols="6">
+                  <label>Hora de finalización:</label>
+                  <v-text-field v-model="timetable.finishingHour" type="time"></v-text-field>
+                </v-col>
+              </v-row>
             </v-col>
 
 
@@ -124,13 +139,22 @@
             </v-col>
 
             <v-col cols="12" md="4">
-              <v-text-field
-                v-model="availability"
-                label="Disponibilidad*"
-                hide-details
-              ></v-text-field>
-            </v-col>
+              <v-row>
+                <!-- Número de minutos -->
+                <v-col cols="12">
+                  <label>Tiempo de franja de reserva (minutos):</label>
+                  <v-text-field v-model="available.timePeriod" type="number"></v-text-field>
+                </v-col>
 
+                <!-- Número de personas -->
+                <v-col cols="12">
+                  <label>Número de personas por reserva:</label>
+                  <v-text-field v-model="available.numberOfPeople" type="number"></v-text-field>
+                </v-col>
+              </v-row>
+
+            </v-col>
+            
   
           </v-row>
   
@@ -181,7 +205,13 @@
         ] as ((value: string) => true | string)[], // Asigna un tipo a restaurantnameRules
         address: '',
         description: '',
-        timetable: '',
+        timetable: {
+          selectedDays: [],
+          startingHour: null,
+          finishingHour: null,
+        },
+        daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+    
         timetableRules: [
           (value: string) => {
             if (value) return true;
@@ -245,7 +275,10 @@
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
         pictures: [],
         menu: [], // es un pdf
-        availability: [],
+        available: {
+          timePeriod: null,
+          numberOfPeople: null,
+        },
         
       }),
       methods: {
@@ -264,7 +297,6 @@
           console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
-  
 
       
       async RegisterRestaurantApi() {
@@ -312,7 +344,7 @@
             "phoneNumber": this.phone,
             "pictures": profilePhotoBase64,
             "menu": this.menu,
-            "availability": this.availability,
+            "availability": this.available,
           };
           console.log('Datos a enviar', newRestaurantJson);
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
@@ -337,7 +369,7 @@
           const textElement = document.createElement('h3');
   
           if (response.status === 400) {
-            console.error('Faltan campos obligatorios'); // Hay que definir los códigos de error.
+            console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
             console.error('Faltan campos obligatorios');
             textElement.innerText = 'Faltan campos obligatorios';
@@ -355,8 +387,7 @@
             textElement.innerText = 'Error desconocido';
             }
           } else {
-          console.error('Error al realizar la solicitud:', error.message);
-          // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+            console.error('Error al realizar la solicitud:', error.message);
           }
   
           // Añade el elemento de texto al contenedor

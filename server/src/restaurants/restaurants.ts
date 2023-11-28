@@ -7,6 +7,7 @@
 import * as mongodb from 'mongodb';
 import { Available } from '../available.js';
 import { Reservation } from '../reservation.js';
+import { Timetable } from '../timeTable.js';
 
 
 export interface restaurantInterface {
@@ -18,7 +19,7 @@ export interface restaurantInterface {
   restaurantName: string;
   restaurantAddress: string;
   description:string;
-  timeTable: string;
+  timeTable: Timetable;
   category: string;
 
   phoneNumber: string;
@@ -41,7 +42,7 @@ export class restaurantClass {
     private restaurantName: string,
     private restaurantAddress: string,
     private description:string,
-    private timeTable: string,
+    private timeTable: Timetable,
     private category: string,
 
     private phoneNumber: string,
