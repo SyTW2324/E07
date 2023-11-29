@@ -19,7 +19,7 @@ describe('<Home />', () => {
     cy.contains('Bienvenido a sientate a la mesa').should('exist');
   });
 
-  it('Se verifica botón de iniciar sesión "Iniciar sesión"', () => {
+  it('Se verifica botón de "Iniciar sesión"', () => {
     cy.mount(Home);
     cy.contains('Iniciar sesión').should('exist');
     cy.contains('Iniciar sesión').click();
