@@ -96,6 +96,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           v-model="username"
           class="mb-2"
           label="Usuario"
+          id="username"
 
         ></v-text-field>
 
@@ -106,6 +107,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           label="Contraseña"
           placeholder="Introduce tu contraseña"
           type="password"
+          id="password"
         >
       </v-text-field>
 
@@ -117,7 +119,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           color="wihite"
           size="large"
           type="submit"
-          
+          id="loginButton"
           variant="elevated"
           
         >
