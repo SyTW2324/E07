@@ -82,15 +82,16 @@ usersRouter.get('/users', async (req, res) => {
 usersRouter.delete('/users', async (req, res) => {
   try{
     
-    if(req.body.userName){
-      const user = await UserModel.findOneAndDelete({userName: req.body.userName});
-      if(user && user.password === req.body.password){
+    if(req.query.userName){
+      console.log(req.query.userName);
+      const user = await UserModel.findOneAndDelete({userName: req.query.userName});
+      if(user){
         
         return res.status(200).send(user);
       }
       else{
-        console.log("Contraseña incorrecta");
-        return res.status(404).send({code: 4, message: "Contraseña incorrecta"});
+        console.log("Usuario no encontrado");
+        return res.status(404).send({code: 4, message: "Usuario no encontrado"});
       }
     }
     else{

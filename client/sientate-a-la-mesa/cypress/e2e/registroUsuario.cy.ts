@@ -2,41 +2,30 @@ import axios from 'axios';
 import { baseUrl } from '../../src/env/env-variables';
 
 describe('Registro de usuario', () => {
-  beforeEach(() => {
-    const user = {
-      name: "Peter", // "Ismael"
-      surname: "parker", // "Hernández"
-      userName: "peter", // "imh22"
-      password: "peter200A", // "isma200A"
-      email: "alu@gmail.com",
-      phoneNumber: "666666666",
-      address: "Calle falsa 123",
-      profilePhoto: null
-    }
+  beforeEach(async () => {
     
     const userDelete = {
       userName: "peter",
-      password: "peter200A"
     }
     
-    const response = axios.delete(`${baseUrl}/users`, {data: userDelete})    
+    const response = await axios.delete(`${baseUrl}users?userName=${userDelete.userName}`);    
     
 
   })
 
   it('Registro de usuario', () => {
     
-      cy.visit('http://localhost:5173')
-      cy.get('#botonRegistro').click()
-      cy.get('#botonRegistroUsuario').click()
-      cy.get('#firstName').type('Peter')
-      cy.get('#lastName').type('parker')
-      cy.get('#userName').type('peter')
-      cy.get('#password').type('peter200A')
-      cy.get('#email').type('alu@gmail')
-      cy.get('#phoneNumber').type('666666666')
-      cy.get('#address').type('Calle falsa 123')
-      cy.get('#enviarRegistroUsuario').click()
+    cy.visit('http://localhost:5173')
+    cy.get('#botonRegistro').click()
+    cy.get('#botonRegistroUsuario').click()
+    cy.get('#firstname').type('Peter')
+    cy.get('#lastname').type('parker')
+    cy.get('#email').type('alu@gmail.com')
+    cy.get('#phone').type('999887766')
+    cy.get('#username').type('peter')
+    cy.get('#password').type('peter200A')
+    cy.get('#address').type('Calle falsa 123')
+    cy.get('#enviarRegistroUsuario').click()
 
   })
 })

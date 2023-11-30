@@ -2,31 +2,18 @@ import axios from 'axios';
 import { baseUrl } from '../../src/env/env-variables';
 
 describe('Registro de establecimiento', () => {
-  beforeEach(() => {
-    const user = {
-      restaurantName: "Peter's Pizza", // "Ismael's Pizza"
-      restaurantAddress: "Calle Falsa 123",
-      description: "Pizzeria de Peter",
-      category: "pizzeria",
-      email: "peter@email.com",
-      phone: "666666666",
-      timeTable: [],
-      menu: [],
-      userName: "peter",
-      passwd: "peter200A",
-      
-      
-    }
+  beforeEach(async () => {
     
     const userDelete = {
-      userName: "peter",
-      password: "peter200A"
+      userName: "establecimientoPrueba",
     }
-    const reponse = axios.delete(`${baseUrl}/users`);    
-  })
-//     // header 
     
-//   })
+    const response = await axios.delete(`${baseUrl}restaurants?userName=${userDelete.userName}`);    
+    
+  })
+
+    
+
   it('Registro de establecimiento', () => {
     cy.visit('http://localhost:5173')
 
@@ -46,29 +33,26 @@ describe('Registro de establecimiento', () => {
     cy.contains(day).click();
     });
 
-    // ? hora inicio pendiente
-    cy.get('label:contains("Hora de inicio") + input[type="time"]').type('09:00');
+    // ? hora inicio
+    cy.get('#horaInicio').type('09:00');
+    // ? hora fin
+    cy.get('#horaFin').type('18:00');
     
-    // ? hora fin pendiente
-    cy.get('label:contains("Hora de finalización") + input[type="time"]').type('18:00');
-    
-    
-    cy.get('#category').select('pizzeria')
-    cy.get('#email').type('establecimientoPrueba@gmail')
+    // ? Categoría
+    // cy.get('#category').scrollTo()
+        // Encuentra el v-select y haz clic en él para abrir el menú
+    cy.get('.v-select').click();
+
+    cy.contains('pizzeria').click()  // Seleccionar la categoría deseada
+
+    cy.get('#email').type('establecimientoPrueba@gmail.com')
     cy.get('#phone').type('666666666')
     cy.get('#username').type('establecimientoPrueba')
-    cy.get('#password').type('establecimientoPrueba')
-
-    // ? fotos pendiente
+    cy.get('#password').type('establecimientoPrueba1')
 
 
-    // ? pdf menú
-
-
-    //  ? franja elegir hora pendiente
-
-
-    
+    //  ? franja elegir hora
+    cy.get('#franjaTiempo').type('30');
     cy.get('#numberOfPeople').type('4')
    
     cy.get('#enviarRegistroEstablecimiento').click()

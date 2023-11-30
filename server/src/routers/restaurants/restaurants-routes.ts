@@ -111,9 +111,9 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
 restaurantsRouter.delete('/restaurants', async (req, res) => {
   try{
     
-    if(req.query.restaurantName){
-      const restaurant = await RestaurantModel.findOneAndDelete({restaurantName: req.query.restaurantName});
-      if(restaurant && restaurant.passwd === req.query.passwd){
+    if(req.query.userName){
+      const restaurant = await RestaurantModel.findOneAndDelete({userName: req.query.userName});
+      if(restaurant){
         
         return res.status(200).send(restaurant);
       }
@@ -123,8 +123,8 @@ restaurantsRouter.delete('/restaurants', async (req, res) => {
       }
     }
     else{
-      console.log("Falta el nombre de Restaurante");
-      return res.status(400).send({code: 3, error: "Falta el nombre de Restaurante"});
+      console.log("Falta el nombre de usuario");
+      return res.status(400).send({code: 3, error: "Falta el nombre de usuario"});
     }
   }  
   catch{

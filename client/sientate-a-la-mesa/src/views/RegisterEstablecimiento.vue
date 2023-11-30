@@ -60,27 +60,28 @@
                 <!-- Hora de inicio -->
                 <v-col cols="6">
                   <label>Hora de inicio:</label>
-                  <v-text-field v-model="timetable.startingHour" type="time"></v-text-field>
+                  <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
                 </v-col>
 
                 <!-- Hora de finalización -->
                 <v-col cols="6">
                   <label>Hora de finalización:</label>
-                  <v-text-field v-model="timetable.finishingHour" type="time"></v-text-field>
+                  <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
                 </v-col>
               </v-row>
             </v-col>
 
 
             <v-col cols="12" md="4">
-              <v-text-field
+              <v-select
                 id="category"
                 v-model="category"
-                :rules="categoryRules"
+                :items="categories"
                 label="Categoría*"
                 required
                 hide-details
-              ></v-text-field>
+
+              ></v-select>
             </v-col>
 
   
@@ -151,7 +152,7 @@
                 <!-- Número de minutos -->
                 <v-col cols="12">
                   <label>Tiempo de franja de reserva (minutos):</label>
-                  <v-text-field v-model="available.timePeriod" type="number"></v-text-field>
+                  <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
                 </v-col>
 
                 <!-- Número de personas -->
@@ -168,7 +169,7 @@
   
           </v-row>
   
-          <v-btn id="enviarRegistroEstablecimiento" idtype="submit" color="primary">Enviar</v-btn>
+          <v-btn id="enviarRegistroEstablecimiento" type="submit" color="primary">Enviar</v-btn>
   
           </v-container>
         </v-form>
@@ -230,6 +231,7 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a timetableRules
         category: '',
+        categories: ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'],
         categoryRules: [
           (value: string) => {
             if (value) return true;
