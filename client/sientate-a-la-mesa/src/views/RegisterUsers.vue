@@ -15,6 +15,7 @@
         <v-row>
           <v-col cols="12" md="4">
             <v-text-field
+              id="firstname"
               v-model="firstname"
               :rules="nameRules"
               :counter="10"
@@ -26,6 +27,7 @@
 
           <v-col cols="12" md="4">
             <v-text-field
+              id="lastname"
               v-model="lastname"
               :rules="nameRules"
               :counter="10"
@@ -37,6 +39,7 @@
 
           <v-col cols="12" md="4">
             <v-text-field
+              id="email"
               v-model="email"
               :rules="emailRules"
               label="Correo electrónico*"
@@ -47,6 +50,7 @@
 
           <v-col cols="12" md="4">
             <v-text-field
+              id="phone"
               v-model="phone"
               :rules="phoneRules"
               label="Teléfono*"
@@ -57,6 +61,7 @@
 
           <v-col cols="12" md="4">
             <v-text-field
+              id="username"
               label="Nombre de usuario*"
               v-model="username"
               hide-details
@@ -66,6 +71,7 @@
 
           <v-col cols="12" md="4">
             <v-text-field
+              id="password"
               v-model="password"
               :rules="passwordRules"
               label="Contraseña*"
@@ -76,6 +82,7 @@
 
           <v-col cols="12" md="4">
             <v-text-field
+              id="address"
               label="Calle*"
               v-model="address"
               hide-details
@@ -94,7 +101,7 @@
 
         </v-row>
 
-        <v-btn type="submit" color="primary">Enviar</v-btn>
+        <v-btn id="enviarRegistroUsuario" type="submit" color="primary">Enviar</v-btn>
 
         </v-container>
       </v-form>

@@ -79,3 +79,27 @@ usersRouter.get('/users', async (req, res) => {
   }
 });
 
+usersRouter.delete('/users', async (req, res) => {
+  try{
+    
+    if(req.body.userName){
+      const user = await UserModel.findOneAndDelete({userName: req.body.userName});
+      if(user && user.password === req.body.password){
+        
+        return res.status(200).send(user);
+      }
+      else{
+        console.log("Contraseña incorrecta");
+        return res.status(404).send({code: 4, message: "Contraseña incorrecta"});
+      }
+    }
+    else{
+      console.log("Falta el nombre de usuario");
+      return res.status(400).send({code: 3, message: "Falta el nombre de usuario"});
+    }
+  }  
+  catch{
+    return res.status(500).send();
+  }
+});
+

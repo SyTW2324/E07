@@ -107,3 +107,27 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
   }
 });
 
+
+restaurantsRouter.delete('/restaurants', async (req, res) => {
+  try{
+    
+    if(req.query.restaurantName){
+      const restaurant = await RestaurantModel.findOneAndDelete({restaurantName: req.query.restaurantName});
+      if(restaurant && restaurant.passwd === req.query.passwd){
+        
+        return res.status(200).send(restaurant);
+      }
+      else{
+        console.log("Restaurante no encontrado");
+        return res.status(404).send({code: 1, error: "Restaurante no encontrado"});
+      }
+    }
+    else{
+      console.log("Falta el nombre de Restaurante");
+      return res.status(400).send({code: 3, error: "Falta el nombre de Restaurante"});
+    }
+  }  
+  catch{
+    return res.status(500).send();
+  }
+});

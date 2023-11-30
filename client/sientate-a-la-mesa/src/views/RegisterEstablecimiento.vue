@@ -15,6 +15,7 @@
           <v-row>
             <v-col cols="12" md="4">
               <v-text-field
+                id="restaurantname"
                 v-model="restaurantname"
                 :rules="restaurantnameRules"
                 :counter="10"
@@ -26,6 +27,7 @@
 
             <v-col cols="12" md="4">
               <v-text-field
+                id="address"
                 v-model="address"
                 label="Dirección del establecimiento*"
                 required
@@ -35,6 +37,7 @@
 
             <v-col cols="12" md="4">
               <v-text-field
+                id="description"
                 v-model="description"
                 label="Descripción*"
                 required
@@ -71,6 +74,7 @@
 
             <v-col cols="12" md="4">
               <v-text-field
+                id="category"
                 v-model="category"
                 :rules="categoryRules"
                 label="Categoría*"
@@ -82,6 +86,7 @@
   
             <v-col cols="12" md="4">
               <v-text-field
+                id="email"
                 v-model="email"
                 :rules="emailRules"
                 label="Correo electrónico*"
@@ -92,6 +97,7 @@
   
             <v-col cols="12" md="4">
               <v-text-field
+                id="phone"
                 v-model="phone"
                 :rules="phoneRules"
                 label="Teléfono*"
@@ -102,6 +108,7 @@
   
             <v-col cols="12" md="4">
               <v-text-field
+                id="username"
                 label="Nombre de usuario*"
                 v-model="username"
                 hide-details
@@ -111,6 +118,7 @@
   
             <v-col cols="12" md="4">
               <v-text-field
+                id="password"
                 v-model="password"
                 :rules="passwordRules"
                 label="Contraseña*"
@@ -149,7 +157,9 @@
                 <!-- Número de personas -->
                 <v-col cols="12">
                   <label>Número de personas por reserva:</label>
-                  <v-text-field v-model="available.numberOfPeople" type="number"></v-text-field>
+                  <v-text-field 
+                  id="numberOfPeople"
+                  v-model="available.numberOfPeople" type="number"></v-text-field>
                 </v-col>
               </v-row>
 
@@ -158,7 +168,7 @@
   
           </v-row>
   
-          <v-btn type="submit" color="primary">Enviar</v-btn>
+          <v-btn id="enviarRegistroEstablecimiento" idtype="submit" color="primary">Enviar</v-btn>
   
           </v-container>
         </v-form>

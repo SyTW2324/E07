@@ -27,13 +27,13 @@
     <v-row justify="center" align="center">
       <router-link to="/login">
         <v-col cols="auto">
-          <v-btn density="default" color="teal">Iniciar sesión</v-btn>
+          <v-btn id="botonIniciarSesion" density="default" color="teal">Iniciar sesión</v-btn>
         </v-col>
       </router-link>
       
       <router-link to="/register-main">
          <v-col cols="auto">
-        <v-btn density="default" color="teal">Registrate</v-btn>
+        <v-btn id="botonRegistro" density="default" color="teal">Registrate</v-btn>
       </v-col>
       </router-link>
      

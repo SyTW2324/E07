@@ -18,13 +18,13 @@ import Footer from '../components/Footer.vue'
       <v-row justify="center" align="center">
         <router-link to="/register-users">
           <v-col cols="auto">
-          <v-btn density="default" color="teal">Registrarme como usuario</v-btn>
+          <v-btn id="botonRegistroUsuario" density="default" color="teal">Registrarme como usuario</v-btn>
           </v-col>
         </router-link>
 
         <router-link to="/register-restaurants">
           <v-col cols="auto">
-          <v-btn density="default" color="teal">Registarme como establecimiento</v-btn>
+          <v-btn id="botonRegistroEstablecimiento" density="default" color="teal">Registarme como establecimiento</v-btn>
           </v-col>
         </router-link>
       </v-row>
