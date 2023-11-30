@@ -73,6 +73,10 @@ export const useAuthStore = defineStore({
                 }
             }
             return false;
+        },
+        getToken(){
+            const user = JSON.parse(localStorage.getItem('user') ?? 'null');
+            return user.token;
         }
         
     }

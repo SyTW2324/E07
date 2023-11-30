@@ -10,6 +10,7 @@ import { userInterface } from '../../users/users.js';
 import { UserModel } from '../../users/users-model.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
+import { jwtDecode } from 'jwt-decode';
 
 
 export const usersRouter = express.Router();
@@ -59,28 +60,43 @@ usersRouter.post('/users', async (req, res) => {
 // Mostrar perfil de un usuario
 usersRouter.get('/users', async (req, res) => {
   try{
-    if (req.query.token){
+    if (req.query.token && req.query.userName) {
       const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
       if (verified) {
-        const decodedToken = jsonwebtoken.decode(req.query.token as string);
-        const parsedToken = JSON.parse(JSON.stringify(decodedToken));
-        if(parsedToken.username){
-          const user = await UserModel.findOne({username: parsedToken.userName});
+        const decodedToken = jwtDecode(req.query.token as string);
+        console.log(decodedToken);
+        if (Number(decodedToken.exp) > (Date.now() / 1000)) {
+          const user = await UserModel.findOne({userName: req.query.userName});
+          console.log(user);
           if(user){
-            return res.status(200).send(user);
+            // renderizar la página de perfil de usuario y guardarla en una carpeta
+            let userPhoto = null;
+            if (user.profilePhoto) {
+              userPhoto = user.profilePhoto.toString('base64');
+            }
+            const userSend = {
+              name: user.name,
+              surname: user.surname,
+              userName: user.userName,
+              email: user.email,
+              phoneNumber: user.phoneNumber,
+              address: user.address,
+              profilePhoto: userPhoto
+            }
+            return res.status(200).send({code: 0, message: userSend});
           }
           else{
-            console.log("Usuario no encontrado");
-            return res.status(404).send({code: 4, message: "Usuario no encontrado"});
+            return res.status(404).send({code: 1, message: "Usuario no encontrado"});
           }
+  
         } else {
-          return res.status(400).send({code: 3, message: "Otro problema con el token"});
+          return res.status(400).send({code: 2, message: "Token expirado"});
         }
       } else {
-        return res.status(400).send({code: 2, message: "Token inválido"});
+        return res.status(400).send({code: 4, message: "Token inválido"});
       }
     } else {
-      return res.status(400).send({code: 1, message: "El usuario no existe"});
+      return res.status(400).send({code: 5, message: "Falta el token en la query"});
     }
   }  
   catch{
