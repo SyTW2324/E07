@@ -38,7 +38,7 @@ export const loginRouter = express.Router();
           if(user && user.password === req.body.password){
             // const newLogin = new LoginModel(login);
             // const loginMessage = await newLogin.save();
-            const userToken = jsonwebtoken.sign({ username: user.userName, password: user.password }, secretKey, { expiresIn: 30 });
+            const userToken = jsonwebtoken.sign({ username: user.userName, password: user.password }, secretKey, { expiresIn: '1h' });
             const resMessage = {
               username: user.userName,
               accessToken: userToken,
