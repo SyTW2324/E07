@@ -5,6 +5,7 @@
  */
 
 import {Document, Schema, model} from 'mongoose';
+import { RestaurantModel } from '../restaurants/restaurants-models.js';
 
 interface userDocumentInterface {
     name: string;
@@ -77,13 +78,22 @@ export async function validateUserSchema(user: userDocumentInterface): Promise<{
         ]
     });
 
-    if (existingUser) {
-        if (existingUser.userName === user.userName) {
-            return { code: 2, errors: 'Ya existe un usuario con ese nombre de usuario' };
-        } else if (existingUser.email === user.email) {
-            return { code: 3, errors: 'Ya existe un usuario con ese correo electrónico' };
-        } else if (existingUser.phoneNumber === user.phoneNumber) {
-            return { code: 4, errors: 'Ya existe un usuario con ese número de teléfono' };
+    const existingRestaurant = await RestaurantModel.findOne({
+        $or: [
+            { userName: user.userName },
+            { email: user.email },
+            { phoneNumber: user.phoneNumber }
+        ]
+    });
+
+
+    if (existingUser || existingRestaurant) {
+        if (existingUser?.userName === user.userName || existingRestaurant?.userName === user.userName) {
+            return { code: 2, errors: 'Ya existe ese nombre de usuario' };
+        } else if (existingUser?.email === user.email || existingRestaurant?.email === user.email) {
+            return { code: 3, errors: 'Ya existe ese correo electrónico' };
+        } else if (existingUser?.phoneNumber === user.phoneNumber || existingRestaurant?.phoneNumber === user.phoneNumber) {
+            return { code: 4, errors: 'Ya existe número de teléfono' };
         }
     }
 

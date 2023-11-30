@@ -8,6 +8,7 @@ import {Document, Schema, model} from 'mongoose';
 import { Available } from '../available.js';
 import { Reservation } from '../reservation.js';
 import { Timetable } from '../timeTable.js';
+import { UserModel } from '../users/users-model.js';
 
 interface restaurantsDocumentInterface {
   userName: string;
@@ -122,15 +123,24 @@ export async function validateRestaurantSchema(restaurant: restaurantsDocumentIn
     ]
   });
 
-  if (existingRestaurant) {
-    if (existingRestaurant.userName === existingRestaurant.userName) {
-      return { code: 2, errors: 'Ya existe un restaurante con ese nombre de usuario' };
+  // Necesario para comprobar en la base de datos contraria para la unicidad de los datos en toda la app
+  const existingUserDatas = await UserModel.findOne({
+    $or: [
+      { userName: restaurant.userName },
+      { email: restaurant.email },
+      { phoneNumber: restaurant.phoneNumber }
+    ]
+  });
+
+  if (existingRestaurant || existingUserDatas) {
+    if (existingRestaurant?.userName === restaurant.userName || existingUserDatas?.userName === restaurant.userName) {
+      return { code: 2, errors: 'Ya existe ese nombre de usuario' };
     }
-    else if (existingRestaurant.email === existingRestaurant.email) {
-      return { code: 3, errors: 'Ya existe un restaurante con ese correo electrónico' };
+    else if (existingRestaurant?.email === restaurant.email || existingUserDatas?.email === restaurant.email) {
+      return { code: 3, errors: 'Ya existe ese correo electrónico' };
     }
-    else if (existingRestaurant.phoneNumber === existingRestaurant.phoneNumber) {
-      return { code: 4, errors: 'Ya existe un restaurante con ese número de teléfono' };
+    else if (existingRestaurant?.phoneNumber === restaurant.phoneNumber || existingUserDatas?.phoneNumber === restaurant.phoneNumber) {
+      return { code: 4, errors: 'Ya existe ese número de teléfono' };
     }
   }
   return { code: 0, errors: '' };
