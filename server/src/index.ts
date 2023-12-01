@@ -8,9 +8,16 @@ import { app } from './app.js';
 import cors from 'cors';
 
 import {port} from './env-variables.js';
-import { ip_express } from './env-variables.js';
+import { ip_express_despliegue } from './env-variables.js';
+import { ip_express_dev } from './env-variables.js';
 
+let ip_express = "";
 
+if (process.argv[3] === 'despliegue') {
+  ip_express = ip_express_despliegue;
+} else {
+  ip_express = ip_express_dev;
+}
 
 // Resto de la configuración del servidor
 

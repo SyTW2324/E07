@@ -10,6 +10,8 @@ export const uri_bbdd_local: string = 'mongodb://adminProyecto:1234@172.16.131.2
 
 export const port: number = 8081;
 
-export const ip_express: string = '10.6.128.143';
+export const ip_express_despliegue: string = '10.6.128.143';
+
+export const ip_express_dev: string = 'localhost';
 
 export const secretKey: string = 'secretKey';
