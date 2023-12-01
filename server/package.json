@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js dev",
-    "dev": "tsc-watch --onSuccess \"node dist/index.js dev\"",
+    "dev": "tsc-watch --onSuccess \"node dist/index.js test \"",
     "startTest": "node dist/index.js test",
     "doc": "typedoc",
     "test": "env-cmd -f ./config/test.env mocha --exit",

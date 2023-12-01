@@ -15,6 +15,8 @@ let ip_express = ip_express_despliegue;
 
 if (process.argv[2] === 'dev') {
   ip_express = ip_express_dev;
+} else if (process.argv[2] === 'test') {
+  ip_express = ip_express_dev
 }
 
 // Resto de la configuración del servidor
