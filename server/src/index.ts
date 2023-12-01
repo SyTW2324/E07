@@ -11,11 +11,9 @@ import {port} from './env-variables.js';
 import { ip_express_despliegue } from './env-variables.js';
 import { ip_express_dev } from './env-variables.js';
 
-let ip_express = "";
+let ip_express = ip_express_despliegue;
 
-if (process.argv[3] === 'despliegue') {
-  ip_express = ip_express_despliegue;
-} else {
+if (process.argv[2] === 'dev') {
   ip_express = ip_express_dev;
 }
 

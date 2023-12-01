@@ -9,7 +9,7 @@ describe('Registro de establecimiento', () => {
     }
     
     const response = await axios.delete(`${baseUrl}restaurants?userName=${userDelete.userName}`);    
-    
+    console.log(response.data);
   })
 
     

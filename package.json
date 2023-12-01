@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run start:server && npm run start:client",
-    "start:server": "cd server && npm install && npm run build && pm2 start dist/index.js local despliegue",
-    "start:client": "cd client/sientate-a-la-mesa && npm install && npm run build && nohup http-server dist/ -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
+    "start:server": "cd server/  && pm2 start dist/index.js ",
+    "start:client": "cd client/sientate-a-la-mesa && nohup http-server dist/ -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
     "stop": "npm run stop:server && npm run stop:client",
     "stop:server": "cd server && pm2 stop dist/index.js && pm2 delete dist/index.js",
     "stop:client": "kill -15 $(cat .http-server-pid)"

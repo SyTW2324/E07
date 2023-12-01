@@ -1,2 +1,2 @@
 
-export const baseUrl: string = "http://localhost:8081/"
+export const baseUrl: string = "http://10.6.128.143:8081/"
