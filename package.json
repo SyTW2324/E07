@@ -11,8 +11,8 @@
     "stop:server": "cd server && pm2 stop dist/index.js && pm2 delete dist/index.js",
     "stop:client": "kill -15 $(cat .http-server-pid)",
     "test": "npm run test:server",
-    "test:server": "cd server/ && npm run test"
-    
+    "test:server": "cd server/ && npm run test",
+    "installServer": "cd server/ && npm install"
   },
   "contributors": [
     {
