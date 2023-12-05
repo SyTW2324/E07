@@ -32,7 +32,9 @@ usersRouter.post('/users', async (req, res) => {
         address: req.body.address,
         profilePhoto: null
       }
+      console.log("peticion correcta")
       if (req.body.profilePhoto) {
+        console.log("foto", req.body.profilePhoto)
         user.profilePhoto = req.body.profilePhoto;
       }
         const userSchemaValidation = await validateUserSchema(user);

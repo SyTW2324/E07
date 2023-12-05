@@ -91,17 +91,18 @@
           </v-col>
           <v-spacer></v-spacer>
           <v-col cols="12" md="4">
-            <v-file-input
+            <!-- <v-file-input
               label="Foto de perfil"
               v-model="profilePhoto"
               accept="image/*"
               placeholder="Seleccione una imagen"
-            ></v-file-input>
+            ></v-file-input> -->
+            <input type="file" @change="onFileSelected" id="profilePhoto" name="profilePhoto" accept="image/*">
           </v-col>
 
         </v-row>
 
-        <v-btn id="enviarRegistroUsuario" type="submit" color="primary">Enviar</v-btn>
+        <v-btn id="enviarRegistroUsuario" @click="RegisterUserApi" color="primary">Enviar</v-btn>
 
         </v-container>
       </v-form>
@@ -171,7 +172,7 @@ import { baseUrl } from '../env/env-variables';
       lastname: '',
       username: '',
       address: '',
-      profilePhoto: [],
+      profilePhoto: null,
       nameError: '',
       nameRules: [
         (value: string) => {
@@ -241,6 +242,12 @@ import { baseUrl } from '../env/env-variables';
       }
     },
 
+    onFileSelected(event: any) {
+      console.log(event);
+      this.profilePhoto = event.target.files[0];
+      console.log("foto upload", this.profilePhoto);
+    },
+
     async RegisterUserApi() {
       try {
 
@@ -248,17 +255,23 @@ import { baseUrl } from '../env/env-variables';
         this.validUserName = true;
         this.validEmail = true;
         this.validPhone = true;
-  
-        let profilePhotoBase64 = null;
-        if (this.profilePhoto.length > 0) {
-          const file = this.profilePhoto[0];
+        
+        let photoBase64 = null;
+
+        console.log("foto", this.profilePhoto)
+
+        if (this.profilePhoto) {
+          const file = this.profilePhoto;
           const reader = new FileReader();
           reader.readAsDataURL(file);
-          profilePhotoBase64 = await new Promise((resolve, reject) => {
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-          });
+          reader.onload = () => {
+            photoBase64 = reader.result;
+          };
+          reader.onerror = error => console.log(error);
         }
+
+        console.log("foto", photoBase64)
+
         const newUserJson = {
           name: this.firstname,
           surname: this.lastname,
@@ -267,7 +280,7 @@ import { baseUrl } from '../env/env-variables';
           email: this.email,
           phoneNumber: this.phone,
           address: this.address,
-          profilePhoto: profilePhotoBase64
+          profilePhoto: photoBase64,
         };
         const response = await axios.post(`${baseUrl}users/`, newUserJson);
        //const response = await axios.get('http://localhost:3000/users/');
