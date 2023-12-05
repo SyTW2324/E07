@@ -12,6 +12,7 @@
     "stop:client": "kill -15 $(cat .http-server-pid)",
     "test": "npm run test:server",
     "test:server": "cd server/ && npm run test"
+    
   },
   "contributors": [
     {
