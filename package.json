@@ -10,9 +10,11 @@
     "stop": "npm run stop:server && npm run stop:client",
     "stop:server": "cd server && pm2 stop dist/index.js && pm2 delete dist/index.js",
     "stop:client": "kill -15 $(cat .http-server-pid)",
-    "test": "npm run test:server",
+    "test": "npm run test:server && npm run test:client",
     "test:server": "cd server/ && npm run test",
-    "installServer": "cd server/ && npm install"
+    "test:client": "cd client/sientate-a-la-mesa/ && npm run test",
+    "installServer": "cd server/ && npm install",
+    "installClient": "cd client/sientate-a-la-mesa/ && npm install"
   },
   "contributors": [
     {
