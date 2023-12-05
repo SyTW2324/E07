@@ -7,7 +7,8 @@
     "dev": "vite ",
     "dev2": "vite --host 10.6.128.143 --port 8080",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "mocha"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.5",

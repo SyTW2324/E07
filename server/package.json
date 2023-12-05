@@ -10,7 +10,7 @@
     "dev": "tsc-watch --onSuccess \"node dist/index.js test \"",
     "startTest": "node dist/index.js test",
     "doc": "typedoc",
-    "test": "env-cmd -f ./config/test.env mocha --exit",
+    "test": "mocha --exit",
     "coverage": "c8 npm test && c8 report --reporter=lcov"
   },
   "keywords": [],

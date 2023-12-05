@@ -9,7 +9,10 @@
     "start:client": "cd client/sientate-a-la-mesa && nohup http-server dist/ -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
     "stop": "npm run stop:server && npm run stop:client",
     "stop:server": "cd server && pm2 stop dist/index.js && pm2 delete dist/index.js",
-    "stop:client": "kill -15 $(cat .http-server-pid)"
+    "stop:client": "kill -15 $(cat .http-server-pid)",
+    "test": "npm run test:client && npm run test:server",
+    "test:server": "cd server/ && npm run test",
+    "test:client": "cd client/sientate-a-la-mesa && npm run test"
   },
   "contributors": [
     {
