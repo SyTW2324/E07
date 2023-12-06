@@ -2,8 +2,7 @@ name: Slack Notification
 
 on:
   push:
-    branches:
-      - main  # ajusta según la rama que desees
+    branches: ["main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
 
 jobs:
   slack_notification:
