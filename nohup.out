@@ -1,0 +1,119 @@
+Starting up http-server, serving out-of-service.html
+
+http-server version: 14.1.1
+
+http-server settings: 
+CORS: disabled
+Cache: 3600 seconds
+Connection Timeout: 120 seconds
+Directory Listings: visible
+AutoIndex: visible
+Serve GZIP Files: false
+Serve Brotli Files: false
+Default File Extension: none
+
+Available on:
+  http://10.6.128.143:8080
+Hit CTRL-C to stop the server
+
+http-server stopped.
+node:internal/validators:177
+    throw new ERR_INVALID_ARG_TYPE(name, 'number', value);
+    ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "msecs" argument must be of type number. Received type boolean (true)
+    at new NodeError (node:internal/errors:406:5)
+    at validateNumber (node:internal/validators:177:11)
+    at getTimerDuration (node:internal/timers:396:3)
+    at Socket.setStreamTimeout [as setTimeout] (node:internal/stream_base_commons:244:11)
+    at connectionListenerInternal (node:_http_server:661:12)
+    at defaultTriggerAsyncIdScope (node:internal/async_hooks:464:18)
+    at Server.connectionListener (node:_http_server:645:3)
+    at Server.emit (node:events:514:28)
+    at TCP.onconnection (node:net:2157:8) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v20.8.0
+node:internal/validators:177
+    throw new ERR_INVALID_ARG_TYPE(name, 'number', value);
+    ^
+
+TypeError [ERR_INVALID_ARG_TYPE]: The "msecs" argument must be of type number. Received type boolean (true)
+    at new NodeError (node:internal/errors:406:5)
+    at validateNumber (node:internal/validators:177:11)
+    at getTimerDuration (node:internal/timers:396:3)
+    at Socket.setStreamTimeout [as setTimeout] (node:internal/stream_base_commons:244:11)
+    at connectionListenerInternal (node:_http_server:661:12)
+    at defaultTriggerAsyncIdScope (node:internal/async_hooks:464:18)
+    at Server.connectionListener (node:_http_server:645:3)
+    at Server.emit (node:events:514:28)
+    at TCP.onconnection (node:net:2157:8) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
+
+Node.js v20.8.0
+(node:182944) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:182973) [DEP0066] DeprecationWarning: OutgoingMessage.prototype._headers is deprecated
+(Use `node --trace-deprecation ...` to show where the warning was created)
+node:events:492
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 10.6.128.143:8080
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at doListen (node:net:2069:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1899:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '10.6.128.143',
+  port: 8080
+}
+
+Node.js v20.8.0
+node:events:492
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 10.6.128.143:8080
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at doListen (node:net:2069:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1899:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '10.6.128.143',
+  port: 8080
+}
+
+Node.js v20.8.0
+node:events:492
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 10.6.128.143:8080
+    at Server.setupListenHandle [as _listen2] (node:net:1872:16)
+    at listenInCluster (node:net:1920:12)
+    at doListen (node:net:2069:7)
+    at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1899:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '10.6.128.143',
+  port: 8080
+}
+
+Node.js v20.8.0

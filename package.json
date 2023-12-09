@@ -4,12 +4,22 @@
   "description": "Aplicacion para la gestión de reservas en restaurantes",
   "main": "index.js",
   "scripts": {
-    "start": "npm run start:server && npm run start:client",
-    "start:server": "cd server/  && pm2 start dist/index.js ",
-    "start:client": "cd client/sientate-a-la-mesa && nohup http-server dist/ -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
+    "start": " npm run start:server && npm run start:client",
+    "start_build": "npm run stop:manteinance && run start:server_build && npm run start:client_build",
+
+    "stop:manteinance": "kill -9 $(pidof http-server)",
+
+    "start:server": "cd server/ && pm2 start dist/index.js",
+    "start:client": "cd client/sientate-a-la-mesa  && nohup http-server dist/ -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
+
+    "start:client_build": "cd client/sientate-a-la-mesa  && npm install && npm run build && nohup http-server dist/ -a 10.6.128.143 -p 8080 -silent & echo $! > .http-server-pid",
+    "start:server_build": "cd server/ && npm install && npm run build && pm2 start dist/index.js ",
+
     "stop": "npm run stop:server && npm run stop:client",
     "stop:server": "cd server && pm2 stop dist/index.js && pm2 delete dist/index.js",
-    "stop:client": "kill -15 $(cat .http-server-pid)",
+    "stop:client": "kill -9 $(pidof http-server)",
+    "start:manteinance": "nohup http-server ./manteinance -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
+
     "test": "npm run test:server && npm run test:client",
     "test:server": "cd server/ && npm run test",
     "test:client": "cd client/sientate-a-la-mesa/ && npm run test",
