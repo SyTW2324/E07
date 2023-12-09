@@ -20,7 +20,7 @@ export const useAuthStore = defineStore({
     state: () => ({
         // initialize state from local storage to enable user to stay logged in
         user: JSON.parse(localStorage.getItem('user') ?? 'null'),
-        returnUrl: null
+        returnUrl: null,
     }),
     actions: {
         async login(username: string, passwordInput: string): Promise<{code: number, message: string}> {
@@ -33,11 +33,13 @@ export const useAuthStore = defineStore({
                     this.user = result;
         
                     // store user details and jwt in local storage to keep user logged in between page refreshes
+                    console.log("result", result);
                     localStorage.setItem('user', JSON.stringify(result));
-        
+                    localStorage.setItem('profilePhoto', result.profilePhoto);
+
                     // redirect to previous url or default to home page
                     
-                    router.push(this.returnUrl || '/home-base'); // cambio para que lleve a la home-base
+                    router.push('/home-base'); // cambio para que lleve a la home-base
                     return {code: 0, message: "Usuario logeado"};
                 } else {
                     return result;
@@ -51,6 +53,7 @@ export const useAuthStore = defineStore({
         logout() {
             this.user = null;
             localStorage.removeItem('user');
+            localStorage.removeItem('profilePhoto');
             router.push('/login');
         },
         isExpired() {
@@ -77,6 +80,10 @@ export const useAuthStore = defineStore({
         getToken(){
             const user = JSON.parse(localStorage.getItem('user') ?? 'null');
             return user.token;
+        },
+        getProfilePhoto(){
+            const profilePhoto = localStorage.getItem('profilePhoto');
+            return profilePhoto;
         }
         
     }

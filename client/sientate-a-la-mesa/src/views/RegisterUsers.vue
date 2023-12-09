@@ -91,13 +91,12 @@
           </v-col>
           <v-spacer></v-spacer>
           <v-col cols="12" md="4">
-            <!-- <v-file-input
+            <v-file-input
               label="Foto de perfil"
               v-model="profilePhoto"
               accept="image/*"
               placeholder="Seleccione una imagen"
-            ></v-file-input> -->
-            <input type="file" @change="onFileSelected" id="profilePhoto" name="profilePhoto" accept="image/*">
+            ></v-file-input>
           </v-col>
 
         </v-row>
@@ -172,7 +171,7 @@ import { baseUrl } from '../env/env-variables';
       lastname: '',
       username: '',
       address: '',
-      profilePhoto: null,
+      profilePhoto: [new File([""], "")],
       nameError: '',
       nameRules: [
         (value: string) => {
@@ -248,6 +247,22 @@ import { baseUrl } from '../env/env-variables';
       console.log("foto upload", this.profilePhoto);
     },
 
+    async convertFileToBase64(file: File) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+
+        reader.onerror = (error) => {
+          reject(error);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    },
+
     async RegisterUserApi() {
       try {
 
@@ -255,23 +270,16 @@ import { baseUrl } from '../env/env-variables';
         this.validUserName = true;
         this.validEmail = true;
         this.validPhone = true;
-        
-        let photoBase64 = null;
+      
 
         console.log("foto", this.profilePhoto)
 
-        if (this.profilePhoto) {
-          const file = this.profilePhoto;
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            photoBase64 = reader.result;
-          };
-          reader.onerror = error => console.log(error);
-        }
 
-        console.log("foto", photoBase64)
+        //const formDataPhoto = new FormData();
+        let photoBase64: string = '';
 
+        photoBase64 = await this.convertFileToBase64(this.profilePhoto[0]) as string;
+        console.log("photoBase64", photoBase64)
         const newUserJson = {
           name: this.firstname,
           surname: this.lastname,
@@ -282,6 +290,7 @@ import { baseUrl } from '../env/env-variables';
           address: this.address,
           profilePhoto: photoBase64,
         };
+        console.log("newUserJson", newUserJson)
         const response = await axios.post(`${baseUrl}users/`, newUserJson);
        //const response = await axios.get('http://localhost:3000/users/');
         console.log('Datos obtenidos de la API', response.data);

@@ -68,7 +68,7 @@ function handleResponse(response: Response): Promise<any> {
             }
             return error
         }
-        const user = {username: data.message.username, token: data.message.accessToken, tipo: data.message.tipo};
+        const user = {username: data.message.username, token: data.message.accessToken, tipo: data.message.tipo, profilePhoto: data.message.profilePhoto};
         // aquí se guarda el token en el store
         return user;
     });

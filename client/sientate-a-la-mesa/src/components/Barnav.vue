@@ -25,7 +25,7 @@
             <img :src="usuario" alt="Profile Photo">
           </v-avatar>
         </v-btn>
-        <v-btn v-else>
+        <v-btn v-else-if="userLogged.getProfilePhoto() ===' '">
           {{ userLogged.user.username }}
           <v-menu activator="parent">
           <v-list>
@@ -63,8 +63,49 @@
           </v-list>
           </v-menu>  
         </v-btn>
+
+        <v-btn v-else>
+          <v-avatar size="40">
+            <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover;"/>
+            <v-menu activator="parent">
+              <v-list>
+              <v-list-item>
+                <v-btn
+     
+                  block
+                  color="wihite"
+                  size="large"
+                  type="submit"
+          
+                  variant="elevated"
+                  >
+                  <router-link to="/my-profile" style="text-decoration: none;" v-if="userLogged.user.tipo == 'user'">
+                  <p style="color: teal;">  Mi perfil</p>
+                  </router-link>
+                  <router-link to="/my-profile-restaurants" style="text-decoration: none;" v-else>
+                  <p style="color: teal;">  Mi establecimiento</p>
+                  </router-link>
+                  </v-btn>
+              </v-list-item>
+            <v-list-item @click="userLogged.logout()">
+                <v-btn
+     
+                  block
+                  color="wihite"
+                  size="large"
+                  type="submit"
+                  
+                  variant="elevated"
+                  >
+                  <p style="color: teal;"> Salir</p>
+                  </v-btn>
+              </v-list-item>
+              </v-list>
+              </v-menu>  
+          </v-avatar>
+        </v-btn>
         
-        <v-btn icon>
+        <!-- <v-btn icon>
         <v-icon>mdi-dots-vertical</v-icon>
           <v-menu activator="parent">
           <v-list>
@@ -83,7 +124,7 @@
           </v-list-item>
           </v-list>
         </v-menu>
-      </v-btn>
+      </v-btn> -->
       </v-app-bar>
   
 </template>
@@ -96,6 +137,6 @@ import { useAuthStore } from '../stores/useAuthStore';
 
 const userLogged = useAuthStore();
 
-
+const profilePhoto = userLogged.getProfilePhoto() as string;
 
 </script>
