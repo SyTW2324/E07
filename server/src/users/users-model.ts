@@ -7,7 +7,7 @@
 import {Document, Schema, model} from 'mongoose';
 import { RestaurantModel } from '../restaurants/restaurants-models.js';
 
-interface userDocumentInterface {
+export interface userDocumentInterface extends Document{
     name: string;
     surname: string;
     userName: string;
@@ -15,7 +15,7 @@ interface userDocumentInterface {
     email: string;
     phoneNumber: string;
     address: string;
-    profilePhoto?: Buffer | null; // Buffer para almacenar los datos binarios de la foto de perfil
+    profilePhoto?: string
 }
 
 
@@ -63,7 +63,8 @@ const UserSchema = new Schema<userDocumentInterface>({
         trim: true
     },
     profilePhoto: {
-        type: Buffer
+        type: String   
+        
     }
 });
 

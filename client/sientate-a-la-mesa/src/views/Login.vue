@@ -2,33 +2,7 @@
 
 <script setup lang="ts">
 import Barnav from '../components/Barnav.vue';
-import Footer from '../components/Footer.vue'
-
-
-
-// import { Form, Field } from 'vee-validate';
-// import * as Yup from 'yup';
-
-// import { useAuthStore } from '@/stores';
-
-// const schema = Yup.object().shape({
-//     username: Yup.string().required('Username is required'),
-//     password: Yup.string().required('Password is required')
-// });
-
-// let username: string = '';
-// let password: string = '';
-
-
-
-
-// function loginOne() {
-//     const authStore = useAuthStore();
-
-//     return authStore.login(username, password)
-//         .catch(error => console.log(error));
-// }
-
+import Footer from '../components/Footer.vue';
 </script>
 
 <script lang="ts">

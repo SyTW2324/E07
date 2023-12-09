@@ -6,11 +6,11 @@
 import express from 'express';
 
 import { validateUserSchema } from '../../users/users-model.js';
-import { userInterface } from '../../users/users.js';
 import { UserModel } from '../../users/users-model.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
 import { jwtDecode } from 'jwt-decode';
+import {userDocumentInterface} from '../../users/users-model.js';
 
 
 export const usersRouter = express.Router();
@@ -22,7 +22,7 @@ usersRouter.post('/users', async (req, res) => {
 
     console.log('Petición POST a /users');
     if(req.body.name && req.body.surname && req.body.userName && req.body.password && req.body.email && req.body.phoneNumber && req.body.address) {
-      const user: userInterface = {
+      const user = new UserModel({
         name: req.body.name,
         surname: req.body.surname,
         userName: req.body.userName,
@@ -31,16 +31,18 @@ usersRouter.post('/users', async (req, res) => {
         phoneNumber: req.body.phoneNumber,
         address: req.body.address,
         profilePhoto: null
-      }
+      })
+      console.log("peticion correcta");
+      console.log(req.body);
       if (req.body.profilePhoto) {
+        console.log("foto", req.body.profilePhoto);
         user.profilePhoto = req.body.profilePhoto;
       }
-        const userSchemaValidation = await validateUserSchema(user);
-        if (userSchemaValidation.code !== 0) {
-          return res.status(400).send(userSchemaValidation);
-        }
-        const newUser = new UserModel(user);
-        const userMessage = await newUser.save();
+      const userSchemaValidation = await validateUserSchema(user);
+      if (userSchemaValidation.code !== 0) {
+        return res.status(400).send(userSchemaValidation);
+      }
+        const userMessage = await user.save();
         return res.status(201).send(userMessage);
 
     } else {
@@ -70,18 +72,13 @@ usersRouter.get('/users', async (req, res) => {
           console.log(user);
           if(user){
             // renderizar la página de perfil de usuario y guardarla en una carpeta
-            let userPhoto = null;
-            if (user.profilePhoto) {
-              userPhoto = user.profilePhoto.toString('base64');
-            }
             const userSend = {
               name: user.name,
               surname: user.surname,
               userName: user.userName,
               email: user.email,
               phoneNumber: user.phoneNumber,
-              address: user.address,
-              profilePhoto: userPhoto
+              address: user.address
             }
             return res.status(200).send({code: 0, message: userSend});
           }
