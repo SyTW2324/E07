@@ -1,93 +1,124 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import Barnav from '../components/Barnav.vue';
-import Footer from '../components/Footer.vue'
+import Footer from '../components/Footer.vue';
+import axios from 'axios';
+import { useRoute } from 'vue-router';
+import { baseUrl } from '../env/env-variables';
+import router from '../router';
+
+let loading = ref(false);
+const selection = ref(1);
+// Define un array con las horas disponibles
+let availableHours = ref<string[]>([]);
+let restaurants = ref<any>(null);
+let restaurantName = ref<string>('');
+
+
+async function fetchRestaurantData() {
+  
+  try {
+    const route = useRoute();
+    const restaurant = await axios.get(`${baseUrl}restaurants/${route.params.id}`);
+
+    if (restaurant.data === null) router.push(`/404}`);;
+
+    restaurants.value = restaurant.data;
+    
+    const startingHour = restaurant.data.timeTable[0].startingHour;
+    const finishingHour = restaurant.data.timeTable[0].finishingHour;
+    const timePeriod = 30;
+
+
+    const periodosDisponibles = calcularPeriodosDisponibles(startingHour, finishingHour, timePeriod);
+    availableHours.value = periodosDisponibles;
+    restaurantName.value = restaurant.data.restaurantName;
+
+    loading.value = false; // Se debe establecer a false aquí, después de obtener los datos.
+
+  } catch (error) {
+    console.error('Error al obtener los datos del restaurante:', error);
+    loading.value = false; // También se debe establecer a false en caso de error.
+    router.push('/404');
+  }
+}
+
+// ... (las funciones calcularPeriodosDisponibles y formatTime también deben estar aquí)
+
+function calcularPeriodosDisponibles(startingHour: string, finishingHour: string, timePeriod: number): string[] {
+    // Convertir las horas de apertura y cierre a objetos Date para facilitar la manipulación
+    const startTime = new Date(`2000-01-01T${startingHour}:00`);
+    const endTime = new Date(`2000-01-01T${finishingHour}:00`);
+
+    // Calcular la cantidad total de minutos disponibles durante el horario de apertura
+    const totalMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+
+    // Calcular la cantidad de periodos disponibles
+    const numberOfPeriods = Math.floor(totalMinutes / timePeriod);
+
+    // Calcular los periodos disponibles y almacenarlos en un array de strings
+    const availablePeriods: string[] = [];
+    let currentPeriodTime = startTime;
+
+    for (let i = 0; i < numberOfPeriods; i++) {
+        const periodEndTime = new Date(currentPeriodTime.getTime() + timePeriod * 60 * 1000);
+        availablePeriods.push(`${formatTime(currentPeriodTime)} - ${formatTime(periodEndTime)}`);
+        currentPeriodTime = periodEndTime;
+    }
+
+    return availablePeriods;
+}
+
+// Función auxiliar para formatear la hora en formato HH:mm
+function formatTime(time: Date): string {
+    const hours = time.getHours().toString().padStart(2, '0');
+    const minutes = time.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+}
+// Función para reservar
+function reserve() {
+  loading.value = true;
+
+  setTimeout(() => (loading.value = false), 2000);
+}
+
+fetchRestaurantData();
+
+
 </script>
 
 <template>
-
-<v-app>
-  <Barnav></Barnav>
-  <v-main>
-
-
-    <v-container class="d-flex align-center justify-center" style="padding-top: 5em; padding-bottom: 5em;"> 
-      <v-card
-        class="mx-auto"
-        width="1100"
-        height="320"
-        image="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        theme="dark"
-      > 
-        <v-card-title>Nombre del establecimiento {{ }}</v-card-title>
-      </v-card>
-    </v-container>
-
-    <v-container>
-      <v-container style="align-items: right: inherit;">
-        <v-card :loading="loading" class="mx-auto my-12 " max-width="374" >
-              <template v-slot:loader="{ isActive }">
-                <v-progress-linear
-                  :active="isActive"
-                  color="teal"
-                  height="4"
-                  indeterminate
-                ></v-progress-linear>
-              </template>
-              <v-card-title>Disponibilidad: </v-card-title>
-
-              <div class="px-4">
-                <v-chip-group v-model="selection">
-                  <!-- Utiliza v-for para iterar sobre el array de horas -->
-                  <v-chip v-for="hour in availableHours" :key="hour">{{ hour }}</v-chip>
-                </v-chip-group>
-              </div>
-
-              <v-card-actions>
-                <v-btn color="teal" variant="text" @click="reserve">
-                  Reservar
-                </v-btn>
-              </v-card-actions>
-            </v-card>
+  <v-app>
+    <Barnav></Barnav>
+    <v-main>
+      <v-container class="d-flex align-center justify-center" style="padding-top: 5em; padding-bottom: 5em;"> 
+        <v-card class="mx-auto" width="1100" height="320" image="https://cdn.vuetifyjs.com/images/cards/docks.jpg" theme="dark"> 
+          <v-card-title> {{ restaurantName  }}</v-card-title>
+        </v-card>
       </v-container>
-   
-    </v-container>
 
+      <v-container>
+        <v-container style="align-items: center: inherit;">
+          <v-card :loading="loading" class="mx-auto my-12 " max-width="1000" >
+            <template v-slot:loader="{ isActive }">
+              <v-progress-linear :active="isActive" color="teal" height="4" indeterminate></v-progress-linear>
+            </template>
+            <v-card-title>Disponibilidad: </v-card-title>
 
+            <div class="px-10">
+              <v-chip-group v-model="selection">
+                <!-- Utiliza v-for para iterar sobre el array de horas -->
+                <v-chip v-for="hour in availableHours" :key="hour">{{ hour }}</v-chip>
+              </v-chip-group>
+            </div>
 
-
-  </v-main>
-
-
-
-
-
-
-
-  
-
-  <Footer></Footer>
-  
-</v-app>
-
+            <v-card-actions>
+              <v-btn color="teal" variant="text" @click="reserve">Reservar</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-container>
+      </v-container>
+    </v-main>
+    <Footer></Footer>
+  </v-app>
 </template>
-
-
-<script lang="ts">
-  export default {
-    data: () => ({
-      loading: false,
-      selection: 1,
-      // Define un array con las horas disponibles
-      availableHours: ["5:30PM", "7:30PM", "8:00PM", "9:00PM"],
-      selection: [], // Puedes inicializar esto según tus necesidades
-    }),
-
-    methods: {
-      reserve() {
-        this.loading = true
-
-        setTimeout(() => (this.loading = false), 2000)
-      },
-    },
-  }
-</script>

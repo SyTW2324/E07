@@ -53,3 +53,4 @@ import Footer from '../components/Footer.vue'
 </v-app>
 
 </template>
+

@@ -10,6 +10,7 @@ import MyProfile from '../views/MyProfile.vue'
 import HomeBase from '../views/HomeBase.vue'
 import MyProfileRestaurants from '../views/MiEstablecimiento.vue'
 import Establecimiento from '../views/EstablecimientoVista.vue'
+import E404 from '../views/404.vue'
 
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -55,7 +56,7 @@ const routes: RouteRecordRaw[] = [
     component: MyProfileRestaurants
   },
   {
-    path: '/establecimientos',
+    path: '/establecimientos/:id',
     name: 'establecimientos',
     component: Establecimiento
   },
@@ -63,6 +64,12 @@ const routes: RouteRecordRaw[] = [
     path: '/home-base',
     name: 'home-base',
     component: HomeBase
+
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: E404
 
   }
 
