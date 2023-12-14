@@ -311,7 +311,7 @@
         }
       },
 
-      async convertFileToBase64(file: File) {
+      async convertFileToDataURL(file: File) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
 
@@ -325,7 +325,7 @@
 
           reader.readAsDataURL(file);
         });
-    },
+      },
       
       async RegisterRestaurantApi() {
         try {
@@ -338,8 +338,16 @@
 
           let photoBase64: string = ' ';
           if (this.pictures.length > 0) {
-            photoBase64 = await this.convertFileToBase64(this.pictures[0]) as string;
+            photoBase64 = await this.convertFileToDataURL(this.pictures[0]) as string;
           }
+          let menuData: string = ' ';
+          const formData = new FormData();
+          if (this.menu.length > 0) {
+            formData.append('pdf', this.menu[0]);
+          }
+          console.log('menuData', menuData);
+
+          // comprimir el pdf
 
           const newRestaurantJson = {
             "userName": this.username,
@@ -352,7 +360,7 @@
             "category": this.category,
             "phoneNumber": this.phone,
             "pictures": photoBase64,
-            "menu": this.menu,
+            "menu": "",
             "availability": this.available,
           };
           console.log('Datos a enviar', newRestaurantJson);
@@ -360,9 +368,10 @@
          //const response = await axios.get('http://localhost:3000/users/');
           console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
-  
+          //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
+          const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
-          if (response.status === 201) {
+          if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
             console.log('Restaurante registrado correctamente');
   

@@ -11,6 +11,8 @@ import { RestaurantModel } from '../../models/restaurants/restaurants-models.js'
 import jsonwebtoken from 'jsonwebtoken';
 import { jwtDecode } from 'jwt-decode';
 import { secretKey } from '../../env-variables.js';
+import multer from 'multer';
+import path from 'path';
  
 export const restaurantsRouter = express.Router();
 
@@ -83,6 +85,46 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
     );
   }
 });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Carpeta donde se guardarán los archivos (ajusta según tus necesidades)
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext); // Nombre del archivo (se añade una marca de tiempo para evitar conflictos)
+  },
+});
+
+const upload = multer({ storage: storage });
+
+restaurantsRouter.put("/restaurants/uploadpdf/", upload.single('pdf'), async (req, res) => {
+  try {
+    if (req.query.userName && req.body.pdf) {  
+
+      const restaurant = await RestaurantModel.findOne({userName: req.query.userName});
+    if(restaurant){
+      console.log("");
+      const restaurantUpdated = await RestaurantModel.findOneAndUpdate({userName: req.query.userName}, {menu: req.file?.filename});
+      console.log("PDF subido correctamente");
+      return res.status(200).send({code: 0, message: "PDF subido correctamente"});
+    }
+    else{
+      return res.status(404).send({code: 1, message: "Restaurante no encontrado"});
+    }
+
+    } else {
+    return res.status(400).send({code: 2, message: "Token expirado"});
+    }
+  } catch (error) {
+    return res.status(500).send(
+      {
+        error: error.message,
+        stack: error.stack
+      }
+    );
+  }
+})
 
 // Mostrar perfil de un restaurante
 restaurantsRouter.get('/restaurants', async (req, res) => {
