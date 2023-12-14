@@ -8,7 +8,9 @@ import express from 'express';
 import { validateRestaurantSchema } from '../../models/restaurants/restaurants-models.js';
 import { restaurantInterface } from '../../models/restaurants/restaurants.js';
 import { RestaurantModel } from '../../models/restaurants/restaurants-models.js';
-
+import jsonwebtoken from 'jsonwebtoken';
+import { jwtDecode } from 'jwt-decode';
+import { secretKey } from '../../env-variables.js';
  
 export const restaurantsRouter = express.Router();
 
@@ -85,21 +87,38 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
 // Mostrar perfil de un restaurante
 restaurantsRouter.get('/restaurants', async (req, res) => {
   try{
-    
-    if(req.query.restaurantName){
-      const restaurant = await RestaurantModel.findOne({restaurantName: req.query.restaurantName});
-      if(restaurant && restaurant.passwd === req.query.passwd){
-        
-        return res.status(200).send(restaurant);
+    if (req.query.token && req.query.userName) {
+      const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
+      if (verified) {
+        const decodedToken = jwtDecode(req.query.token as string);
+        console.log(decodedToken);
+        if (Number(decodedToken.exp) > (Date.now() / 1000)) {
+          const restaurant = await RestaurantModel.findOne({userName: req.query.userName});
+          if(restaurant){
+            // renderizar la página de perfil de usuario y guardarla en una carpeta
+            const restaurantSend = {
+              restaurantName: restaurant.restaurantName,
+              userName: restaurant.userName,
+              email: restaurant.email,
+              phoneNumber: restaurant.phoneNumber,
+              restaurantAddress: restaurant.restaurantAddress,
+              timeTable: restaurant.timeTable,
+              category: restaurant.category,
+            }
+            return res.status(200).send({code: 0, message: restaurantSend});
+          }
+          else{
+            return res.status(404).send({code: 1, message: "Restaurante no encontrado"});
+          }
+  
+        } else {
+          return res.status(400).send({code: 2, message: "Token expirado"});
+        }
+      } else {
+        return res.status(400).send({code: 4, message: "Token inválido"});
       }
-      else{
-        console.log("Restaurante no encontrado");
-        return res.status(404).send({code: 1, error: "Restaurante no encontrado"});
-      }
-    }
-    else{
-      console.log("Falta el nombre de Restaurante");
-      return res.status(400).send({code: 3, error: "Falta el nombre de Restaurante"});
+    } else {
+      return res.status(400).send({code: 5, message: "Falta el token en la query"});
     }
   }  
   catch{

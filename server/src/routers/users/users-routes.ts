@@ -10,7 +10,6 @@ import { UserModel } from '../../models/users/users-model.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
 import { jwtDecode } from 'jwt-decode';
-import {userDocumentInterface} from '../../models/users/users-model.js';
 
 
 export const usersRouter = express.Router();
