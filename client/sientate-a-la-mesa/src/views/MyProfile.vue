@@ -4,79 +4,85 @@
 <v-app>
   <Barnav></Barnav>
   <v-main>
-    <v-container class="d-flex align-center justify-center" >
-      <h1>Mi perfil</h1>
-    </v-container>
-    <v-container class="d-flex align-center justify-center">
-      <v-row align-content="stretch" >
-        <v-col>
-          <div class="d-flex align-center justify-center">
-            <v-avatar size="200" color="grey">
-              <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover;"/>
+    <div>
+      <v-container class="d-flex align-center justify-center" >
+        <h1>Mi perfil</h1>
+      </v-container>
+    </div>
+
+    <div>
+      <v-container class="d-flex align-center justify-center">
+        <v-row>
+          <v-col class="d-flex align-center justify-center">
+            <v-avatar size="200" color="grey" >
+              <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
             </v-avatar>
-          </div>
-        </v-col>
-        <v-col>
-          <p>Nombre: {{name}}</p> 
-          <p>Apellidos: {{surname}} </p>
-          <p>Dirección: {{address}} </p>
-          <p>Correo: {{email}} </p>
-          <p>Nombre de usuario: {{username}} </p>
-          <p>Telefono: {{phoneNumber}} </p>
-          <br>
-          <v-btn color="teal">Editar</v-btn>
-        </v-col>
-        <v-col>
-          <v-card max-width="344" elevation="16" color="teal" density="compact">
-            <v-title>
-              Mis próximas reservas
-            </v-title>
-            <v-card-item>
-              Reserva 1
-            </v-card-item>
-            <v-card-item>
-              Reserva 2
-            </v-card-item>
-            <v-card-item>
-              Reserva 3
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+          </v-col>
+          <v-col>
+            <p>Nombre: {{ name }}</p>
+            <p>Apellidos: {{ surname }}</p>
+            <p>Dirección: {{ address }}</p>
+            <p>Correo: {{ email }}</p>
+            <p>Nombre de usuario: {{ username }}</p>
+            <p>Telefono: {{ phoneNumber }}</p>
+            <br />
+            <v-btn color="teal">Editar</v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
     <br>
-    <br>
-    <v-container>
-      <v-row>
-        <v-col>
-          <v-card max-width="344" elevation="16" color="teal" density="compact">
-            <v-title>
-              Buzón de notificaciones
-            </v-title>
-            <v-card-item>
-              Notificación 1
-            </v-card-item>
-            <v-card-item>
-              Notificación 2
-            </v-card-item>
-          </v-card>
-        </v-col>
-        <v-col >
-          <v-card max-width="344" elevation="16" color="teal" density="compact">
-            <v-title>
-              Reservas anteriores
-            </v-title>
-            <v-card-item>
-              Reserva 1
-            </v-card-item>
-            <v-card-item>
-              Reserva 2
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-      
+    <div>
+      <v-container class="d-flex align-center justify-center">
+        <v-row align-content="stretch" >
+          <v-col>
+            <v-card max-width="344" elevation="16" color="teal" density="compact">
+              <v-title>
+                Mis próximas reservas
+              </v-title>
+              <v-card-item>
+                Reserva 1
+              </v-card-item>
+              <v-card-item>
+                Reserva 2
+              </v-card-item>
+              <v-card-item>
+                Reserva 3
+              </v-card-item>
+            </v-card>
+          </v-col>
+          <v-col>
+            <v-card max-width="344" elevation="16" color="teal" density="compact">
+              <v-title>
+                Mis reservas anteriores
+              </v-title>
+              <v-card-item>
+                Reserva 1
+              </v-card-item>
+              <v-card-item>
+                Reserva 2
+              </v-card-item>
+              <v-card-item>
+                Reserva 3
+              </v-card-item>
+            </v-card>
+          </v-col>
+          <v-col>
+            <v-card max-width="344" elevation="16" color="teal" density="compact">
+              <v-title>
+                Buzón de notificaciones
+              </v-title>
+              <v-card-item>
+                Notificación 1
+              </v-card-item>
+              <v-card-item>
+                Notificación 2
+              </v-card-item>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </v-main>
 
   <Footer></Footer>
@@ -93,18 +99,7 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 import { ref } from 'vue';
-// {
-//   "_id": "65589473d64b256f95140327",
-//   "name": "John",
-//   "surname": "Doe",
-//   "userName": "johndoe50",
-//   "password": "MiContraseña1",
-//   "email": "john50@example.es",
-//   "phoneNumber": "150456789",
-//   "address": "123 Main St",
-//   "profilePhoto": null,
-//   "__v": 0
-// }
+
 let username = ref("");
 let name = ref("");
 let surname = ref("");
