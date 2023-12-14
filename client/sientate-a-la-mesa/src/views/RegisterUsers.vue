@@ -171,7 +171,7 @@ import { baseUrl } from '../env/env-variables';
       lastname: '',
       username: '',
       address: '',
-      profilePhoto: [new File([""], "")],
+      profilePhoto: [],
       nameError: '',
       nameRules: [
         (value: string) => {
@@ -270,9 +270,11 @@ import { baseUrl } from '../env/env-variables';
 
 
         //const formDataPhoto = new FormData();
-        let photoBase64: string = '';
-
-        photoBase64 = await this.convertFileToBase64(this.profilePhoto[0]) as string;
+        let photoBase64: string = ' ';
+        if (this.profilePhoto.length > 0) {
+          photoBase64 = await this.convertFileToBase64(this.profilePhoto[0]) as string;
+        }
+       
         console.log("photoBase64", photoBase64)
         const newUserJson = {
           name: this.firstname,

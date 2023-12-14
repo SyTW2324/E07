@@ -36,7 +36,7 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
     console.log('Petición POST a /restaurants');
 
     if(req.body.userName && req.body.passwd && req.body.email && req.body.restaurantName && req.body.restaurantAddress && req.body.description && req.body.timeTable && req.body.category && req.body.phoneNumber  && req.body.availability) {
-      const restaurant: restaurantInterface = {
+      const restaurant = new  RestaurantModel({
         userName: req.body.userName,
         passwd: req.body.passwd,
         email: req.body.email,
@@ -51,7 +51,7 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
         availability: req.body.availability,
         nextReservations: [],
         historicReservations: []
-      }
+      })
       if (req.body.pictures) {
         restaurant.pictures = req.body.pictures;
       }

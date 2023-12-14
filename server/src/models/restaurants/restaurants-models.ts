@@ -22,7 +22,7 @@ interface restaurantsDocumentInterface {
   category: string;
 
   phoneNumber: string;
-  pictures: (Buffer | null)[];
+  pictures: string;
 
   menu: Buffer | null;
   availability: Available[];
@@ -84,7 +84,7 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
     match: [ /^\d{9}$/, 'Invalid phone number' ]
   },
   pictures: {
-    type: [Buffer],
+    type: String,
     required: false,
     trim: true
   },

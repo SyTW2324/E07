@@ -57,7 +57,11 @@ export const loginRouter = express.Router();
             const resMessage = {
               username: restaurant.userName,
               accessToken: userToken,
-              tipo: "restaurant"
+              tipo: "restaurant",
+              profilePhoto: " "
+            }
+            if (restaurant.pictures) {
+              resMessage.profilePhoto = restaurant.pictures;
             }
             return res.status(200).send({ code: 0, message: resMessage});
           } else{

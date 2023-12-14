@@ -200,6 +200,7 @@
   
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
+  import { useAuthStore } from '../stores/useAuthStore';
   
   //CORS
   
@@ -285,7 +286,7 @@
             return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
-        pictures: [new File([""], "")],
+        pictures: [],
         menu: [], // es un pdf
         available: {
           timePeriod: null,
@@ -311,19 +312,19 @@
       },
 
       async convertFileToBase64(file: File) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
 
-        reader.onload = () => {
-          resolve(reader.result);
-        };
+          reader.onload = () => {
+            resolve(reader.result);
+          };
 
-        reader.onerror = (error) => {
-          reject(error);
-        };
+          reader.onerror = (error) => {
+            reject(error);
+          };
 
-        reader.readAsDataURL(file);
-      });
+          reader.readAsDataURL(file);
+        });
     },
       
       async RegisterRestaurantApi() {
@@ -334,22 +335,11 @@
           // Crea un elemento de imagen
           const textElement = document.createElement('h3');
           textElement.innerText = ' ';
-          // Realiza la llamada a la API utilizando Axios
-          // "userName": "AsadorLaMatanza";
-          // "passwd": "Hola1234";
-          // "email": "asadormatanza@gmail.com";
-          // "restaurantName": "Asador La Matanza";
-          // "restaurantAddress": "La Matanza, Tenerife";
-          // "description": "Asador de pollos en la Matanza, carne de primera calidad";
-          // "timeTable": "";
-          // "category": "asador";
-          // "phoneNumber": "666666666";
-          // "pictures": "null";
-          // "menu": "null";
-          // "availability": Available[];
 
-          let photoBase64: string = '';
-          photoBase64 = await this.convertFileToBase64(this.pictures[0]) as string;
+          let photoBase64: string = ' ';
+          if (this.pictures.length > 0) {
+            photoBase64 = await this.convertFileToBase64(this.pictures[0]) as string;
+          }
 
           const newRestaurantJson = {
             "userName": this.username,
@@ -379,7 +369,9 @@
             textElement.innerText = 'Restaurante registrado correctamente';
             textContainer.innerHTML = '';
             textContainer.appendChild(textElement);
-            
+            const authStore = useAuthStore();
+            return authStore.login(this.username, this.password).catch(error => console.log(error));
+          
           }
         } catch (error) {
           if (axios.isAxiosError(error) && error.response) {
