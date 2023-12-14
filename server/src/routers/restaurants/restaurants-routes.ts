@@ -5,9 +5,9 @@
  */
 import express from 'express';
 
-import { validateRestaurantSchema } from '../../restaurants/restaurants-models.js';
-import { restaurantInterface } from '../../restaurants/restaurants.js';
-import { RestaurantModel } from '../../restaurants/restaurants-models.js';
+import { validateRestaurantSchema } from '../../models/restaurants/restaurants-models.js';
+import { restaurantInterface } from '../../models/restaurants/restaurants.js';
+import { RestaurantModel } from '../../models/restaurants/restaurants-models.js';
 
  
 export const restaurantsRouter = express.Router();

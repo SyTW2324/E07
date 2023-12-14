@@ -5,9 +5,9 @@
  */
 
 import {Document, Schema, model} from 'mongoose';
-import { Available } from '../available.js';
-import { Reservation } from '../reservation.js';
-import { Timetable } from '../timeTable.js';
+import { Available } from '../../available.js';
+import { Reservation } from '../../reservation.js';
+import { Timetable } from '../../timeTable.js';
 import { UserModel } from '../users/users-model.js';
 
 interface restaurantsDocumentInterface {

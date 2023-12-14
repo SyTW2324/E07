@@ -5,12 +5,12 @@
  */
 import express from 'express';
 
-import { validateUserSchema } from '../../users/users-model.js';
-import { UserModel } from '../../users/users-model.js';
+import { validateUserSchema } from '../../models/users/users-model.js';
+import { UserModel } from '../../models/users/users-model.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
 import { jwtDecode } from 'jwt-decode';
-import {userDocumentInterface} from '../../users/users-model.js';
+import {userDocumentInterface} from '../../models/users/users-model.js';
 
 
 export const usersRouter = express.Router();

@@ -241,12 +241,6 @@ import { baseUrl } from '../env/env-variables';
       }
     },
 
-    onFileSelected(event: any) {
-      console.log(event);
-      this.profilePhoto = event.target.files[0];
-      console.log("foto upload", this.profilePhoto);
-    },
-
     async convertFileToBase64(file: File) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();

@@ -8,8 +8,8 @@ import express from 'express';
 // import { validateLoginSchema } from '../../login/login-model.js';
 // import { loginInterface } from '../../login/login.js';
 // import { LoginModel } from '../../login/login-model.js';
-import { UserModel } from '../../users/users-model.js';
-import { RestaurantModel } from '../../restaurants/restaurants-models.js';
+import { UserModel } from '../../models/users/users-model.js';
+import { RestaurantModel } from '../../models/restaurants/restaurants-models.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
 

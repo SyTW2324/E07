@@ -285,7 +285,7 @@
             return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
-        pictures: [],
+        pictures: [new File([""], "")],
         menu: [], // es un pdf
         available: {
           timePeriod: null,
@@ -310,6 +310,21 @@
         }
       },
 
+      async convertFileToBase64(file: File) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+
+        reader.onerror = (error) => {
+          reject(error);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    },
       
       async RegisterRestaurantApi() {
         try {
@@ -333,17 +348,9 @@
           // "menu": "null";
           // "availability": Available[];
 
-          let profilePhotoBase64 = null;
-          // ! Habría que hacer un bucle para subir todas las imágenes
-          if (this.pictures.length > 0) {
-            const file = this.pictures[0]; 
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            profilePhotoBase64 = await new Promise((resolve, reject) => {
-              reader.onload = () => resolve(reader.result);
-              reader.onerror = error => reject(error);
-            });
-          }
+          let photoBase64: string = '';
+          photoBase64 = await this.convertFileToBase64(this.pictures[0]) as string;
+
           const newRestaurantJson = {
             "userName": this.username,
             "passwd": this.password,
@@ -354,7 +361,7 @@
             "timeTable": this.timetable,
             "category": this.category,
             "phoneNumber": this.phone,
-            "pictures": profilePhotoBase64,
+            "pictures": photoBase64,
             "menu": this.menu,
             "availability": this.available,
           };

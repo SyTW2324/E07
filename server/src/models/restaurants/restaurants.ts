@@ -5,9 +5,9 @@
  */
 
 import * as mongodb from 'mongodb';
-import { Available } from '../available.js';
-import { Reservation } from '../reservation.js';
-import { Timetable } from '../timeTable.js';
+import { Available } from '../../available.js';
+import { Reservation } from '../../reservation.js';
+import { Timetable } from '../../timeTable.js';
 
 
 export interface restaurantInterface {
