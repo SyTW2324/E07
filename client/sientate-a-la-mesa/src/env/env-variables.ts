@@ -3,4 +3,4 @@
 
 // localhost
 
-export const baseUrl: string = "http://10.6.128.143:8081/"
+export const baseUrl: string = "https://bright-jacket-foal.cyclic.app/"
