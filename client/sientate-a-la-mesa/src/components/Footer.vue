@@ -13,7 +13,7 @@
       </v-btn>
       <v-col class="text-center mt-4" cols="12">
         {{ new Date().getFullYear() }} — <strong>Siéntate a la mesa</strong>
-        <p>Desarollado por: Alberto Zarza - Ismael Martín - Marco Barroso</p>
+        <p>Desarollado por:  Alberto Zarza - Ismael Martín - Marco Barroso</p>
       </v-col>
     </v-row>
   </v-footer>
