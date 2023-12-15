@@ -3,6 +3,11 @@
 }
 
 .my-custom-card-home {
-  width:80em;
-  height: 20em;
+  width:50%;
+  height: 50%;
+}
+
+.my-custom-card-text {
+  width:100%;
+  height: 100%;
 }

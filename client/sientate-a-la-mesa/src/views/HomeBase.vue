@@ -3,9 +3,9 @@
     <Barnav></Barnav>
     <v-main>
       <v-container>
-        <v-card class="mx-auto my-16" width="900" height="300" color="teal">
-          <v-card-title> RESERVA YA! Home-Base </v-card-title>
-          <v-card-text>
+        <v-card class="mx-auto my-16 my-custom-card-home" color="teal">
+          <v-card-title> RESERVA YA!</v-card-title>
+          <v-card-text class="my-custom-card-text">
             <p> Nombre de usuario: {{ user.user.username }}</p>
           </v-card-text>
         </v-card>

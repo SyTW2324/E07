@@ -16,10 +16,6 @@
 
     <v-card class="mx-auto my-16 my-custom-card-home" color="teal" >
       <v-card-title class="my-custom-card-home"> Bienvenido a sientate a la mesa</v-card-title>
-      <v-card-text class="my-custom-card-home">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
-      </v-card-text>
       
     </v-card>
     <v-divider></v-divider>
