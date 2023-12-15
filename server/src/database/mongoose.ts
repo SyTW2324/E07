@@ -9,6 +9,8 @@ if (process.argv[2] === 'test') {
   bbdd = uri_bbdd_test;
 } else if (process.argv[2] === 'dev') {
   bbdd = uri_bbdd;
+} else if (process.argv[2] === 'deploy') {
+  bbdd = uri_bbdd;
 }
 
 console.log('Conectando a la base de datos: ' + bbdd);
