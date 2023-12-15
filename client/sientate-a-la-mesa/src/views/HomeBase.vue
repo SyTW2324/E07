@@ -28,7 +28,7 @@
                 size="large"
                 type="submit"
                 variant="elevated"
-                @click="this.$router.push(`/establecimientos/${restaurant}`)"
+                @click="$router.push(`/establecimientos/${restaurant}`)"
               >
                 <p style="color: teal;"> More info</p>
               </v-btn>
