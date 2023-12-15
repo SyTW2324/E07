@@ -12,15 +12,16 @@ import { ip_express_despliegue } from './env-variables.js';
 import { ip_express_dev } from './env-variables.js';
 
 let ip_express = ip_express_despliegue;
-
+let portNumber = port;
 if (process.argv[2] === 'dev') {
   ip_express = ip_express_dev;
 } else if (process.argv[2] === 'test') {
   ip_express = ip_express_dev
+} else if (process.argv[2] === 'deploy') {
+  portNumber = 3000;
 }
 
 // Resto de la configuración del servidor
-
 
 app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); // Reemplaza con tu origen permitido
@@ -31,7 +32,7 @@ app.options('*', (req, res) => {
 });
 
 
-app.listen(port, () => {
+app.listen(portNumber, () => {
   console.log(`Server is up on ip ${ip_express} and port ${port}`);
 });
 
