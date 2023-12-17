@@ -8,7 +8,10 @@ on:
 jobs: 
   deploy:
     runs-on: ubuntu-22.04
-    steps:
+    steps:    
+    
+      - name: Test and cover
+        run: cd server && npm run test
       - name: Coveralls
         env:
           COVERALLS_REPO_TOKEN: ekpZxlRFVw1x0LzudjueD4qr8p8BN1Mre
