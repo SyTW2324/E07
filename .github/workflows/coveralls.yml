@@ -1,0 +1,15 @@
+name: Coveralls
+
+on:
+  push:
+    branches:
+      - main
+
+jobs: 
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ekpZxlRFVw1x0LzudjueD4qr8p8BN1Mre
+        uses: coverallsapp/github-action@v2
