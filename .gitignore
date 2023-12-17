@@ -3,3 +3,4 @@ node_modules
 .http-server-pid
 client/sientate-a-la-mesa/nohup.out
 .nyc_output
+coverage
