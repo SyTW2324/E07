@@ -9,10 +9,9 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     steps:    
-    
       - name: Test and cover
-        - run: npm run installServer
-        - run: npm test
+      - run: npm run installServer
+      - run: npm test
       - name: Coveralls
         env:
           COVERALLS_REPO_TOKEN: ekpZxlRFVw1x0LzudjueD4qr8p8BN1Mre
