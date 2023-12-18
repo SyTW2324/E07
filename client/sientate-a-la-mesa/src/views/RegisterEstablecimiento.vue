@@ -102,14 +102,16 @@
               ></v-text-field>
             </v-col>
   
+
             <v-col cols="12" md="4">
               <v-file-input
-                v-model="pictures"
-                label="Fotos del establecimiento"
+                v-model="profilePicture"
+                label="Foto de perfil"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
               ></v-file-input>
             </v-col>
+
 
             <v-row class="d-flex">
               <!-- Días de la semana -->
@@ -159,6 +161,17 @@
               <v-text-field 
               id="numberOfTables"
               v-model="available.numberOfTables" type="number"></v-text-field>
+            </v-col>
+
+            <!-- imágenes del establecimiento -->
+            <v-col cols="12" md="4">
+              <v-file-input
+                v-model="pictures"
+                label="Imágenes de portada del establecimiento"
+                accept="image/*"
+                placeholder="Seleccione una imagen"
+                multiple
+              ></v-file-input>
             </v-col>
 
             
@@ -313,6 +326,7 @@
             return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
+        profilePicture: [],
         pictures: [],
         menu: [], // es un pdf
         available: {
@@ -368,7 +382,13 @@
 
           let photoBase64: string = ' ';
           if (this.pictures.length > 0) {
-            photoBase64 = await this.convertFileToDataURL(this.pictures[0]) as string;
+            // procesar todas las imagenes
+            for (let i = 0; i < this.pictures.length; i++) {
+              photoBase64 += await this.convertFileToDataURL(this.pictures[i]) as string;
+            }
+          }
+          if (this.profilePicture.length == 1) {
+            photoBase64 = await this.convertFileToDataURL(this.profilePicture[0]) as string;
           }
           let menuData: string = ' ';
           const formData = new FormData();
@@ -389,6 +409,7 @@
             "timeTable": this.timetable,
             "category": this.category,
             "phoneNumber": this.phone,
+            "profilePicture": photoBase64,
             "pictures": photoBase64,
             "menu": "",
             "availability": this.available,

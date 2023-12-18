@@ -3,4 +3,4 @@
 
 // localhost
 
-export const baseUrl: string = "https://long-ruby-sea-lion-wear.cyclic.app/"
+export const baseUrl: string = "http://localhost:8081/"

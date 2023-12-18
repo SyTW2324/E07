@@ -23,6 +23,7 @@ export interface restaurantInterface {
   category: string;
 
   phoneNumber: string;
+  profilePicture: (Buffer | null);
   pictures: (Buffer | null)[]; // Array of pictures
 
   menu: Buffer | null;
@@ -46,6 +47,7 @@ export class restaurantClass {
     private category: string,
 
     private phoneNumber: string,
+    private profilePicture: Buffer | null,
     private pictures: (Buffer | null)[],
     
     private menu: Buffer | null,
@@ -93,6 +95,10 @@ export class restaurantClass {
   
   getPhoneNumber() {
     return this.phoneNumber;
+  }
+
+  getProfilePicture() {
+    return this.profilePicture;
   }
 
   getPictures() {

@@ -22,21 +22,7 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
   console.log(req.body);
 
   try {
-    // "userName": "AsadorLaMatanza";
-    // "passwd": "Hola1234";
-    // "email": "asadormatanza@gmail.com";
 
-    // "restaurantName": "Asador La Matanza";
-    // "restaurantAddress": "La Matanza, Tenerife";
-    // "description": "Asador de pollos en la Matanza, carne de primera calidad";
-    // "timeTable": "";
-    // "category": "asador";
-
-    // "phoneNumber": "666666666";
-    // "pictures": "null";
-
-    // "menu": "null";
-    // "availability": Available[];
     console.log('Petición POST a /restaurants');
 
     if(req.body.userName && req.body.passwd && req.body.email && req.body.restaurantName && req.body.restaurantAddress && req.body.description && req.body.timeTable && req.body.category && req.body.phoneNumber  && req.body.availability) {
@@ -50,12 +36,16 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
         timeTable: req.body.timeTable,
         category: req.body.category,
         phoneNumber: req.body.phoneNumber,
+        profilePicture: req.body.profilePicture,
         pictures: req.body.pictures,
         menu: req.body.menu,
         availability: req.body.availability,
         nextReservations: [],
         historicReservations: []
       })
+      if (req.body.profilePicture) {
+        restaurant.profilePicture = req.body.profilePicture;
+      }
       if (req.body.pictures) {
         restaurant.pictures = req.body.pictures;
       }
@@ -113,8 +103,9 @@ restaurantsRouter.put("/restaurants/uploadpdf/", upload.single('pdf'), async (re
       return res.status(404).send({code: 1, message: "Restaurante no encontrado"});
     }
 
-    } else {
-    return res.status(400).send({code: 2, message: "Token expirado"});
+    } 
+    else {
+      return res.status(400).send({code: 2, message: "Token expirado"});
     }
   } catch (error) {
     return res.status(500).send(
