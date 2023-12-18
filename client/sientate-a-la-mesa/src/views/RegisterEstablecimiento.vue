@@ -45,32 +45,6 @@
               ></v-text-field>
             </v-col>
 
-            <v-col cols="12" md="4">
-              <v-row class="d-flex">
-                <!-- Días de la semana -->
-                <v-col cols="12">
-                  <label>Días de la semana:</label>
-                  <v-row>
-                    <v-col v-for="day in daysOfWeek" :key="day" cols="6">
-                      <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
-                    </v-col>
-                  </v-row>
-                </v-col>
-
-                <!-- Hora de inicio -->
-                <v-col cols="6">
-                  <label>Hora de inicio:</label>
-                  <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
-                </v-col>
-
-                <!-- Hora de finalización -->
-                <v-col cols="6">
-                  <label>Hora de finalización:</label>
-                  <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
-                </v-col>
-              </v-row>
-            </v-col>
-
 
             <v-col cols="12" md="4">
               <v-select
@@ -137,6 +111,31 @@
               ></v-file-input>
             </v-col>
 
+            <v-row class="d-flex">
+              <!-- Días de la semana -->
+              <v-col cols="12">
+                <label>Días de la semana:</label>
+                <v-row>
+                  <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
+                    <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+
+
+            <!-- Hora de inicio -->
+            <v-col cols="4">
+              <label>Hora de inicio:</label>
+              <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
+            </v-col>
+
+            <!-- Hora de finalización -->
+            <v-col cols="4">
+              <label>Hora de finalización:</label>
+              <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
+            </v-col>
+
             <!-- es un pdf -->
             <v-col cols="12" md="4"> 
               <v-file-input
@@ -147,24 +146,21 @@
               ></v-file-input>
             </v-col>
 
+
+            <!-- Número de minutos -->
             <v-col cols="12" md="4">
-              <v-row>
-                <!-- Número de minutos -->
-                <v-col cols="12">
-                  <label>Tiempo de franja de reserva (minutos):</label>
-                  <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
-                </v-col>
-
-                <!-- Número de personas -->
-                <v-col cols="12">
-                  <label>Número de mesas por franja horaria:</label>
-                  <v-text-field 
-                  id="numberOfTables"
-                  v-model="available.numberOfTables" type="number"></v-text-field>
-                </v-col>
-              </v-row>
-
+              <label>Tiempo de franja de reserva (minutos):</label>
+              <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
             </v-col>
+
+            <!-- Número de personas -->
+            <v-col cols="12" md="4">
+              <label>Número de mesas por franja horaria:</label>
+              <v-text-field 
+              id="numberOfTables"
+              v-model="available.numberOfTables" type="number"></v-text-field>
+            </v-col>
+
             
   
           </v-row>
