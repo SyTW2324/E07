@@ -18,7 +18,7 @@ export interface Reservation {
 export function addReservation(reservation: Reservation): boolean {
   const client = UserModel.findById(reservation.clientId);
   const restaurant = RestaurantModel.findById(reservation.restaurantId);
-  if (client !== undefined && restaurant !== undefined) {
+  if (client !== null && restaurant !== null) {
     const newReservation = new reservationModel({
       restaurantId: reservation.restaurantId,
       clientId: reservation.clientId,

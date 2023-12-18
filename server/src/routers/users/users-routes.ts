@@ -79,7 +79,9 @@ usersRouter.get('/users', async (req, res) => {
               userName: user.userName,
               email: user.email,
               phoneNumber: user.phoneNumber,
-              address: user.address
+              address: user.address,
+              nextReservations: user.nextReservations,
+              historicReservations: user.historicReservations
             }
             return res.status(200).send({code: 0, message: userSend});
           }
@@ -126,4 +128,6 @@ usersRouter.delete('/users', async (req, res) => {
     return res.status(500).send();
   }
 });
+
+
 
