@@ -16,6 +16,7 @@
 
     <v-card class="mx-auto my-16 my-custom-card-home" color="teal" >
       <v-card-title class="my-custom-card-home"> Bienvenido a sientate a la mesa</v-card-title>
+
       
     </v-card>
     <v-divider></v-divider>
