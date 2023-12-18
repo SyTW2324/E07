@@ -29,7 +29,9 @@ usersRouter.post('/users', async (req, res) => {
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         address: req.body.address,
-        profilePhoto: null
+        profilePhoto: null,
+        nextReservations: [],
+        historicReservations: []
       })
       console.log("peticion correcta");
       console.log(req.body);
