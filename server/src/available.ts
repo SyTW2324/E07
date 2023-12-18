@@ -11,6 +11,6 @@
 
 export type Available = {
   timePeriod: Number; // minutos para cada reserva, por ejemplo 60 minutos.
-  numberOfPeople: number;
+  numberOfTables: number;
 };
 

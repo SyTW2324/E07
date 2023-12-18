@@ -157,10 +157,10 @@
 
                 <!-- Número de personas -->
                 <v-col cols="12">
-                  <label>Número de personas por reserva:</label>
+                  <label>Número de mesas por franja horaria:</label>
                   <v-text-field 
-                  id="numberOfPeople"
-                  v-model="available.numberOfPeople" type="number"></v-text-field>
+                  id="numberOfTables"
+                  v-model="available.numberOfTables" type="number"></v-text-field>
                 </v-col>
               </v-row>
 
@@ -173,15 +173,42 @@
   
           </v-container>
         </v-form>
-  
-        <v-alert v-if="!valid" type="error">
-          Por favor, corrija los errores en el formulario.
-        </v-alert>
-  
+
       </v-container>
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
         <div ref="textContainer"></div>
       </v-container>
+
+      <!-- Alertas -->
+      <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
+      <v-alert v-if="!valid" type="warning" closable class="my-custom-alert">
+        Por favor, corrija los errores en el formulario.
+        <br>
+        - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+        <br>
+        - Correo: El correo debe ser válido.
+        <br>
+        - Teléfono: El teléfono debe tener 9 dígitos.
+      </v-alert>
+
+      <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
+        El nombre de usuario ya existe elige otro.
+      </v-alert>
+
+      <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
+        El correo ya existe.
+      </v-alert>
+
+      <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
+        El teléfono ya existe.
+      </v-alert>
+
+      <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
+        Usuario registrado correctamente.
+      </v-alert>
+    </v-container>
+
+
     </v-main>
   
     <Footer></Footer>
@@ -207,6 +234,10 @@
     export default {
       data: () => ({
         valid: true,
+        validUserName: true,
+        validEmail: true,
+        validPhone: true,
+        userRegistered: false,
         restaurantname: '',
         restaurantnameRules: [
           (value: string) => {
@@ -290,7 +321,7 @@
         menu: [], // es un pdf
         available: {
           timePeriod: null,
-          numberOfPeople: null,
+          numberOfTables: null,
         },
         
       }),
@@ -329,8 +360,11 @@
       
       async RegisterRestaurantApi() {
         try {
+          this.validUserName = true;
+          this.validEmail = true;
+          this.validPhone = true;
           console.log('Enviando datos a la API'); 
-          const textContainer = this.$refs.textContainer as HTMLElement;
+          // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
           const textElement = document.createElement('h3');
@@ -374,10 +408,11 @@
           if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
             console.log('Restaurante registrado correctamente');
+            this.userRegistered = true;
   
-            textElement.innerText = 'Restaurante registrado correctamente';
-            textContainer.innerHTML = '';
-            textContainer.appendChild(textElement);
+            // textElement.innerText = 'Restaurante registrado correctamente';
+            // textContainer.innerHTML = '';
+            // textContainer.appendChild(textElement);
             const authStore = useAuthStore();
             return authStore.login(this.username, this.password).catch(error => console.log(error));
           
@@ -391,22 +426,26 @@
           if (response.status === 400) {
             console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
-            console.error('Faltan campos obligatorios');
-            textElement.innerText = 'Faltan campos obligatorios';
-            } else if (response.data.code === 2) {
-            console.error('El nombre de usuario ya existe');
-            textElement.innerText = 'El nombre de usuario ya existe elige otro';
-            } else if (response.data.code === 3) {
-            console.error('El correo ya existe');
-            textElement.innerText = 'El correo ya existe';
-            } else if (response.data.code === 4) {
-            console.error('El teléfono ya existe');
-            textElement.innerText = 'El teléfono ya existe';
-            } else {
+              console.error('Faltan campos obligatorios');
+              textElement.innerText = 'Faltan campos obligatorios';
+            } 
+            else if (response.data.code === 2) {
+              console.error('El nombre de usuario ya existe');
+              this.validUserName = false;
+            } 
+            else if (response.data.code === 3) {
+              console.error('El correo ya existe');
+              this.validEmail = false;
+            } 
+            else if (response.data.code === 4) {
+              this.validPhone = false;
+            } 
+            else {
             console.error('Error desconocido:', response.status);
             textElement.innerText = 'Error desconocido';
             }
-          } else {
+          } 
+          else {
             console.error('Error al realizar la solicitud:', error.message);
           }
   
