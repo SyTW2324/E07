@@ -6,6 +6,7 @@
 
 import {Document, Schema, model} from 'mongoose';
 import { RestaurantModel } from '../restaurants/restaurants-models.js';
+import { reservationsDocumentInterface } from '../reservations/reservantions-models.js';
 
 export interface userDocumentInterface extends Document{
     name: string;
@@ -15,7 +16,9 @@ export interface userDocumentInterface extends Document{
     email: string;
     phoneNumber: string;
     address: string;
-    profilePhoto?: string
+    nextReservations: reservationsDocumentInterface[];
+    historicReservations: reservationsDocumentInterface[];
+    profilePhoto?: string;
 }
 
 
@@ -65,6 +68,18 @@ const UserSchema = new Schema<userDocumentInterface>({
     profilePhoto: {
         type: String   
         
+    },
+    nextReservations: {
+        type: [Schema.Types.ObjectId],
+        ref: 'Reservation',
+        required: false,
+        trim: true
+    },
+    historicReservations: {
+        type: [Schema.Types.ObjectId],
+        ref: 'Reservation',
+        required: false,
+        trim: true
     }
 });
 

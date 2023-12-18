@@ -4,115 +4,114 @@
  * Grado en Ingeniería Informática
  */
 
-import * as mongodb from 'mongodb';
-import { Available } from '../../available.js';
-import { Reservation } from '../../reservation.js';
-import { Timetable } from '../../timeTable.js';
+// import * as mongodb from 'mongodb';
+// import { Available } from '../../available.js';
+// import { Timetable } from '../../timeTable.js';
+// import {reservationsDocumentInterface} from '../reservations/reservations-models.js';
+
+// export interface restaurantInterface {
+//   userName: string;
+//   passwd: string;
+//   email: string;
+
+//   _id?: mongodb.ObjectId;
+//   restaurantName: string;
+//   restaurantAddress: string;
+//   description:string;
+//   timeTable: Timetable;
+//   category: string;
+
+//   phoneNumber: string;
+//   pictures: (Buffer | null)[]; // Array of pictures
+
+//   menu: Buffer | null;
+//   availability: Available[];
+//   nextReservations: reservationsDocumentInterface[];
+//   historicReservations: reservationsDocumentInterface[];
+// }
 
 
-export interface restaurantInterface {
-  userName: string;
-  passwd: string;
-  email: string;
 
-  _id?: mongodb.ObjectId;
-  restaurantName: string;
-  restaurantAddress: string;
-  description:string;
-  timeTable: Timetable;
-  category: string;
+// export class restaurantClass {
+//   constructor(
+//     private userName: string,
+//     private passwd: string,
+//     private email: string,
 
-  phoneNumber: string;
-  pictures: (Buffer | null)[]; // Array of pictures
+//     private restaurantName: string,
+//     private restaurantAddress: string,
+//     private description:string,
+//     private timeTable: Timetable,
+//     private category: string,
 
-  menu: Buffer | null;
-  availability: Available[];
-  nextReservations: Reservation[];
-  historicReservations: Reservation[];
-}
-
-
-
-export class restaurantClass {
-  constructor(
-    private userName: string,
-    private passwd: string,
-    private email: string,
-
-    private restaurantName: string,
-    private restaurantAddress: string,
-    private description:string,
-    private timeTable: Timetable,
-    private category: string,
-
-    private phoneNumber: string,
-    private pictures: (Buffer | null)[],
+//     private phoneNumber: string,
+//     private pictures: (Buffer | null)[],
     
-    private menu: Buffer | null,
-    private availability: Available[],
-    private nextReservations: Reservation[],
-    private historicReservations: Reservation[],
-    private _id?: mongodb.ObjectId
-  ) {}
+//     private menu: Buffer | null,
+//     private availability: Available[],
+//     private nextReservations: Reservation[],
+//     private historicReservations: Reservation[],
+//     private _id?: mongodb.ObjectId
+//   ) {}
 
-  getUserName() {
-    return this.userName;
-  }
+//   getUserName() {
+//     return this.userName;
+//   }
 
-  getPasswd() {
-    return this.passwd;
-  }
+//   getPasswd() {
+//     return this.passwd;
+//   }
 
-  getEmail() {
-    return this.email;
-  }
+//   getEmail() {
+//     return this.email;
+//   }
 
-  getId() {
-    return this._id;
-  }
+//   getId() {
+//     return this._id;
+//   }
 
-  getRestaurantName() {
-    return this.restaurantName;
-  }
+//   getRestaurantName() {
+//     return this.restaurantName;
+//   }
 
-  getRestaurantAddress() {
-    return this.restaurantAddress;
-  }
+//   getRestaurantAddress() {
+//     return this.restaurantAddress;
+//   }
 
-  getDescription() {
-    return this.description;
-  }
+//   getDescription() {
+//     return this.description;
+//   }
 
-  getTimeTable() {
-    return this.timeTable;
-  }
+//   getTimeTable() {
+//     return this.timeTable;
+//   }
 
-  getCategory() {
-    return this.category;
-  }
+//   getCategory() {
+//     return this.category;
+//   }
   
-  getPhoneNumber() {
-    return this.phoneNumber;
-  }
+//   getPhoneNumber() {
+//     return this.phoneNumber;
+//   }
 
-  getPictures() {
-    return this.pictures;
-  }
+//   getPictures() {
+//     return this.pictures;
+//   }
 
-  getMenu() {
-    return this.menu;
-  }
+//   getMenu() {
+//     return this.menu;
+//   }
 
-  getAvailability() {
-    return this.availability;
-  }
+//   getAvailability() {
+//     return this.availability;
+//   }
 
-  getNextReservations() {
-    return this.nextReservations;
-  }
+//   getNextReservations() {
+//     return this.nextReservations;
+//   }
 
-  getHistoricReservations() {
-    return this.historicReservations;
-  }
+//   getHistoricReservations() {
+//     return this.historicReservations;
+//   }
 
-}
+// }

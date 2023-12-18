@@ -10,7 +10,7 @@ import Footer from '../components/Footer.vue'
   <v-main>
     
     <v-container style="padding: 2em;">
-    <v-card class="mx-auto" width="700" height="320" color="red-accent-4" style=""> 
+    <v-card class="mx-auto my-custom-card-home"  color="red-accent-4" style=""> 
           <v-card-title> ERROR 404</v-card-title>
         </v-card>
     </v-container>
