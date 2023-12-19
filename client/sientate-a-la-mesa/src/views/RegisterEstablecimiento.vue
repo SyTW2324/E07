@@ -45,32 +45,6 @@
               ></v-text-field>
             </v-col>
 
-            <v-col cols="12" md="4">
-              <v-row class="d-flex">
-                <!-- Días de la semana -->
-                <v-col cols="12">
-                  <label>Días de la semana:</label>
-                  <v-row>
-                    <v-col v-for="day in daysOfWeek" :key="day" cols="6">
-                      <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
-                    </v-col>
-                  </v-row>
-                </v-col>
-
-                <!-- Hora de inicio -->
-                <v-col cols="6">
-                  <label>Hora de inicio:</label>
-                  <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
-                </v-col>
-
-                <!-- Hora de finalización -->
-                <v-col cols="6">
-                  <label>Hora de finalización:</label>
-                  <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
-                </v-col>
-              </v-row>
-            </v-col>
-
 
             <v-col cols="12" md="4">
               <v-select
@@ -128,13 +102,40 @@
               ></v-text-field>
             </v-col>
   
+
             <v-col cols="12" md="4">
               <v-file-input
-                v-model="pictures"
-                label="Fotos del establecimiento"
+                v-model="profilePicture"
+                label="Foto de perfil"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
               ></v-file-input>
+            </v-col>
+
+
+            <v-row class="d-flex">
+              <!-- Días de la semana -->
+              <v-col cols="12">
+                <label>Días de la semana:</label>
+                <v-row>
+                  <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
+                    <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+
+
+            <!-- Hora de inicio -->
+            <v-col cols="4">
+              <label>Hora de inicio:</label>
+              <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
+            </v-col>
+
+            <!-- Hora de finalización -->
+            <v-col cols="4">
+              <label>Hora de finalización:</label>
+              <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
             </v-col>
 
             <!-- es un pdf -->
@@ -147,24 +148,32 @@
               ></v-file-input>
             </v-col>
 
+
+            <!-- Número de minutos -->
             <v-col cols="12" md="4">
-              <v-row>
-                <!-- Número de minutos -->
-                <v-col cols="12">
-                  <label>Tiempo de franja de reserva (minutos):</label>
-                  <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
-                </v-col>
-
-                <!-- Número de personas -->
-                <v-col cols="12">
-                  <label>Número de personas por reserva:</label>
-                  <v-text-field 
-                  id="numberOfPeople"
-                  v-model="available.numberOfPeople" type="number"></v-text-field>
-                </v-col>
-              </v-row>
-
+              <label>Tiempo de franja de reserva (minutos):</label>
+              <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
             </v-col>
+
+            <!-- Número de personas -->
+            <v-col cols="12" md="4">
+              <label>Número de mesas por franja horaria:</label>
+              <v-text-field 
+              id="numberOfTables"
+              v-model="available.numberOfTables" type="number"></v-text-field>
+            </v-col>
+
+            <!-- imágenes del establecimiento -->
+            <v-col cols="12" md="4">
+              <v-file-input
+                v-model="pictures"
+                label="Imágenes de portada del establecimiento"
+                accept="image/*"
+                placeholder="Seleccione una imagen"
+                multiple
+              ></v-file-input>
+            </v-col>
+
             
   
           </v-row>
@@ -173,15 +182,42 @@
   
           </v-container>
         </v-form>
-  
-        <v-alert v-if="!valid" type="error">
-          Por favor, corrija los errores en el formulario.
-        </v-alert>
-  
+
       </v-container>
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
         <div ref="textContainer"></div>
       </v-container>
+
+      <!-- Alertas -->
+      <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
+      <v-alert v-if="!valid" type="warning" closable class="my-custom-alert">
+        Por favor, corrija los errores en el formulario.
+        <br>
+        - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+        <br>
+        - Correo: El correo debe ser válido.
+        <br>
+        - Teléfono: El teléfono debe tener 9 dígitos.
+      </v-alert>
+
+      <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
+        El nombre de usuario ya existe elige otro.
+      </v-alert>
+
+      <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
+        El correo ya existe.
+      </v-alert>
+
+      <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
+        El teléfono ya existe.
+      </v-alert>
+
+      <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
+        Usuario registrado correctamente.
+      </v-alert>
+    </v-container>
+
+
     </v-main>
   
     <Footer></Footer>
@@ -207,6 +243,10 @@
     export default {
       data: () => ({
         valid: true,
+        validUserName: true,
+        validEmail: true,
+        validPhone: true,
+        userRegistered: false,
         restaurantname: '',
         restaurantnameRules: [
           (value: string) => {
@@ -286,11 +326,12 @@
             return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
+        profilePicture: [],
         pictures: [],
         menu: [], // es un pdf
         available: {
           timePeriod: null,
-          numberOfPeople: null,
+          numberOfTables: null,
         },
         
       }),
@@ -329,8 +370,11 @@
       
       async RegisterRestaurantApi() {
         try {
+          this.validUserName = true;
+          this.validEmail = true;
+          this.validPhone = true;
           console.log('Enviando datos a la API'); 
-          const textContainer = this.$refs.textContainer as HTMLElement;
+          // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
           const textElement = document.createElement('h3');
@@ -338,7 +382,13 @@
 
           let photoBase64: string = ' ';
           if (this.pictures.length > 0) {
-            photoBase64 = await this.convertFileToDataURL(this.pictures[0]) as string;
+            // procesar todas las imagenes
+            for (let i = 0; i < this.pictures.length; i++) {
+              photoBase64 += await this.convertFileToDataURL(this.pictures[i]) as string;
+            }
+          }
+          if (this.profilePicture.length == 1) {
+            photoBase64 = await this.convertFileToDataURL(this.profilePicture[0]) as string;
           }
           let menuData: string = ' ';
           const formData = new FormData();
@@ -359,6 +409,7 @@
             "timeTable": this.timetable,
             "category": this.category,
             "phoneNumber": this.phone,
+            "profilePicture": photoBase64,
             "pictures": photoBase64,
             "menu": "",
             "availability": this.available,
@@ -374,10 +425,11 @@
           if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
             console.log('Restaurante registrado correctamente');
+            this.userRegistered = true;
   
-            textElement.innerText = 'Restaurante registrado correctamente';
-            textContainer.innerHTML = '';
-            textContainer.appendChild(textElement);
+            // textElement.innerText = 'Restaurante registrado correctamente';
+            // textContainer.innerHTML = '';
+            // textContainer.appendChild(textElement);
             const authStore = useAuthStore();
             return authStore.login(this.username, this.password).catch(error => console.log(error));
           
@@ -391,22 +443,26 @@
           if (response.status === 400) {
             console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
-            console.error('Faltan campos obligatorios');
-            textElement.innerText = 'Faltan campos obligatorios';
-            } else if (response.data.code === 2) {
-            console.error('El nombre de usuario ya existe');
-            textElement.innerText = 'El nombre de usuario ya existe elige otro';
-            } else if (response.data.code === 3) {
-            console.error('El correo ya existe');
-            textElement.innerText = 'El correo ya existe';
-            } else if (response.data.code === 4) {
-            console.error('El teléfono ya existe');
-            textElement.innerText = 'El teléfono ya existe';
-            } else {
+              console.error('Faltan campos obligatorios');
+              textElement.innerText = 'Faltan campos obligatorios';
+            } 
+            else if (response.data.code === 2) {
+              console.error('El nombre de usuario ya existe');
+              this.validUserName = false;
+            } 
+            else if (response.data.code === 3) {
+              console.error('El correo ya existe');
+              this.validEmail = false;
+            } 
+            else if (response.data.code === 4) {
+              this.validPhone = false;
+            } 
+            else {
             console.error('Error desconocido:', response.status);
             textElement.innerText = 'Error desconocido';
             }
-          } else {
+          } 
+          else {
             console.error('Error al realizar la solicitud:', error.message);
           }
   

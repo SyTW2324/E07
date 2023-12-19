@@ -6,8 +6,9 @@
 
 // import * as mongodb from 'mongodb';
 // import { Available } from '../../available.js';
+// import { Reservation } from '../../reservation.js';
 // import { Timetable } from '../../timeTable.js';
-// import {reservationsDocumentInterface} from '../reservations/reservations-models.js';
+
 
 // export interface restaurantInterface {
 //   userName: string;
@@ -22,12 +23,13 @@
 //   category: string;
 
 //   phoneNumber: string;
+//   profilePicture: (Buffer | null);
 //   pictures: (Buffer | null)[]; // Array of pictures
 
 //   menu: Buffer | null;
 //   availability: Available[];
-//   nextReservations: reservationsDocumentInterface[];
-//   historicReservations: reservationsDocumentInterface[];
+//   nextReservations: Reservation[];
+//   historicReservations: Reservation[];
 // }
 
 
@@ -45,6 +47,7 @@
 //     private category: string,
 
 //     private phoneNumber: string,
+//     private profilePicture: Buffer | null,
 //     private pictures: (Buffer | null)[],
     
 //     private menu: Buffer | null,
@@ -92,6 +95,10 @@
   
 //   getPhoneNumber() {
 //     return this.phoneNumber;
+//   }
+
+//   getProfilePicture() {
+//     return this.profilePicture;
 //   }
 
 //   getPictures() {

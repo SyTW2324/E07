@@ -22,6 +22,7 @@ export interface restaurantsDocumentInterface extends Document {
   category: string;
 
   phoneNumber: string;
+  profilePicture: string;
   pictures: string;
 
   menu: Buffer | null;
@@ -82,6 +83,11 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
     trim: true,
     unique: true,
     match: [ /^\d{9}$/, 'Invalid phone number' ]
+  },
+  profilePicture: {
+    type: String,
+    required: false,
+    trim: true
   },
   pictures: {
     type: String,
