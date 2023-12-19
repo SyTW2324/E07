@@ -35,19 +35,23 @@
     <div>
       <v-container class="d-flex align-center justify-center">
         <v-row align-content="stretch" >
-          <v-col>
+          <v-col v-if="nextReservationsFlag == false">
             <v-card max-width="344" elevation="16" color="teal" density="compact">
               <v-title>
                 Mis próximas reservas
               </v-title>
-              <v-card-item>
-                Reserva 1
+              <v-card-item >
+                No tienes resevas
               </v-card-item>
-              <v-card-item>
-                Reserva 2
-              </v-card-item>
-              <v-card-item>
-                Reserva 3
+            </v-card>
+          </v-col>
+          <v-col v-else>
+            <v-card max-width="344" elevation="16" color="teal" density="compact">
+              <v-title>
+                Mis próximas reservas
+              </v-title>
+              <v-card-item v-for="reservation in nextReservations">
+                <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{reservation.date}} <v-btn @click="cancelReservation(reservation.reservationId)" color="white">Cancelar</v-btn> </p> 
               </v-card-item>
             </v-card>
           </v-col>
@@ -56,31 +60,13 @@
               <v-title>
                 Mis reservas anteriores
               </v-title>
-              <v-card-item>
-                Reserva 1
-              </v-card-item>
-              <v-card-item>
-                Reserva 2
-              </v-card-item>
-              <v-card-item>
-                Reserva 3
-              </v-card-item>
-            </v-card>
-          </v-col>
-          <v-col>
-            <v-card max-width="344" elevation="16" color="teal" density="compact">
-              <v-title>
-                Buzón de notificaciones
-              </v-title>
-              <v-card-item>
-                Notificación 1
-              </v-card-item>
-              <v-card-item>
-                Notificación 2
+              <v-card-item v-if="historicReservationsFlag == false">
+                No tienes resevas anteriores
               </v-card-item>
             </v-card>
           </v-col>
         </v-row>
+        <v-btn @onClick="cancelReservation('1')" color="teal">prueba</v-btn>
       </v-container>
     </div>
   </v-main>
@@ -99,6 +85,13 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 import { ref } from 'vue';
+import router from '../router';
+
+interface Reservation {
+  restaurant: string;
+  date: string;
+  reservationId: string;
+}
 
 let username = ref("");
 let name = ref("");
@@ -106,9 +99,12 @@ let surname = ref("");
 let email = ref("");
 let phoneNumber = ref("");
 let address = ref("");
-
 let profilePhoto = ref("");
+let nextReservationsFlag = ref(false);
+let historicReservationsFlag = ref(false);
 
+let nextReservations = ref<Reservation[]>([]);
+let historicReservations = ref<Reservation[]>([]);
 
 async function getUser() {
   const authStore = useAuthStore();
@@ -125,6 +121,40 @@ async function getUser() {
         email.value = response.data.message.email;
         phoneNumber.value = response.data.message.phoneNumber;
         address.value = response.data.message.address;
+
+        if (response.data.message.nextReservations.length > 0) {
+          nextReservationsFlag.value = true
+          for (let i in response.data.message.nextReservations) {
+            const response = await axios.get(`${baseUrl}reservations/?id=${i}`);
+            if (response.data.code === 0) {
+              const newReservation: Reservation = {
+                restaurant: response.data.message.restaurant as string,
+                date: response.data.message.date as string,
+                reservationId: i as string
+              }
+              nextReservations.value.push(newReservation);
+            } else {
+              console.log("Error al obtener las reservas");
+            }
+          }
+        } 
+        if (response.data.message.historicReservations.length > 0) {
+          historicReservationsFlag.value = true;
+          for (let i in response.data.message.historicReservations) {
+            const response = await axios.get(`${baseUrl}reservations/?id=${i}`);
+            if (response.data.code === 0) {
+              const newReservation: Reservation = {
+                restaurant: response.data.message.restaurant as string,
+                date: response.data.message.date as string,
+                reservationId: i as string
+              }
+              historicReservations.value.push(newReservation);
+            } else {
+              console.log("Error al obtener las reservas");
+            }
+          }
+        }
+
         if (authStore.getProfilePhoto() === " ") {
           profilePhoto.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         } else {
@@ -145,4 +175,43 @@ async function getUser() {
 }
 
 getUser();
+
+async function cancelReservation(reservationId: string) {
+  try {
+    console.log("dentro de cancelReservation");
+    const authStore = useAuthStore();
+    if (authStore.user) {
+    if (authStore.isExpired() === true) {
+      const userToken = authStore.getToken();
+      const response = await axios.delete(`${baseUrl}reservations/?token=${userToken}&userName=${authStore.user.username}&reservationId=${reservationId}`)
+      if (response.data.code === 0) {
+        console.log("Reserva cancelada");
+        // Recargar la página
+        router.push({ name: 'my-profile' });
+        
+      }
+    } else {
+      authStore.logout();
+    }
+    } else {
+    authStore.logout();
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+        const response = error.response;
+        if (response.status === 400 || response.status === 404) {
+          console.log(response.data.message);
+        } else {
+          console.error('Error al realizar la solicitud:', error.message);
+        }
+    } else {
+        console.error('Error al realizar la solicitud');
+    }
+      
+  }
+}
+  
+
 </script>
+
+

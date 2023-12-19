@@ -6,11 +6,11 @@
 
 import {Document, Schema, model} from 'mongoose';
 import { Available } from '../../available.js';
-import { Reservation } from '../../reservation.js';
 import { Timetable } from '../../timeTable.js';
 import { UserModel } from '../users/users-model.js';
+import { reservationsDocumentInterface } from '../reservations/reservantions-models.js';
 
-interface restaurantsDocumentInterface {
+export interface restaurantsDocumentInterface extends Document {
   userName: string;
   passwd: string;
   email: string;
@@ -27,8 +27,8 @@ interface restaurantsDocumentInterface {
 
   menu: Buffer | null;
   availability: Available[];
-  nextReservations: Reservation[];
-  historicReservations: Reservation[];
+  nextReservations: reservationsDocumentInterface[];
+  historicReservations: reservationsDocumentInterface[];
 }
 
 
@@ -106,12 +106,14 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
 
   },
   nextReservations: {
-    type: [Object],
+    type: [Schema.Types.ObjectId],
+    ref: 'Reservation',
     required: false,
     trim: true
   },
   historicReservations: {
-    type: [Object],
+    type: [Schema.Types.ObjectId],
+    ref: 'Reservation',
     required: false,
     trim: true
   }

@@ -29,7 +29,9 @@ usersRouter.post('/users', async (req, res) => {
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         address: req.body.address,
-        profilePhoto: null
+        profilePhoto: null,
+        nextReservations: [],
+        historicReservations: []
       })
       console.log("peticion correcta");
       console.log(req.body);
@@ -77,7 +79,9 @@ usersRouter.get('/users', async (req, res) => {
               userName: user.userName,
               email: user.email,
               phoneNumber: user.phoneNumber,
-              address: user.address
+              address: user.address,
+              nextReservations: user.nextReservations,
+              historicReservations: user.historicReservations
             }
             return res.status(200).send({code: 0, message: userSend});
           }
@@ -124,4 +128,6 @@ usersRouter.delete('/users', async (req, res) => {
     return res.status(500).send();
   }
 });
+
+
 
