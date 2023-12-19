@@ -51,7 +51,7 @@
                 Mis próximas reservas
               </v-title>
               <v-card-item v-for="reservation in nextReservations">
-                <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{reservation.date}} </p>
+                <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{reservation.date}} <v-btn @click="cancelReservation(reservation.reservationId)" color="white">Cancelar</v-btn> </p> 
               </v-card-item>
             </v-card>
           </v-col>
@@ -66,6 +66,7 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-btn @onClick="cancelReservation('1')" color="teal">prueba</v-btn>
       </v-container>
     </div>
   </v-main>
@@ -84,11 +85,12 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 import { ref } from 'vue';
-import Reservation from './Reservation.vue';
+import router from '../router';
 
 interface Reservation {
   restaurant: string;
   date: string;
+  reservationId: string;
 }
 
 let username = ref("");
@@ -120,19 +122,6 @@ async function getUser() {
         phoneNumber.value = response.data.message.phoneNumber;
         address.value = response.data.message.address;
 
-        // prueba
-        // nextReservationsFlag.value = true;
-        // const newReservation: Reservation = {
-        //   restaurant: "restaurante",
-        //   date: "24/12/2023 23:00"
-        // }
-        // nextReservations.value.push(newReservation);
-
-        // const newReservation2: Reservation = {
-        //   restaurant: "restaurante2",
-        //   date: "24/12/2023 23:00"
-        // }
-        // nextReservations.value.push(newReservation2);
         if (response.data.message.nextReservations.length > 0) {
           nextReservationsFlag.value = true
           for (let i in response.data.message.nextReservations) {
@@ -140,7 +129,8 @@ async function getUser() {
             if (response.data.code === 0) {
               const newReservation: Reservation = {
                 restaurant: response.data.message.restaurant as string,
-                date: response.data.message.date as string
+                date: response.data.message.date as string,
+                reservationId: i as string
               }
               nextReservations.value.push(newReservation);
             } else {
@@ -155,7 +145,8 @@ async function getUser() {
             if (response.data.code === 0) {
               const newReservation: Reservation = {
                 restaurant: response.data.message.restaurant as string,
-                date: response.data.message.date as string
+                date: response.data.message.date as string,
+                reservationId: i as string
               }
               historicReservations.value.push(newReservation);
             } else {
@@ -184,4 +175,43 @@ async function getUser() {
 }
 
 getUser();
+
+async function cancelReservation(reservationId: string) {
+  try {
+    console.log("dentro de cancelReservation");
+    const authStore = useAuthStore();
+    if (authStore.user) {
+    if (authStore.isExpired() === true) {
+      const userToken = authStore.getToken();
+      const response = await axios.delete(`${baseUrl}reservations/?token=${userToken}&userName=${authStore.user.username}&reservationId=${reservationId}`)
+      if (response.data.code === 0) {
+        console.log("Reserva cancelada");
+        // Recargar la página
+        router.push({ name: 'my-profile' });
+        
+      }
+    } else {
+      authStore.logout();
+    }
+    } else {
+    authStore.logout();
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+        const response = error.response;
+        if (response.status === 400 || response.status === 404) {
+          console.log(response.data.message);
+        } else {
+          console.error('Error al realizar la solicitud:', error.message);
+        }
+    } else {
+        console.error('Error al realizar la solicitud');
+    }
+      
+  }
+}
+  
+
 </script>
+
+
