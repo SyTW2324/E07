@@ -9,6 +9,7 @@ import express from 'express';
 import { usersRouter } from './routers/users/users-routes.js';
 import { loginRouter } from './routers/login/login-routers.js';
 import { restaurantsRouter } from './routers/restaurants/restaurants-routes.js';
+import { reservationsRouter } from './routers/reservations/reservation-routers.js';
 import './database/mongoose.js';
 
 
@@ -31,4 +32,5 @@ app.use((req, res, next) => {
 
 app.use(usersRouter);
 app.use(loginRouter);
-app.use(restaurantsRouter)
+app.use(restaurantsRouter);
+app.use(reservationsRouter);
