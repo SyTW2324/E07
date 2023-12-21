@@ -20,8 +20,7 @@
     "test:client": "cd client/sientate-a-la-mesa/ && npm run test",
     "installServer": "cd server/ && npm install",
     "installClient": "cd client/sientate-a-la-mesa/ && npm install",
-    "coverage": "nyc npm run test_server && nyc report --reporter=lcov",
-    "test_server": "cd server/ && npm run test"
+    "coverage-server": "cd server/ && npm run coverage"
   },
   "contributors": [
     {
