@@ -25,6 +25,6 @@ jobs:
         run: npm run coverage-server
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
-        env:
+        env: 
           GITHUB_TOKEN: cf739f96b33fdeb4fd8f7274b14543d5b9bcdd4a   # Needed to get PR information, if any
           SONAR_TOKEN: cf739f96b33fdeb4fd8f7274b14543d5b9bcdd4a
