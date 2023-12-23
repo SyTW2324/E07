@@ -15,7 +15,7 @@
           <v-row>
             <v-col class="d-flex align-center justify-center">
               <v-avatar size="200" color="grey" >
-                <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
+                <img :src="profilePicture" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
               </v-avatar>
             </v-col>
             <v-col>
@@ -83,7 +83,7 @@
   let selectedDays = ref("");
   let startingHour = ref("");
   let finishingHour = ref("");
-  let profilePhoto = ref("");
+  let profilePicture = ref("");
   let hours = ref("");
   
   async function getRestaurant() {
@@ -93,7 +93,8 @@
     if (authStore.isExpired() === true) {
         const userToken = authStore.getToken();
         const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-        console.log(response);
+        console.log("response:", response);
+
         if (response.data.code === 0) {
           userName.value = response.data.message.userName;
           restaurantName.value = response.data.message.restaurantName;
@@ -107,11 +108,18 @@
           startingHour.value = response.data.message.timeTable[0].startingHour;
           finishingHour.value = response.data.message.timeTable[0].finishingHour;
           hours.value = startingHour.value + " - " + finishingHour.value;
-          if (authStore.getProfilePhoto() === " ") {
-            profilePhoto.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+          
+
+          if (authStore.getProfilePhotoRestaurant() === " " || authStore.getProfilePhotoRestaurant() === null || authStore.getProfilePhotoRestaurant() === "undefined") {
+            console.log("dentro de if");
+            profilePicture.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
           } else {
             // Reducir tamaño de la imagen
-            profilePhoto.value = authStore.getProfilePhoto() as string;
+            console.log("dentro de else");
+            const photoUrl = authStore.getProfilePhotoRestaurant();
+            console.log("URL de la foto de perfil:", photoUrl);
+
+            profilePicture.value = authStore.getProfilePhotoRestaurant() as string;
           }
         } else {
           authStore.logout();
