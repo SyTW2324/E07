@@ -9,12 +9,16 @@ import router from '../router';
 import { useAuthStore } from '../stores/useAuthStore';
 
 
+
 let loading = ref(false);
 const selection = ref<string | null>(null);
 // Define un array con las horas disponibles
 let availableHours = ref<string[]>([]);
 let restaurants = ref<any>(null);
 let restaurantName = ref<string>('');
+let selectedDate = ref<string | null>(null);
+let calendar = ref<boolean>(true);
+
 
 
 async function fetchRestaurantData() {
@@ -26,15 +30,9 @@ async function fetchRestaurantData() {
     if (restaurant.data === null) router.push(`/404}`);;
 
     restaurants.value = restaurant.data;
-    
-    const startingHour = restaurant.data.timeTable[0].startingHour;
-    const finishingHour = restaurant.data.timeTable[0].finishingHour;
-    const timePeriod = 30;
 
-
-    const periodosDisponibles = calcularPeriodosDisponibles(startingHour, finishingHour, timePeriod);
-    availableHours.value = periodosDisponibles;
     restaurantName.value = restaurant.data.restaurantName;
+
 
     loading.value = false; // Se debe establecer a false aquí, después de obtener los datos.
 
@@ -45,39 +43,7 @@ async function fetchRestaurantData() {
   }
 }
 
-// ... (las funciones calcularPeriodosDisponibles y formatTime también deben estar aquí)
 
-function calcularPeriodosDisponibles(startingHour: string, finishingHour: string, timePeriod: number): string[] {
-    // Convertir las horas de apertura y cierre a objetos Date para facilitar la manipulación
-    const startTime = new Date(`2000-01-01T${startingHour}:00`);
-    if (finishingHour === '00:00') finishingHour = '24:00';
-    const endTime = new Date(`2000-01-01T${finishingHour}:00`);
-
-    // Calcular la cantidad total de minutos disponibles durante el horario de apertura
-    const totalMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
-
-    // Calcular la cantidad de periodos disponibles
-    const numberOfPeriods = Math.floor(totalMinutes / timePeriod);
-
-    // Calcular los periodos disponibles y almacenarlos en un array de strings
-    const availablePeriods: string[] = [];
-    let currentPeriodTime = startTime;
-
-    for (let i = 0; i < numberOfPeriods; i++) {
-        const periodEndTime = new Date(currentPeriodTime.getTime() + timePeriod * 60 * 1000);
-        availablePeriods.push(`${formatTime(currentPeriodTime)} - ${formatTime(periodEndTime)}`);
-        currentPeriodTime = periodEndTime;
-    }
-
-    return availablePeriods;
-}
-
-// Función auxiliar para formatear la hora en formato HH:mm
-function formatTime(time: Date): string {
-    const hours = time.getHours().toString().padStart(2, '0');
-    const minutes = time.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-}
 // Función para reservar
 async function reserve(selection: string | null) {
   loading.value = true;
@@ -94,10 +60,11 @@ async function reserve(selection: string | null) {
 
   date.setHours(Number(availableHours.value[Number(selection)].split(':')[0]));
   date.setMinutes(Number(availableHours.value[Number(selection)].split(':')[1].split(' ')[0]));
+  
   //pon el dia, mes y año de la reserva
-  date.setDate(1);
-  date.setMonth(1);
-  date.setFullYear(2021);
+  date.setDate(selectedDate.value ? new Date(selectedDate.value).getDate() : 0);
+  date.setMonth(selectedDate.value ? new Date(selectedDate.value).getMonth() : 0);
+  date.setFullYear(selectedDate.value ? new Date(selectedDate.value).getFullYear() : 0);
 
   console.log(date);
 
@@ -115,6 +82,13 @@ async function reserve(selection: string | null) {
 
   console.log(response);
 
+  if (response.data.code === 0) {
+    console.log('Reserva exitosa');
+    calendar.value = true;
+  } else {
+    console.log('Error al reservar');
+  }
+
 
 
 
@@ -123,6 +97,21 @@ async function reserve(selection: string | null) {
   
 
   setTimeout(() => (loading.value = false), 2000);
+}
+
+async function selectionDay() {
+  console.log(selectedDate.value)
+  
+    //!OJO FORMATO MES/DIA/AÑO
+  const selectedDateValue = selectedDate.value ? new Date(selectedDate.value) : null;
+  const day = selectedDateValue ? (selectedDateValue.getMonth() + 1) + '/' + selectedDateValue.getDate() + '/' + selectedDateValue.getFullYear() : '';
+
+  console.log(day);
+  calendar.value = false;
+  const availableHoursGet = await axios.get(`${baseUrl}reservationsAvilable/?RestaurantName=${restaurantName.value}&day=${day}`);
+  if (availableHoursGet.data.code === 0) {
+    availableHours.value = availableHoursGet.data.message;
+  }  
 }
 
 
@@ -143,7 +132,17 @@ fetchRestaurantData();
       </v-container>
 
       <v-container>
-        <v-container style="align-items: center: inherit;">
+
+        <v-container v-show="calendar">
+          <v-row justify="space-around">
+            <v-date-picker v-model="selectedDate" show-adjacent-months></v-date-picker>
+          </v-row>
+
+          <v-row justify="center" class="mt-3">
+            <v-btn @click="selectionDay()">Selección</v-btn>
+          </v-row>
+        </v-container>
+        <v-container style="align-items: center: inherit;" v-show="!calendar">
           <v-card :loading="loading" class="mx-auto my-12 " max-width="1000" >
             <template v-slot:loader="{ isActive }">
               <v-progress-linear :active="isActive" color="teal" height="4" indeterminate></v-progress-linear>
@@ -162,6 +161,8 @@ fetchRestaurantData();
             </v-card-actions>
           </v-card>
         </v-container>
+
+
 
       </v-container>
     </v-main>
