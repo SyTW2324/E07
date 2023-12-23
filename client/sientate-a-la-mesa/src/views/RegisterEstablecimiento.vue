@@ -1,4 +1,3 @@
-
 <template>
 
   <v-app>
@@ -237,6 +236,8 @@
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
+  import Compressor from 'compressorjs';
+
   
   //CORS
   
@@ -352,6 +353,38 @@
         }
       },
 
+      async compressImages(pictures: File[]) {
+        const compressedImages = await Promise.all(
+          pictures.map(async (picture) => {
+            const compressedImage = await this.compressImage(picture);
+            return compressedImage;
+          })
+        );
+
+        return compressedImages;
+      },
+
+      compressImage(file: File) {
+        return new Promise((resolve, reject) => {
+          new Compressor(file, {
+            quality: 0.6,
+            success(result) {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                resolve(reader.result);
+              };
+              reader.readAsDataURL(result);
+            },
+            error(e) {
+              console.error('Error al comprimir la imagen:', e);
+              reject(e);
+            },
+          });
+        });
+      },
+
+
+      
       async convertFileToDataURL(file: File) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -379,17 +412,48 @@
           // Crea un elemento de imagen
           const textElement = document.createElement('h3');
           textElement.innerText = ' ';
+          console.log('pre-compresion')
+          let compressedPictures: string[] = [];
+          try {
+            if (this.pictures.length > 0) {
+              console.log('pre')
+              const compressedImages = await this.compressImages(this.pictures);
+              console.log('post')
+              // Verificación de tipo para cada elemento del array
+              compressedImages.forEach((compressedImage) => {
+                if (typeof compressedImage === 'string') {
+                  compressedPictures.push(compressedImage);
+                } else {
+                  console.error('Uno de los elementos no es una cadena.');
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error durante la compresión de imágenes:', error);
+          }
+          console.log('imágenes comprimidas')
 
-          let photoBase64: string = ' ';
-          if (this.pictures.length > 0) {
-            // procesar todas las imagenes
-            for (let i = 0; i < this.pictures.length; i++) {
-              photoBase64 += await this.convertFileToDataURL(this.pictures[i]) as string;
+
+          let compressedProfilePicture: string | undefined = '';
+          if (this.profilePicture.length === 1) {
+            const result = await this.compressImage(this.profilePicture[0]);
+            if (typeof result === 'string') {
+              compressedProfilePicture = result;
+            } else {
+              console.error('El resultado de compressImage no es una cadena.');
             }
           }
-          if (this.profilePicture.length == 1) {
-            photoBase64 = await this.convertFileToDataURL(this.profilePicture[0]) as string;
-          }
+
+          // let photoBase64: string = ' ';
+          // if (this.pictures.length > 0) {
+          //   // procesar todas las imagenes
+          //   for (let i = 0; i < this.pictures.length; i++) {
+          //     photoBase64 += await this.convertFileToDataURL(this.pictures[i]) as string;
+          //   }
+          // }
+          // if (this.profilePicture.length == 1) {
+          //   photoBase64 = await this.convertFileToDataURL(this.profilePicture[0]) as string;
+          // }
           let menuData: string = ' ';
           const formData = new FormData();
           if (this.menu.length > 0) {
@@ -409,8 +473,8 @@
             "timeTable": this.timetable,
             "category": this.category,
             "phoneNumber": this.phone,
-            "profilePicture": photoBase64,
-            "pictures": photoBase64,
+            "profilePicture": compressedProfilePicture,
+            "pictures": compressedPictures,
             "menu": "",
             "availability": this.available,
           };
@@ -426,10 +490,6 @@
             //this.$router.push('/login');
             console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
-  
-            // textElement.innerText = 'Restaurante registrado correctamente';
-            // textContainer.innerHTML = '';
-            // textContainer.appendChild(textElement);
             const authStore = useAuthStore();
             return authStore.login(this.username, this.password).catch(error => console.log(error));
           

@@ -11,13 +11,16 @@ import { loginRouter } from './routers/login/login-routers.js';
 import { restaurantsRouter } from './routers/restaurants/restaurants-routes.js';
 import { reservationsRouter } from './routers/reservations/reservation-routers.js';
 import './database/mongoose.js';
-
+import bodyParser from 'body-parser';
 
 
 
 export const app = express();
-app.use(express.json());
 
+// nuevo
+app.use(bodyParser.json({ limit: '500mb' })); // Ajusta el límite según tus necesidades
+
+app.use(express.json());
 
 
 
