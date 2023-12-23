@@ -52,19 +52,7 @@
                 </v-card-item>
               </v-card>
             </v-col>
-            <v-col>
-              <v-card max-width="344" elevation="16" color="teal" density="compact">
-                <v-title>
-                  Buzón de notificaciones
-                </v-title>
-                <v-card-item>
-                  Notificación 1
-                </v-card-item>
-                <v-card-item>
-                  Notificación 2
-                </v-card-item>
-              </v-card>
-            </v-col>
+            
           </v-row>
         </v-container>
       </div>
