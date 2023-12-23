@@ -18,7 +18,7 @@ import bodyParser from 'body-parser';
 export const app = express();
 
 // nuevo
-app.use(bodyParser.json({ limit: '500mb' })); // Ajusta el límite según tus necesidades
+app.use(bodyParser.json({ limit: '50mb' })); // Ajusta el límite según tus necesidades
 
 app.use(express.json());
 

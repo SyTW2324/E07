@@ -108,6 +108,8 @@
                 label="Foto de perfil"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
+                :multiple="false"
+                :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
 
@@ -144,6 +146,8 @@
                 label="Menú"
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
+                :multiple="false"
+                :maxSize="1024*1024*6" 
               ></v-file-input>
             </v-col>
 
@@ -170,6 +174,7 @@
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 multiple
+                :maxSize="1024*1024*4"
               ></v-file-input>
             </v-col>
 
@@ -236,7 +241,7 @@
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
-  import Compressor from 'compressorjs';
+  import { compressImages, compressImage} from '../compression'
 
   
   //CORS
@@ -353,53 +358,23 @@
         }
       },
 
-      async compressImages(pictures: File[]) {
-        const compressedImages = await Promise.all(
-          pictures.map(async (picture) => {
-            const compressedImage = await this.compressImage(picture);
-            return compressedImage;
-          })
-        );
-
-        return compressedImages;
-      },
-
-      compressImage(file: File) {
-        return new Promise((resolve, reject) => {
-          new Compressor(file, {
-            quality: 0.6,
-            success(result) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                resolve(reader.result);
-              };
-              reader.readAsDataURL(result);
-            },
-            error(e) {
-              console.error('Error al comprimir la imagen:', e);
-              reject(e);
-            },
-          });
-        });
-      },
-
 
       
-      async convertFileToDataURL(file: File) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
+      // async convertFileToDataURL(file: File) {
+      //   return new Promise((resolve, reject) => {
+      //     const reader = new FileReader();
 
-          reader.onload = () => {
-            resolve(reader.result);
-          };
+      //     reader.onload = () => {
+      //       resolve(reader.result);
+      //     };
 
-          reader.onerror = (error) => {
-            reject(error);
-          };
+      //     reader.onerror = (error) => {
+      //       reject(error);
+      //     };
 
-          reader.readAsDataURL(file);
-        });
-      },
+      //     reader.readAsDataURL(file);
+      //   });
+      // },
       
       async RegisterRestaurantApi() {
         try {
@@ -412,13 +387,10 @@
           // Crea un elemento de imagen
           const textElement = document.createElement('h3');
           textElement.innerText = ' ';
-          console.log('pre-compresion')
           let compressedPictures: string[] = [];
           try {
             if (this.pictures.length > 0) {
-              console.log('pre')
-              const compressedImages = await this.compressImages(this.pictures);
-              console.log('post')
+              const compressedImages = await compressImages(this.pictures);
               // Verificación de tipo para cada elemento del array
               compressedImages.forEach((compressedImage) => {
                 if (typeof compressedImage === 'string') {
@@ -431,12 +403,11 @@
           } catch (error) {
             console.error('Error durante la compresión de imágenes:', error);
           }
-          console.log('imágenes comprimidas')
 
 
           let compressedProfilePicture: string | undefined = '';
           if (this.profilePicture.length === 1) {
-            const result = await this.compressImage(this.profilePicture[0]);
+            const result = await compressImage(this.profilePicture[0]);
             if (typeof result === 'string') {
               compressedProfilePicture = result;
             } else {
@@ -444,16 +415,6 @@
             }
           }
 
-          // let photoBase64: string = ' ';
-          // if (this.pictures.length > 0) {
-          //   // procesar todas las imagenes
-          //   for (let i = 0; i < this.pictures.length; i++) {
-          //     photoBase64 += await this.convertFileToDataURL(this.pictures[i]) as string;
-          //   }
-          // }
-          // if (this.profilePicture.length == 1) {
-          //   photoBase64 = await this.convertFileToDataURL(this.profilePicture[0]) as string;
-          // }
           let menuData: string = ' ';
           const formData = new FormData();
           if (this.menu.length > 0) {
