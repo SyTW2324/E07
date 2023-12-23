@@ -7,8 +7,9 @@ import { useRoute } from 'vue-router';
 import { baseUrl } from '../env/env-variables';
 import router from '../router';
 
+
 let loading = ref(false);
-const selection = ref(1);
+const selection = ref<string | null>(null);
 // Define un array con las horas disponibles
 let availableHours = ref<string[]>([]);
 let restaurants = ref<any>(null);
@@ -48,6 +49,7 @@ async function fetchRestaurantData() {
 function calcularPeriodosDisponibles(startingHour: string, finishingHour: string, timePeriod: number): string[] {
     // Convertir las horas de apertura y cierre a objetos Date para facilitar la manipulación
     const startTime = new Date(`2000-01-01T${startingHour}:00`);
+    if (finishingHour === '00:00') finishingHour = '24:00';
     const endTime = new Date(`2000-01-01T${finishingHour}:00`);
 
     // Calcular la cantidad total de minutos disponibles durante el horario de apertura
@@ -76,11 +78,15 @@ function formatTime(time: Date): string {
     return `${hours}:${minutes}`;
 }
 // Función para reservar
-function reserve() {
+function reserve(selection: string | null) {
   loading.value = true;
+  console.log('Reservando...');
+  console.log('Seleccionado:', availableHours.value[Number(selection)]);
 
   setTimeout(() => (loading.value = false), 2000);
 }
+
+
 
 fetchRestaurantData();
 
@@ -113,10 +119,11 @@ fetchRestaurantData();
             </div>
 
             <v-card-actions>
-              <v-btn color="teal" variant="text" @click="reserve">Reservar</v-btn>
+              <v-btn color="teal" variant="text" @click="reserve(selection)">Reservar</v-btn>
             </v-card-actions>
           </v-card>
         </v-container>
+
       </v-container>
     </v-main>
     <Footer></Footer>
