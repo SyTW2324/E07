@@ -30,3 +30,18 @@ export async function compressImage(file: File) {
     });
   });
 }
+
+// Función para descomprimir una imagen (simplemente devuelve la imagen original)
+function decompressImage(compressedImage: string) {
+  // No hay ninguna operación de descompresión, ya que image-compressor comprime las imágenes directamente
+  return compressedImage;
+}
+
+// Función para descomprimir varias imágenes
+export async function decompressImages(compressedImages: string[]) {
+  const decompressedImages = compressedImages.map((compressedImage) =>
+    decompressImage(compressedImage)
+  );
+
+  return decompressedImages;
+}
