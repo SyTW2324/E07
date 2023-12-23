@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useRoute } from 'vue-router';
 import { baseUrl } from '../env/env-variables';
 import router from '../router';
+import { useAuthStore } from '../stores/useAuthStore';
 
 
 let loading = ref(false);
@@ -78,10 +79,48 @@ function formatTime(time: Date): string {
     return `${hours}:${minutes}`;
 }
 // Función para reservar
-function reserve(selection: string | null) {
+async function reserve(selection: string | null) {
   loading.value = true;
+  const authStore = useAuthStore();
+
   console.log('Reservando...');
   console.log('Seleccionado:', availableHours.value[Number(selection)]);
+
+  //  una reserva exitosa después de 2 segundos
+
+  //Crear un post con el body incluye el token, nombre restaurante, nombre usuario, y el dia y hora de la reserva en el tipo Date
+
+  const date = new Date();
+
+  date.setHours(Number(availableHours.value[Number(selection)].split(':')[0]));
+  date.setMinutes(Number(availableHours.value[Number(selection)].split(':')[1].split(' ')[0]));
+  //pon el dia, mes y año de la reserva
+  date.setDate(1);
+  date.setMonth(1);
+  date.setFullYear(2021);
+
+  console.log(date);
+
+  console.log("------------------------------------------");
+  
+  const body = {
+    token: authStore.getToken(),
+    restaurantName: restaurantName.value,
+    userName: authStore.user.username,
+    day: date
+    
+  }
+
+  const response = await axios.post(`${baseUrl}reservations`, body);
+
+  console.log(response);
+
+
+
+
+
+
+  
 
   setTimeout(() => (loading.value = false), 2000);
 }
