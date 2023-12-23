@@ -241,7 +241,6 @@
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
-  import { compressImages, compressImage} from '../compression'
 
   
   //CORS
@@ -360,21 +359,21 @@
 
 
       
-      // async convertFileToDataURL(file: File) {
-      //   return new Promise((resolve, reject) => {
-      //     const reader = new FileReader();
+      async convertFileToBase64(file: File) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
 
-      //     reader.onload = () => {
-      //       resolve(reader.result);
-      //     };
+        reader.onload = () => {
+          resolve(reader.result);
+        };
 
-      //     reader.onerror = (error) => {
-      //       reject(error);
-      //     };
+        reader.onerror = (error) => {
+          reject(error);
+        };
 
-      //     reader.readAsDataURL(file);
-      //   });
-      // },
+        reader.readAsDataURL(file);
+      });
+    },
       
       async RegisterRestaurantApi() {
         try {
@@ -387,33 +386,19 @@
           // Crea un elemento de imagen
           const textElement = document.createElement('h3');
           textElement.innerText = ' ';
-          let compressedPictures: string[] = [];
-          try {
-            if (this.pictures.length > 0) {
-              const compressedImages = await compressImages(this.pictures);
-              // Verificación de tipo para cada elemento del array
-              compressedImages.forEach((compressedImage) => {
-                if (typeof compressedImage === 'string') {
-                  compressedPictures.push(compressedImage);
-                } else {
-                  console.error('Uno de los elementos no es una cadena.');
-                }
-              });
-            }
-          } catch (error) {
-            console.error('Error durante la compresión de imágenes:', error);
-          }
 
-
-          let compressedProfilePicture: string | undefined = '';
-          if (this.profilePicture.length === 1) {
-            const result = await compressImage(this.profilePicture[0]);
-            if (typeof result === 'string') {
-              compressedProfilePicture = result;
-            } else {
-              console.error('El resultado de compressImage no es una cadena.');
+          let photoBase64_profile: string = ' ';
+          let photoBase64_pictures: string[] = [];
+          if (this.pictures.length > 0) {
+            
+            for (let i = 0; i < this.pictures.length; i++) {
+              photoBase64_pictures[i] = await this.convertFileToBase64(this.pictures[i]) as string;
             }
           }
+          if (this.profilePicture.length == 1) {
+            photoBase64_profile = await this.convertFileToBase64(this.profilePicture[0]) as string;
+          }
+          
 
           let menuData: string = ' ';
           const formData = new FormData();
@@ -434,8 +419,8 @@
             "timeTable": this.timetable,
             "category": this.category,
             "phoneNumber": this.phone,
-            "profilePicture": compressedProfilePicture,
-            "pictures": compressedPictures,
+            "profilePicture": photoBase64_profile,
+            "pictures": photoBase64_pictures,
             "menu": "",
             "availability": this.available,
           };
