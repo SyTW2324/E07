@@ -14,7 +14,6 @@ import router from "../router/index.ts";
 
 
 
-
 export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
@@ -27,15 +26,17 @@ export const useAuthStore = defineStore({
             try {
 
                 const result = await fetchWrapper.post(`${baseUrl}login/authenticate`, { userName: username, password: passwordInput });
-    
+
                 // update pinia state
                 if (result.username) {
                     this.user = result;
+                    // console.log("result", result);
+
         
                     // store user details and jwt in local storage to keep user logged in between page refreshes
-                    console.log("result", result);
                     localStorage.setItem('user', JSON.stringify(result));
                     localStorage.setItem('profilePhoto', result.profilePhoto);
+                    localStorage.setItem('profilePicture', result.profilePicture);
 
                     // redirect to previous url or default to home page
                     
@@ -54,6 +55,7 @@ export const useAuthStore = defineStore({
             this.user = null;
             localStorage.removeItem('user');
             localStorage.removeItem('profilePhoto');
+            localStorage.removeItem('profilePicture');
             router.push('/login');
         },
         isExpired() {
@@ -69,8 +71,8 @@ export const useAuthStore = defineStore({
                     exp = Number(decoded.exp);
                 } 
                 const now = Date.now() / 1000;
-                console.log(now);
-                console.log(exp);
+                // console.log(now);
+                // console.log(exp);
                 if (now < exp) {
                     return true;
                 }
@@ -83,6 +85,11 @@ export const useAuthStore = defineStore({
         },
         getProfilePhoto(){
             const profilePhoto = localStorage.getItem('profilePhoto');
+            return profilePhoto;
+        },
+        getProfilePhotoRestaurant(){
+            const profilePhoto = localStorage.getItem('profilePicture');
+            console.log(profilePhoto);
             return profilePhoto;
         }
         
