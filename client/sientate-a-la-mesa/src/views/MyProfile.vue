@@ -17,7 +17,7 @@
             <v-avatar size="200" color="grey" >
               <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
             </v-avatar>
-          </v-col>
+          </v-col>reservationId
           <v-col>
             <p>Nombre: {{ name }}</p>
             <p>Apellidos: {{ surname }}</p>
@@ -121,16 +121,25 @@ async function getUser() {
         email.value = response.data.message.email;
         phoneNumber.value = response.data.message.phoneNumber;
         address.value = response.data.message.address;
-
+        let reservations = response.data.message.nextReservations;
         if (response.data.message.nextReservations.length > 0) {
           nextReservationsFlag.value = true
-          for (let i in response.data.message.nextReservations) {
-            const response = await axios.get(`${baseUrl}reservations/?id=${i}`);
+          console.log("dentro de nextReservations");
+          console.log(response.data.message.nextReservations);
+          console.log(reservations)
+          for (let i in reservations) {
+            const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
             if (response.data.code === 0) {
+              const date = new Date(response.data.message.day);
+              //pasar la fecha a string
+              const dateString = date.getDate().toLocaleString() + "/" + (date.getMonth() + 1).toLocaleString() + "/" + date.getFullYear().toLocaleString() + " " + date.getHours().toLocaleString() + ":" + date.getMinutes().toLocaleString();
+              
+              
+
               const newReservation: Reservation = {
                 restaurant: response.data.message.restaurant as string,
-                date: response.data.message.date as string,
-                reservationId: i as string
+                date: dateString as string ,
+                reservationId: reservations[i] as string
               }
               nextReservations.value.push(newReservation);
             } else {
@@ -187,7 +196,7 @@ async function cancelReservation(reservationId: string) {
       if (response.data.code === 0) {
         console.log("Reserva cancelada");
         // Recargar la página
-        router.push({ name: 'my-profile' });
+        router.push({ name: 'home-base' });
         
       }
     } else {
@@ -199,7 +208,7 @@ async function cancelReservation(reservationId: string) {
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
         const response = error.response;
-        if (response.status === 400 || response.status === 404) {
+        if (response.status === 400 || response.status === 404 || response.status === 500) {
           console.log(response.data.message);
         } else {
           console.error('Error al realizar la solicitud:', error.message);

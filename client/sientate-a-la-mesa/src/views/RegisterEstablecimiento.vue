@@ -1,4 +1,3 @@
-
 <template>
 
   <v-app>
@@ -109,6 +108,8 @@
                 label="Foto de perfil"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
+                :multiple="false"
+                :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
 
@@ -145,6 +146,8 @@
                 label="Menú"
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
+                :multiple="false"
+                :maxSize="1024*1024*6" 
               ></v-file-input>
             </v-col>
 
@@ -171,6 +174,7 @@
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 multiple
+                :maxSize="1024*1024*4"
               ></v-file-input>
             </v-col>
 
@@ -237,6 +241,7 @@
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
+
   
   //CORS
   
@@ -352,21 +357,23 @@
         }
       },
 
-      async convertFileToDataURL(file: File) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
 
-          reader.onload = () => {
-            resolve(reader.result);
-          };
+      
+      async convertFileToBase64(file: File) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
 
-          reader.onerror = (error) => {
-            reject(error);
-          };
+        reader.onload = () => {
+          resolve(reader.result);
+        };
 
-          reader.readAsDataURL(file);
-        });
-      },
+        reader.onerror = (error) => {
+          reject(error);
+        };
+
+        reader.readAsDataURL(file);
+      });
+    },
       
       async RegisterRestaurantApi() {
         try {
@@ -380,22 +387,22 @@
           const textElement = document.createElement('h3');
           textElement.innerText = ' ';
 
-          let photoBase64: string = ' ';
+          let photoBase64_profile: string = ' ';
+          let photoBase64_pictures: string[] = [];
           if (this.pictures.length > 0) {
-            // procesar todas las imagenes
+            
             for (let i = 0; i < this.pictures.length; i++) {
-              photoBase64 += await this.convertFileToDataURL(this.pictures[i]) as string;
+              photoBase64_pictures[i] = await this.convertFileToBase64(this.pictures[i]) as string;
             }
           }
           if (this.profilePicture.length == 1) {
-            photoBase64 = await this.convertFileToDataURL(this.profilePicture[0]) as string;
+            photoBase64_profile = await this.convertFileToBase64(this.profilePicture[0]) as string;
           }
-          let menuData: string = ' ';
-          const formData = new FormData();
-          if (this.menu.length > 0) {
-            formData.append('pdf', this.menu[0]);
+          
+          let pdfBase64: string = ' ';
+          if (this.menu.length == 1) {
+            pdfBase64 = await this.convertFileToBase64(this.menu[0]) as string;
           }
-          console.log('menuData', menuData);
 
           // comprimir el pdf
 
@@ -409,9 +416,9 @@
             "timeTable": this.timetable,
             "category": this.category,
             "phoneNumber": this.phone,
-            "profilePicture": photoBase64,
-            "pictures": photoBase64,
-            "menu": "",
+            "profilePicture": photoBase64_profile,
+            "pictures": photoBase64_pictures,
+            "menu": pdfBase64,
             "availability": this.available,
           };
           console.log('Datos a enviar', newRestaurantJson);
@@ -426,10 +433,6 @@
             //this.$router.push('/login');
             console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
-  
-            // textElement.innerText = 'Restaurante registrado correctamente';
-            // textContainer.innerHTML = '';
-            // textContainer.appendChild(textElement);
             const authStore = useAuthStore();
             return authStore.login(this.username, this.password).catch(error => console.log(error));
           

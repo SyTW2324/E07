@@ -52,19 +52,7 @@
                 </v-card-item>
               </v-card>
             </v-col>
-            <v-col>
-              <v-card max-width="344" elevation="16" color="teal" density="compact">
-                <v-title>
-                  Buzón de notificaciones
-                </v-title>
-                <v-card-item>
-                  Notificación 1
-                </v-card-item>
-                <v-card-item>
-                  Notificación 2
-                </v-card-item>
-              </v-card>
-            </v-col>
+            
           </v-row>
         </v-container>
       </div>
@@ -105,7 +93,8 @@
     if (authStore.isExpired() === true) {
         const userToken = authStore.getToken();
         const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-        console.log(response);
+        console.log("response:", response);
+
         if (response.data.code === 0) {
           userName.value = response.data.message.userName;
           restaurantName.value = response.data.message.restaurantName;
@@ -119,7 +108,9 @@
           startingHour.value = response.data.message.timeTable[0].startingHour;
           finishingHour.value = response.data.message.timeTable[0].finishingHour;
           hours.value = startingHour.value + " - " + finishingHour.value;
-          if (authStore.getProfilePhoto() === " ") {
+          
+
+          if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
             profilePhoto.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
           } else {
             // Reducir tamaño de la imagen

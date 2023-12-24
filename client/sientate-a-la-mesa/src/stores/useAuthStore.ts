@@ -14,7 +14,6 @@ import router from "../router/index.ts";
 
 
 
-
 export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
@@ -27,19 +26,28 @@ export const useAuthStore = defineStore({
             try {
 
                 const result = await fetchWrapper.post(`${baseUrl}login/authenticate`, { userName: username, password: passwordInput });
-    
+
                 // update pinia state
                 if (result.username) {
                     this.user = result;
+                    console.log("result", result);
+
         
                     // store user details and jwt in local storage to keep user logged in between page refreshes
-                    console.log("result", result);
                     localStorage.setItem('user', JSON.stringify(result));
                     localStorage.setItem('profilePhoto', result.profilePhoto);
+                    // localStorage.setItem('pictures', result.pictures);
+                    localStorage.setItem('pictures', JSON.stringify(result.pictures));
+                    
+
+                    console.log("pictures size", result.pictures);
 
                     // redirect to previous url or default to home page
-                    
-                    router.push('/home-base'); // cambio para que lleve a la home-base
+                    if (this.user.tipo === 'user') {
+                        router.push('/home-base'); // cambio para que lleve a la home-base
+                    } else if (this.user.tipo === 'restaurant') {
+                        router.push('/home-restaurants');
+                    }
                     return {code: 0, message: "Usuario logeado"};
                 } else {
                     return result;
@@ -54,6 +62,7 @@ export const useAuthStore = defineStore({
             this.user = null;
             localStorage.removeItem('user');
             localStorage.removeItem('profilePhoto');
+            localStorage.removeItem('pictures');
             router.push('/login');
         },
         isExpired() {
@@ -69,8 +78,8 @@ export const useAuthStore = defineStore({
                     exp = Number(decoded.exp);
                 } 
                 const now = Date.now() / 1000;
-                console.log(now);
-                console.log(exp);
+                // console.log(now);
+                // console.log(exp);
                 if (now < exp) {
                     return true;
                 }
@@ -84,7 +93,12 @@ export const useAuthStore = defineStore({
         getProfilePhoto(){
             const profilePhoto = localStorage.getItem('profilePhoto');
             return profilePhoto;
+        },
+        getPictures(): string[] | null {
+            const pictures = localStorage.getItem('pictures');
+            return pictures ? JSON.parse(pictures) : null;
         }
+          
         
     }
 });
