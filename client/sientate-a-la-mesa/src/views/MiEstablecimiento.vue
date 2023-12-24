@@ -15,7 +15,7 @@
           <v-row>
             <v-col class="d-flex align-center justify-center">
               <v-avatar size="200" color="grey" >
-                <img :src="profilePicture" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
+                <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
               </v-avatar>
             </v-col>
             <v-col>
@@ -83,7 +83,7 @@
   let selectedDays = ref("");
   let startingHour = ref("");
   let finishingHour = ref("");
-  let profilePicture = ref("");
+  let profilePhoto = ref("");
   let hours = ref("");
   
   async function getRestaurant() {
@@ -110,16 +110,11 @@
           hours.value = startingHour.value + " - " + finishingHour.value;
           
 
-          if (authStore.getProfilePhotoRestaurant() === " " || authStore.getProfilePhotoRestaurant() === null || authStore.getProfilePhotoRestaurant() === "undefined") {
-            console.log("dentro de if");
-            profilePicture.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+          if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
+            profilePhoto.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
           } else {
             // Reducir tamaño de la imagen
-            console.log("dentro de else");
-            const photoUrl = authStore.getProfilePhotoRestaurant();
-            console.log("URL de la foto de perfil:", photoUrl);
-
-            profilePicture.value = authStore.getProfilePhotoRestaurant() as string;
+            profilePhoto.value = authStore.getProfilePhoto() as string;
           }
         } else {
           authStore.logout();

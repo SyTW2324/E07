@@ -60,8 +60,8 @@ export const loginRouter = express.Router();
               tipo: "restaurant",
               profilePhoto: " "
             }
-            if (restaurant.pictures) {
-              resMessage.profilePhoto = restaurant.pictures;
+            if (restaurant.profilePicture) {
+              resMessage.profilePhoto = restaurant.profilePicture;
             }
             return res.status(200).send({ code: 0, message: resMessage});
           } else{
