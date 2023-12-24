@@ -54,11 +54,22 @@ export const loginRouter = express.Router();
             // const newLogin = new LoginModel(login);
             // const loginMessage = await newLogin.save();
             const userToken = jsonwebtoken.sign({ username: restaurant.userName, password: restaurant.passwd }, secretKey, { expiresIn: '1h' });
-            const resMessage = {
+            const resMessage: {
+              username: string;
+              accessToken: string;
+              tipo: string;
+              profilePhoto: string;
+              pictures: string[]; // Explicitly typed as an array of strings
+            } = {
               username: restaurant.userName,
               accessToken: userToken,
               tipo: "restaurant",
-              profilePhoto: " "
+              profilePhoto: " ",
+              pictures: []
+            }
+            if (restaurant.pictures) {
+              resMessage.pictures = restaurant.pictures;
+              console.log("Fotos del restaurante: " + restaurant.pictures.length);
             }
             if (restaurant.profilePicture) {
               resMessage.profilePhoto = restaurant.profilePicture;

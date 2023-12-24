@@ -23,7 +23,7 @@ export interface restaurantsDocumentInterface extends Document {
 
   phoneNumber: string;
   profilePicture: string;
-  pictures: string;
+  pictures: string[];
 
   menu: Buffer | null;
   availability: Available[];
@@ -90,7 +90,7 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
     trim: true
   },
   pictures: {
-    type: String,
+    type: [String],
     required: false,
     trim: true
   },
