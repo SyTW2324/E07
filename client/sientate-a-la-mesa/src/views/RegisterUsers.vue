@@ -101,7 +101,7 @@
 
         </v-row>
 
-        <v-btn id="enviarRegistroUsuario" @click="RegisterUserApi" color="primary">Enviar</v-btn>
+        <v-btn id="enviarRegistroUsuario" @click="submitForm" color="primary">Enviar</v-btn>
 
         </v-container>
       </v-form>
@@ -236,7 +236,7 @@ import { baseUrl } from '../env/env-variables';
       } else {
         // al usuario debe mostrarle en la web el problema 
         // y no enviar el formulario hasta que no lo corrija
-        
+        this.valid = false;
         console.log('Formulario inválido. Por favor, corrija los errores.');
       }
     },
@@ -264,6 +264,7 @@ import { baseUrl } from '../env/env-variables';
         this.validUserName = true;
         this.validEmail = true;
         this.validPhone = true;
+        this.valid = true;
       
 
         console.log("foto", this.profilePhoto)
