@@ -8,6 +8,8 @@ import Footer from '../components/Footer.vue'
 <v-app>
   <Barnav></Barnav>
   <v-main>
+      
+
     
     <v-container style="padding: 2em;">
     <v-card class="mx-auto my-custom-card-home"  color="red-accent-4" style=""> 
