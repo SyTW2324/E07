@@ -78,7 +78,8 @@ const routes: RouteRecordRaw[] = [
     name: '404',
     component: E404
 
-  }
+  },
+
 
 ];
 
@@ -90,8 +91,15 @@ const router =  createRouter({
 
 router.beforeEach( async (to) => {
 
-  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants', '/establecimientos'];
+  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants'];
+  const userPages = ['/my-profile', '/home-base', '/establecimientos'];
+  const restaurantPages = ['/my-profile-restaurants', '/home-restaurants'];
+
   const authRequired = !publicPages.includes(to.path);
+
+  const userPagesAccess = userPages.includes(to.path);
+  const restaurantPagesAccess = restaurantPages.includes(to.path);
+
   const auth = useAuthStore();
   const expired = auth.isExpired();
   console.log('expired', expired);
@@ -100,7 +108,18 @@ router.beforeEach( async (to) => {
     auth.logout();
     return '/login';
   } else if (to.path === '/login' && auth.user != null && expired === true) {
-    return '/my-profile';
+    if (auth.user.tipo === 'user') {
+      return '/home-base';
+    } else if (auth.user.tipo === 'restaurant') {
+      return '/home-restaurants';
+    } else {
+      auth.logout();
+    }
+    return '/login';
+  } else if (userPagesAccess && auth.user.tipo === 'restaurant') {
+    return '/404';
+  } else if (restaurantPagesAccess && auth.user.tipo === 'user') {
+    return '/404';
   }
 }
 );

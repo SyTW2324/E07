@@ -43,8 +43,11 @@ export const useAuthStore = defineStore({
                     console.log("pictures size", result.pictures);
 
                     // redirect to previous url or default to home page
-                    
-                    router.push('/home-base'); // cambio para que lleve a la home-base
+                    if (this.user.tipo === 'user') {
+                        router.push('/home-base'); // cambio para que lleve a la home-base
+                    } else if (this.user.tipo === 'restaurant') {
+                        router.push('/home-restaurants');
+                    }
                     return {code: 0, message: "Usuario logeado"};
                 } else {
                     return result;

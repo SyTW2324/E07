@@ -5,6 +5,9 @@
           <router-link v-if="userLogged.user == null" to="/">
             <v-app-bar-nav-icon> <img :src="icoWeb" alt="Logo">  </v-app-bar-nav-icon>
           </router-link>
+          <router-link v-else-if="userLogged.user.tipo == 'restaurant'" to="/home-restaurants">
+            <v-app-bar-nav-icon> <img :src="icoWeb" alt="Logo">  </v-app-bar-nav-icon>
+          </router-link>
           <router-link v-else to="/home-base">
             <v-app-bar-nav-icon> <img :src="icoWeb" alt="Logo">  </v-app-bar-nav-icon>
           </router-link>
@@ -14,7 +17,9 @@
         <v-app-bar-title> 
           <router-link v-if="userLogged.user == null" to="/" style="text-decoration: none; color: #ffffff;"><p>Sientate a la mesa</p>
           </router-link> 
-          <router-link v-else to="/home-base" style="text-decoration: none; color: #ffffff;"><p>Sientate a la mesa</p> 
+          <router-link v-else-if="userLogged.user.tipo == 'restaurant'" to="/home-restaurants" style="text-decoration: none; color: #ffffff;"><p>Sientate a la mesa</p> 
+          </router-link>
+          <router-link v-else to="/home-base" style="text-decoration: none; color: #ffffff;"><p>Sientate a la mesa</p>
           </router-link>
         </v-app-bar-title>
        
