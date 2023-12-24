@@ -34,7 +34,10 @@
               <v-card-title>
                 <h2>Menú</h2>
               </v-card-title>
-              <vue-pdf-app style="height: 100vh;" :pdf="menu"></vue-pdf-app>
+              <vue-pdf-app v-if="menu !== ''" style="height: 100vh;" :pdf="menu"></vue-pdf-app>
+              <v-card-text v-if="menu === ''">
+                <p> No hay un menú disponible</p>
+              </v-card-text>
             </v-card>
           </v-col>
           <v-col cols="12" md="6">
