@@ -13,6 +13,31 @@
                 :src="item"
               ></v-carousel-item>
             </v-carousel>
+            <br />
+            <v-card color="teal">
+              <v-card-title>
+                <h2>{{ restaurantName }}</h2>
+              </v-card-title>
+              <v-card-subtitle>
+                <h3>{{ category }}</h3>
+              </v-card-subtitle>
+              <v-card-text>
+                <p>{{ restaurantAddress }}</p>
+                <p>{{ phoneNumber }}</p>
+                <p>{{ email }}</p>
+                <p>{{ hours }}</p>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-card color="teal">
+              <v-card-title>
+                <h2>Menú</h2>
+              </v-card-title>
+              <vue-pdf-app style="height: 100vh;" :pdf="menu"></vue-pdf-app>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6">
           </v-col>
           
           
@@ -33,6 +58,7 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 import { ref } from 'vue';
+import VuePdfApp from "vue3-pdf-app";
 
 let userName = ref("");
 let restaurantName = ref("");
@@ -47,6 +73,8 @@ let finishingHour = ref("");
 let profilePhoto = ref("");
 let pictures = ref<string[]>([]);
 let hours = ref("");
+
+let menu = ref("");
 
 async function getRestaurant() {
   const authStore = useAuthStore();
@@ -70,6 +98,7 @@ async function getRestaurant() {
         startingHour.value = response.data.message.timeTable[0].startingHour;
         finishingHour.value = response.data.message.timeTable[0].finishingHour;
         hours.value = startingHour.value + " - " + finishingHour.value;
+        menu.value = response.data.message.menu;
         
 
         if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {

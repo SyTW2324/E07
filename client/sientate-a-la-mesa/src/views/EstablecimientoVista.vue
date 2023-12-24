@@ -129,6 +129,7 @@ fetchRestaurantData();
         <v-card class="mx-auto" width="1100" height="320" image="https://cdn.vuetifyjs.com/images/cards/docks.jpg" theme="dark"> 
           <v-card-title> {{ restaurantName  }}</v-card-title>
         </v-card>
+        
       </v-container>
 
       <v-container>
