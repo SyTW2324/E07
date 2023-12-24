@@ -25,7 +25,7 @@ export interface restaurantsDocumentInterface extends Document {
   profilePicture: string;
   pictures: string[];
 
-  menu: Buffer | null;
+  menu: string;
   availability: Available[];
   nextReservations: reservationsDocumentInterface[];
   historicReservations: reservationsDocumentInterface[];
@@ -95,7 +95,7 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
     trim: true
   },
   menu: {
-    type: Buffer,
+    type: String,
     required: false,
     trim: true
   },

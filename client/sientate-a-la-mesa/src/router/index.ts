@@ -8,6 +8,7 @@ import RecuperarContraseña from '../views/RecuperarContraseña.vue';
 import Login from '../views/Login.vue';
 import MyProfile from '../views/MyProfile.vue'
 import HomeBase from '../views/HomeBase.vue'
+import HomeEstablecimiento from '../views/HomeEstablecimiento.vue'
 import MyProfileRestaurants from '../views/MiEstablecimiento.vue'
 import Establecimiento from '../views/EstablecimientoVista.vue'
 import E404 from '../views/404.vue'
@@ -64,6 +65,12 @@ const routes: RouteRecordRaw[] = [
     path: '/home-base',
     name: 'home-base',
     component: HomeBase
+
+  },
+  {
+    path: '/home-restaurants',
+    name: 'home-restaurants',
+    component: HomeEstablecimiento
 
   },
   {

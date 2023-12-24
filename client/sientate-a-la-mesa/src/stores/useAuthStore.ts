@@ -30,13 +30,17 @@ export const useAuthStore = defineStore({
                 // update pinia state
                 if (result.username) {
                     this.user = result;
-                    // console.log("result", result);
+                    console.log("result", result);
 
         
                     // store user details and jwt in local storage to keep user logged in between page refreshes
                     localStorage.setItem('user', JSON.stringify(result));
                     localStorage.setItem('profilePhoto', result.profilePhoto);
-                    localStorage.setItem('profilePicture', result.profilePicture);
+                    // localStorage.setItem('pictures', result.pictures);
+                    localStorage.setItem('pictures', JSON.stringify(result.pictures));
+                    
+
+                    console.log("pictures size", result.pictures);
 
                     // redirect to previous url or default to home page
                     
@@ -55,7 +59,7 @@ export const useAuthStore = defineStore({
             this.user = null;
             localStorage.removeItem('user');
             localStorage.removeItem('profilePhoto');
-            localStorage.removeItem('profilePicture');
+            localStorage.removeItem('pictures');
             router.push('/login');
         },
         isExpired() {
@@ -87,11 +91,11 @@ export const useAuthStore = defineStore({
             const profilePhoto = localStorage.getItem('profilePhoto');
             return profilePhoto;
         },
-        getProfilePhotoRestaurant(){
-            const profilePhoto = localStorage.getItem('profilePicture');
-            console.log(profilePhoto);
-            return profilePhoto;
+        getPictures(): string[] | null {
+            const pictures = localStorage.getItem('pictures');
+            return pictures ? JSON.parse(pictures) : null;
         }
+          
         
     }
 });
