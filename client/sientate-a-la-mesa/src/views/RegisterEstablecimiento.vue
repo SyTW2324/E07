@@ -399,13 +399,10 @@
             photoBase64_profile = await this.convertFileToBase64(this.profilePicture[0]) as string;
           }
           
-
-          let menuData: string = ' ';
-          const formData = new FormData();
-          if (this.menu.length > 0) {
-            formData.append('pdf', this.menu[0]);
+          let pdfBase64: string = ' ';
+          if (this.menu.length == 1) {
+            pdfBase64 = await this.convertFileToBase64(this.menu[0]) as string;
           }
-          console.log('menuData', menuData);
 
           // comprimir el pdf
 
@@ -421,7 +418,7 @@
             "phoneNumber": this.phone,
             "profilePicture": photoBase64_profile,
             "pictures": photoBase64_pictures,
-            "menu": "",
+            "menu": pdfBase64,
             "availability": this.available,
           };
           console.log('Datos a enviar', newRestaurantJson);
