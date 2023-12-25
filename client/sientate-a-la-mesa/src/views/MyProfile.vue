@@ -66,7 +66,6 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-btn @onClick="cancelReservation('1')" color="teal">prueba</v-btn>
       </v-container>
     </div>
   </v-main>
