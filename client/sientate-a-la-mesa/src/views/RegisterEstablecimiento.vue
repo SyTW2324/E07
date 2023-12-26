@@ -665,7 +665,7 @@
         }
 
         //! FALTA COMPROBAR OTROS PARÁMETROS COMO EL NOMBRE DE USUARIO
-  
+        // username, nombre de restaurante,direccion, 
         // Actualizar el estado "valid" si es necesario
         this.valid = isEmailValid && isPhoneValid && isPasswordValid && numberOfTablesError && timetabledaysError && timetablestartError && timetableendError && timePeriodError;
         return this.valid;
