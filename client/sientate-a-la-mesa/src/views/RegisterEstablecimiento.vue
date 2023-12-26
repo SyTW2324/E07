@@ -144,16 +144,42 @@
             <!-- Hora de inicio -->
             <v-col cols="4">
               <label>Hora de inicio:</label>
-              <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
+              <v-text-field
+              id="horaInicio" 
+              v-model="timetable.startingHour" 
+              type="time"
+              required
+              ></v-text-field>
+              <v-col cols="12" v-if="timetable.startingHour === null || timetable.startingHour === undefined || timetable.startingHour ===''">
+                <v-alert
+                  type="warning"
+                  class="my-custom-alert"
+                >
+                  Este campo es obligatorio.
+                </v-alert>
+              </v-col>
             </v-col>
 
             <!-- Hora de finalización -->
             <v-col cols="4">
               <label>Hora de finalización:</label>
-              <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
+              <v-text-field
+              id="horaFin" 
+              v-model="timetable.finishingHour" 
+              type="time"
+              required
+              ></v-text-field>
+              <v-col cols="12" v-if="timetable.finishingHour === null || timetable.finishingHour === undefined || timetable.finishingHour === ''">
+                <v-alert
+                  type="warning"
+                  class="my-custom-alert"
+                >
+                  Este campo es obligatorio.
+                </v-alert>
+              </v-col>
             </v-col>
 
-            <!-- es un pdf, tamaño máximo 6mb -->
+            <!-- es un pdf, tamaño máximo 10mb -->
             <v-col cols="12" md="4"> 
               <v-file-input
                 v-model="menu"
@@ -173,16 +199,24 @@
 
             <!-- Número de minutos -->
             <v-col cols="12" md="4">
-              <label>Tiempo de franja de reserva (minutos):</label>
-              <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
+              <label>Tiempo de franja de reserva (minutos)*:</label>
+              <v-text-field 
+              id="franjaTiempo" 
+              v-model="available.timePeriod" 
+              type="number"
+              required
+              ></v-text-field>
             </v-col>
 
-            <!-- Número de personas -->
+            <!-- Número de mesas -->
             <v-col cols="12" md="4">
-              <label>Número de mesas por franja horaria:</label>
+              <label>Número de mesas por franja horaria*:</label>
               <v-text-field 
               id="numberOfTables"
-              v-model="available.numberOfTables" type="number"></v-text-field>
+              v-model="available.numberOfTables" 
+              type="number"
+              required
+              ></v-text-field>
             </v-col>
 
             <!-- imágenes del establecimiento, tamaño máximo 4mb -->
@@ -284,8 +318,8 @@
         description: '',
         timetable: {
           selectedDays: ['Viernes', 'Sábado', 'Domingo'], //por defecto para que no se quede vacío y salte el warning
-          startingHour: null,
-          finishingHour: null,
+          startingHour: '12:00',
+          finishingHour: '16:00',
         },
         daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
     
