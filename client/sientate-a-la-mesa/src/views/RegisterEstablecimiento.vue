@@ -130,8 +130,8 @@
                 </v-row>
                 <v-col cols="12" v-if="timetable.selectedDays.length < 1">
                   <v-alert
+                    v-model="timetabledaysError"
                     type="warning"
-                    closable
                     class="my-custom-alert"
                   >
                     Debe seleccionar al menos un día de la semana.
@@ -152,6 +152,7 @@
               ></v-text-field>
               <v-col cols="12" v-if="timetable.startingHour === null || timetable.startingHour === undefined || timetable.startingHour ===''">
                 <v-alert
+                  v-model="timetablestartError"
                   type="warning"
                   class="my-custom-alert"
                 >
@@ -171,6 +172,7 @@
               ></v-text-field>
               <v-col cols="12" v-if="timetable.finishingHour === null || timetable.finishingHour === undefined || timetable.finishingHour === ''">
                 <v-alert
+                  v-model="timetableendError"
                   type="warning"
                   class="my-custom-alert"
                 >
@@ -206,7 +208,17 @@
               type="number"
               required
               ></v-text-field>
+              <v-col cols="12" v-if="available.timePeriod < 1 || available.timePeriod === null">
+                <v-alert
+                  v-model="timePeriodError"
+                  type="warning"
+                  class="my-custom-alert"
+                >
+                  El tiempo de franja de reserva debe ser mayor que 0.
+                </v-alert>
+              </v-col>
             </v-col>
+
 
             <!-- Número de mesas -->
             <v-col cols="12" md="4">
@@ -217,6 +229,15 @@
               type="number"
               required
               ></v-text-field>
+              <v-col cols="12" v-if="available.numberOfTables < 1">
+                <v-alert
+                  v-model="numberOfTablesError"
+                  type="warning"
+                  class="my-custom-alert"
+                >
+                  El número de mesas por franja horaria debe ser mayor que 0.
+                </v-alert>
+              </v-col>
             </v-col>
 
             <!-- imágenes del establecimiento, tamaño máximo 4mb -->
@@ -229,6 +250,7 @@
                 multiple
                 :maxSize="1024*1024*4"
               ></v-file-input>
+              
             </v-col>
 
             
@@ -255,6 +277,17 @@
         - Correo: El correo debe ser válido.
         <br>
         - Teléfono: El teléfono debe tener 9 dígitos.
+        <br>
+        - Número de mesas por franja horaria: El número de mesas por franja horaria debe ser mayor que 0.
+        <br>
+        - Tiempo de franja de reserva: El tiempo de franja de reserva debe ser mayor que 0.
+        <br>
+        - Días de la semana: Debe seleccionar al menos un día de la semana.
+        <br>
+        - Hora de inicio: Este campo es obligatorio.
+        <br>
+        - Hora de finalización: Este campo es obligatorio.
+
       </v-alert>
 
       <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
@@ -297,6 +330,13 @@
   import { ref } from 'vue';
 
   const exceedsSizeLimit = ref(false);
+  let numberOfTablesError = true;
+  let timePeriodError = true;
+  let timetabledaysError = true;
+  let timetablestartError = true;
+  let timetableendError = true;
+
+
   //CORS
   
     export default {
@@ -330,7 +370,7 @@
             return 'El horario es obligatorio.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a timetableRules
-        category: '',
+        category: 'asador',
         categories: ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'],
         categoryRules: [
           (value: string) => {
@@ -390,8 +430,8 @@
         menu: [], // es un pdf
 
         available: {
-          timePeriod: null,
-          numberOfTables: null,
+          timePeriod: 30,
+          numberOfTables: 10,
         },
 
       }),
@@ -449,10 +489,13 @@
       
       async RegisterRestaurantApi() {
         try {
+
           this.validUserName = true;
           this.validEmail = true;
           this.validPhone = true;
-          console.log('Enviando datos a la API'); 
+
+
+
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -579,10 +622,54 @@
           if (!isValid) this.passwordError = rule(this.password) as string;
           return isValid;
         });
+
+        // comprobar dias de la semana
+        if (this.timetable.selectedDays.length < 1) {
+          // console.log('Debe seleccionar al menos un día de la semana');
+          timetabledaysError = false;
+        } else {
+          // console.log('Días de la semana seleccionados correctamente');
+          timetabledaysError = true;
+        }
+
+        // comprobar franja horaria
+        if (this.timetable.startingHour === null || this.timetable.startingHour === undefined || this.timetable.startingHour === '') {
+          console.log('Debe seleccionar una hora de inicio');
+          timetablestartError = false;
+        } else {
+          console.log('Hora de inicio seleccionada correctamente');
+          timetablestartError = true;
+        }
+
+        if (this.timetable.finishingHour === null || this.timetable.finishingHour === undefined || this.timetable.finishingHour === '') {
+          console.log('Debe seleccionar una hora de finalización');
+          timetableendError = false;
+        } else {
+          console.log('Hora de finalización seleccionada correctamente');
+          timetableendError = true;
+        }
+
+
+        // comprobar tiempo de franja de reserva
+        if (this.available.timePeriod < 1) {
+          // console.log('El tiempo de franja de reserva debe ser mayor que 0');
+          timePeriodError = false;
+        } else {
+          // console.log('El tiempo de franja de reserva es correcto');
+          timePeriodError = true;
+        }
+
+        // comprobar número de mesas
+        if (this.available.numberOfTables < 1) {
+          numberOfTablesError = false;
+        } else {
+          numberOfTablesError = true;
+        }
+
+        //! FALTA COMPROBAR OTROS PARÁMETROS COMO EL NOMBRE DE USUARIO
   
         // Actualizar el estado "valid" si es necesario
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid;
-  
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && numberOfTablesError && timetabledaysError && timetablestartError && timetableendError && timePeriodError;
         return this.valid;
       },
     },
