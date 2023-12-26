@@ -247,8 +247,9 @@
                 placeholder="Seleccione una imagen"
                 multiple
                 :maxSize="1024*1024*4"
+                @change="checkNumberOfFiles"
               ></v-file-input>
-              
+              <v-alert v-if="exceedsFileLimit" type="error">Se ha excedido el límite de 4 imágenes.</v-alert>
             </v-col>
 
             
@@ -333,6 +334,8 @@
   let timetabledaysError = true;
   let timetablestartError = true;
   let timetableendError = true;
+  let exceedsFileLimit = false;
+  const maxFiles = 4; // Número máximo de archivos
 
 
   //CORS
@@ -449,6 +452,29 @@
           console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
+      checkNumberOfFiles() {
+        this.$nextTick(() => {
+          if (this.pictures.length > 4) {
+            console.log('Se ha excedido el límite de 4 imágenes');
+            exceedsFileLimit = true;
+            this.$forceUpdate(); // Forzar la actualización del DOM
+          } else {
+            console.log('Número de imágenes correcto');
+            exceedsFileLimit = false;
+            this.$forceUpdate(); // Forzar la actualización del DOM
+          }
+        });
+      },
+      // checkNumberOfFiles() {
+      // if (this.pictures.length > maxFiles) {
+      //   console.log('Se ha excedido el límite de 4 imágenes');
+      //   exceedsFileLimit = true;
+      //   // Puedes manejar el caso de exceder el límite aquí, como deshabilitar el botón de enviar.
+      // } else {
+      //   console.log('Número de imágenes correcto');
+      //   exceedsFileLimit = false;
+      // }
+      // },
       checkFileSize(file: File) {
         console.log('tamaño del fichero: ', file.size);
         if (file.size > 1024*1024*6) {
