@@ -120,10 +120,10 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
 });
 
 
-restaurantsRouter.get('/restaurants/:name', async (req, res) => {
+restaurantsRouter.get('/restaurants/info', async (req, res) => {
   try{
 
-    if(req.params.name == "all"){
+    if(req.query.userName == "all"){
       console.log("all");
       const restaurants = await RestaurantModel.find({});
       if(restaurants){
@@ -135,8 +135,8 @@ restaurantsRouter.get('/restaurants/:name', async (req, res) => {
         return res.status(404).send({code: 1, error: "Restaurante no encontrado"});
       }
     }   
-    else if(req.params.name){
-      const restaurant = await RestaurantModel.findOne({restaurantName: req.params.name});
+    else if(req.query.userName){
+      const restaurant = await RestaurantModel.findOne({userName: req.query.userName});
       if(restaurant){
         
         return res.status(200).send(restaurant);
