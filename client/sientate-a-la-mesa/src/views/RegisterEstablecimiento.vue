@@ -120,9 +120,23 @@
                 <label>Días de la semana:</label>
                 <v-row>
                   <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
-                    <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
+                    <v-checkbox 
+                    v-model="timetable.selectedDays" 
+                    :label="day" 
+                    :value="day"
+                    required>
+                  </v-checkbox>
                   </v-col>
                 </v-row>
+                <v-col cols="12" v-if="timetable.selectedDays.length < 1">
+                  <v-alert
+                    type="warning"
+                    closable
+                    class="my-custom-alert"
+                  >
+                    Debe seleccionar al menos un día de la semana.
+                  </v-alert>
+                </v-col>
               </v-col>
             </v-row>
 
@@ -147,12 +161,12 @@
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
                 :multiple="false"
-                :maxSize="1024*1024*6" 
+                :maxSize="1024*1024*10" 
                 @change="onFileChange"
               ></v-file-input>
               <!-- warning -->
-              <v-alert v-if="exceedsSizeLimit" type="warning" closable class="my-custom-alert">
-                El tamaño del archivo excede los 6 MB, no se puede enviar
+              <v-alert v-if="exceedsSizeLimit" type="warning" class="my-custom-alert">
+                El tamaño del archivo no debe exceder los 10 MB.
               </v-alert>
             </v-col>
 
@@ -269,7 +283,7 @@
         address: '',
         description: '',
         timetable: {
-          selectedDays: [],
+          selectedDays: ['Viernes', 'Sábado', 'Domingo'], //por defecto para que no se quede vacío y salte el warning
           startingHour: null,
           finishingHour: null,
         },
@@ -372,9 +386,14 @@
         }
       },
       onFileChange(event: Event) {
-        if (event.target.files && event.target.files[0]) {
-          const file = event.target.files[0];
-          this.checkFileSize(file);
+        const target = event.target as HTMLInputElement;
+        if (target && target.files && target.files[0]) {
+          const file = target.files[0];
+          if (file.size > 1024 * 1024 * 6) {
+            exceedsSizeLimit.value = true;
+          } else {
+            exceedsSizeLimit.value = false;
+          }
         }
       },
       
