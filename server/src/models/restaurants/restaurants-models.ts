@@ -64,7 +64,7 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
   },
   description: {
     type: String,
-    required: true,
+    required: false,
     trim: true
   },
   timeTable: {
@@ -101,7 +101,7 @@ const RestaurantSchema = new Schema<restaurantsDocumentInterface>({
   },
   availability: {
     type: [Object],
-    required: false,
+    required: true,
     trim: true
 
   },

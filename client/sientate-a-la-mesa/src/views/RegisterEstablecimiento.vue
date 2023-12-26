@@ -29,7 +29,6 @@
                 id="address"
                 v-model="address"
                 label="Dirección del establecimiento*"
-                required
                 hide-details
               ></v-text-field>
             </v-col>
@@ -39,7 +38,6 @@
                 id="description"
                 v-model="description"
                 label="Descripción*"
-                required
                 hide-details
               ></v-text-field>
             </v-col>
@@ -199,7 +197,7 @@
             </v-col>
 
 
-            <!-- Número de minutos -->
+            <!-- franja de tiempo por reserva -->
             <v-col cols="12" md="4">
               <label>Tiempo de franja de reserva (minutos)*:</label>
               <v-text-field 
@@ -240,7 +238,7 @@
               </v-col>
             </v-col>
 
-            <!-- imágenes del establecimiento, tamaño máximo 4mb -->
+            <!-- imágenes del establecimiento, tamaño máximo 4mb cada una-->
             <v-col cols="12" md="4">
               <v-file-input
                 v-model="pictures"
