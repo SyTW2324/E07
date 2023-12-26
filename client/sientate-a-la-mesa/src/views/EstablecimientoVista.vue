@@ -44,9 +44,9 @@ async function fetchRestaurantData() {
   
   try {
     const route = useRoute();
-    const restaurant = await axios.get(`${baseUrl}restaurants/${route.params.id}`);
+    const restaurant = await axios.get(`${baseUrl}restaurants/info/?userName=${route.params.userName}`);
 
-    if (restaurant.data === null) router.push(`/404}`);;
+   // if (restaurant.data === null) router.push(`/404}`);;
 
     restaurants.value = restaurant.data;
 

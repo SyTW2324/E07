@@ -57,7 +57,7 @@ const routes: RouteRecordRaw[] = [
     component: MyProfileRestaurants
   },
   {
-    path: '/establecimientos/:id',
+    path: '/establecimientos/:userName',
     name: 'establecimientos',
     component: Establecimiento
   },
