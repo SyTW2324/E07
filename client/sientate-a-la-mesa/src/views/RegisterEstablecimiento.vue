@@ -139,7 +139,7 @@
               <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
             </v-col>
 
-            <!-- es un pdf -->
+            <!-- es un pdf, tamaño máximo 6mb -->
             <v-col cols="12" md="4"> 
               <v-file-input
                 v-model="menu"
@@ -148,7 +148,12 @@
                 placeholder="Seleccione un pdf"
                 :multiple="false"
                 :maxSize="1024*1024*6" 
+                @change="onFileChange"
               ></v-file-input>
+              <!-- warning -->
+              <v-alert v-if="exceedsSizeLimit" type="warning" closable class="my-custom-alert">
+                El tamaño del archivo excede los 6 MB, no se puede enviar
+              </v-alert>
             </v-col>
 
 
@@ -166,7 +171,7 @@
               v-model="available.numberOfTables" type="number"></v-text-field>
             </v-col>
 
-            <!-- imágenes del establecimiento -->
+            <!-- imágenes del establecimiento, tamaño máximo 4mb -->
             <v-col cols="12" md="4">
               <v-file-input
                 v-model="pictures"
@@ -241,8 +246,9 @@
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
+  import { ref } from 'vue';
 
-  
+  const exceedsSizeLimit = ref(false);
   //CORS
   
     export default {
@@ -334,11 +340,12 @@
         profilePicture: [],
         pictures: [],
         menu: [], // es un pdf
+
         available: {
           timePeriod: null,
           numberOfTables: null,
         },
-        
+
       }),
       methods: {
       submitForm() {
@@ -356,8 +363,20 @@
           console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
-
-
+      checkFileSize(file: File) {
+        console.log('tamaño del fichero: ', file.size);
+        if (file.size > 1024*1024*6) {
+          exceedsSizeLimit.value = true;
+        } else {
+          exceedsSizeLimit.value = false;
+        }
+      },
+      onFileChange(event: Event) {
+        if (event.target.files && event.target.files[0]) {
+          const file = event.target.files[0];
+          this.checkFileSize(file);
+        }
+      },
       
       async convertFileToBase64(file: File) {
       return new Promise((resolve, reject) => {
@@ -390,7 +409,6 @@
           let photoBase64_profile: string = ' ';
           let photoBase64_pictures: string[] = [];
           if (this.pictures.length > 0) {
-            
             for (let i = 0; i < this.pictures.length; i++) {
               photoBase64_pictures[i] = await this.convertFileToBase64(this.pictures[i]) as string;
             }
@@ -485,6 +503,11 @@
         this.emailError = '';
         this.phoneError = '';
         this.passwordError = '';
+
+        if (exceedsSizeLimit.value === true) {
+          console.log('El tamaño del archivo excede los 6 MB, no se puede enviar');
+          return false;
+        }
   
         const isEmailValid = this.emailRules.every(rule => {
           const isValid = rule(this.email) === true;

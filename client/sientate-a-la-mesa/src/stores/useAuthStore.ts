@@ -36,7 +36,6 @@ export const useAuthStore = defineStore({
                     // store user details and jwt in local storage to keep user logged in between page refreshes
                     localStorage.setItem('user', JSON.stringify(result));
                     localStorage.setItem('profilePhoto', result.profilePhoto);
-                    // localStorage.setItem('pictures', result.pictures);
                     localStorage.setItem('pictures', JSON.stringify(result.pictures));
                     
 
