@@ -4,71 +4,70 @@
 <v-app>
   <Barnav></Barnav>
   <v-main>
-    <div>
-      <v-container class="d-flex align-center justify-center" >
+    <v-container>
+      <v-container class="d-flex align-center justify-center">
         <h1>Mi perfil</h1>
       </v-container>
-    </div>
 
-    <div>
       <v-container class="d-flex align-center justify-center">
-        <v-row>
-          <v-col class="d-flex align-center justify-center">
-            <v-avatar size="200" color="grey" >
+        <v-col>
+          <v-container>
+            <v-avatar size="20%" color="grey">
               <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
             </v-avatar>
-          </v-col>
-          <v-col>
+  
             <p>Nombre: {{ name }}</p>
             <p>Apellidos: {{ surname }}</p>
             <p>Dirección: {{ address }}</p>
             <p>Correo: {{ email }}</p>
             <p>Nombre de usuario: {{ username }}</p>
             <p>Telefono: {{ phoneNumber }}</p>
-            <br />
-            <v-btn color="teal">Editar</v-btn>
-          </v-col>
-        </v-row>
+  
+          </v-container>
+          <v-btn color="teal">Editar</v-btn>
+        </v-col>
+  
+        <v-col>
+          <v-container>
+            <v-card max-width="344" elevation="16" color="teal" density="compact">
+              <v-title>Mis próximas reservas</v-title>
+              <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
+              <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12" md="4">
+                <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{reservation.date}} <v-btn @click="cancelReservation(reservation.reservationId)" color="white">Cancelar</v-btn></p>
+              </v-card-item>
+            </v-card>
+          </v-container>
+          <v-container v-if = "nextReservationsFlag == true">
+            <v-row>
+              <v-col cols="12">
+                <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+  
+        <v-col>
+          <v-container>
+            <v-card max-width="50%" elevation="40%" color="teal" density="compact">
+              <v-title>Mis reservas anteriores</v-title>
+              <v-card-item v-if="historicReservationsFlag == false">No tienes reservas anteriores</v-card-item>
+              <v-card-item v-else v-for="(reservation, index) in paginatedHistoricReservations" :key="index" cols="12" md="4">
+                <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{reservation.date}}</p>
+              </v-card-item>
+            </v-card>
+          </v-container>
+          <v-container v-if = "historicReservationsFlag == true">
+            <v-row>
+              <v-col cols="12">
+                <v-pagination v-model="currentPageHistoricReservations" :length="totalPagesHistoricReservations" @input="changePageHistoricReservations" />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
       </v-container>
-    </div>
-    <br>
-    <div>
-      <v-container class="d-flex align-center justify-center">
-        <v-row align-content="stretch" >
-          <v-col v-if="nextReservationsFlag == false">
-            <v-card max-width="344" elevation="16" color="teal" density="compact">
-              <v-title>
-                Mis próximas reservas
-              </v-title>
-              <v-card-item >
-                No tienes resevas
-              </v-card-item>
-            </v-card>
-          </v-col>
-          <v-col v-else>
-            <v-card max-width="344" elevation="16" color="teal" density="compact">
-              <v-title>
-                Mis próximas reservas
-              </v-title>
-              <v-card-item v-for="reservation in nextReservations">
-                <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{reservation.date}} <v-btn @click="cancelReservation(reservation.reservationId)" color="white">Cancelar</v-btn> </p> 
-              </v-card-item>
-            </v-card>
-          </v-col>
-          <v-col>
-            <v-card max-width="344" elevation="16" color="teal" density="compact">
-              <v-title>
-                Mis reservas anteriores
-              </v-title>
-              <v-card-item v-if="historicReservationsFlag == false">
-                No tienes resevas anteriores
-              </v-card-item>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </div>
+    </v-container>
   </v-main>
+  
 
   <Footer></Footer>
   
@@ -85,6 +84,7 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 import { ref } from 'vue';
 import router from '../router';
+import { computed } from 'vue';
 
 interface Reservation {
   restaurant: string;
@@ -104,6 +104,48 @@ let historicReservationsFlag = ref(false);
 
 let nextReservations = ref<Reservation[]>([]);
 let historicReservations = ref<Reservation[]>([]);
+
+const itemsPerPage = 3;
+
+// Paginación de las próximas reservas
+const currentPageNextReservations = ref(1);
+
+const paginatedNextReservations = computed(() => {
+  const startIndex = (currentPageNextReservations.value - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  return nextReservations.value?.slice(startIndex, endIndex);
+})
+
+const totalPagesNextReservations = computed(() => {
+  if (nextReservationsFlag.value === true) {
+    return Math.ceil(nextReservations.value.length / itemsPerPage);
+  }
+  return 0;
+});
+
+const changePage = (page: number) => {
+  currentPageNextReservations.value = page
+}
+
+// Paginación de las reservas anteriores
+const currentPageHistoricReservations = ref(1);
+
+const paginatedHistoricReservations = computed(() => {
+  const startIndex = (currentPageHistoricReservations.value - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  return historicReservations.value?.slice(startIndex, endIndex);
+})
+
+const totalPagesHistoricReservations = computed(() => {
+  if (historicReservationsFlag.value === true) {
+    return Math.ceil(historicReservations.value.length / itemsPerPage);
+  }
+  return 0;
+});
+
+const changePageHistoricReservations = (page: number) => {
+  currentPageHistoricReservations.value = page
+}
 
 async function getUser() {
   const authStore = useAuthStore();
