@@ -139,7 +139,7 @@
               <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
             </v-col>
 
-            <!-- es un pdf, tamaño máximo 6mb -->
+            <!-- es un pdf, tamaño máximo 10mb -->
             <v-col cols="12" md="4"> 
               <v-file-input
                 v-model="menu"
@@ -147,13 +147,8 @@
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
                 :multiple="false"
-                :maxSize="1024*1024*6" 
-                @change="onFileChange"
+                :maxSize="1024*1024*10" 
               ></v-file-input>
-              <!-- warning -->
-              <v-alert v-if="exceedsSizeLimit" type="warning" closable class="my-custom-alert">
-                El tamaño del archivo excede los 6 MB, no se puede enviar
-              </v-alert>
             </v-col>
 
 
@@ -221,6 +216,46 @@
         El teléfono ya existe.
       </v-alert>
 
+      <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert">
+        El nombre del establecimiento es obligatorio.
+      </v-alert>
+
+      <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert">
+        La dirección del establecimiento es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert">
+        La categoría es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert">
+        La contraseña es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert">
+        Debe seleccionar al menos un día de la semana.
+      </v-alert>
+
+      <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert">
+        La hora de inicio es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert">
+        La hora de finalización es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert">
+        El tiempo de franja de reserva es obligatorio.
+      </v-alert>
+
+      <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert">
+        El número de mesas por franja horaria es obligatorio.
+      </v-alert>
+
+      <v-alert v-if="!validMenu" type="error" closable class="my-custom-alert">
+        El menú es obligatorio.
+      </v-alert>
+
       <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
         Usuario registrado correctamente.
       </v-alert>
@@ -257,6 +292,16 @@
         validUserName: true,
         validEmail: true,
         validPhone: true,
+        validRestaurantName: true,
+        validAddress: true,
+        validCategory: true,
+        validPassword: true,  
+        validWeekDays: true,
+        validStartingHour: true,
+        validFinishingHour: true,
+        validTimePeriod: true,
+        validNumberOfTables: true,
+        validMenu: true,
         userRegistered: false,
         restaurantname: '',
         restaurantnameRules: [
@@ -363,20 +408,6 @@
           console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
-      checkFileSize(file: File) {
-        console.log('tamaño del fichero: ', file.size);
-        if (file.size > 1024*1024*6) {
-          exceedsSizeLimit.value = true;
-        } else {
-          exceedsSizeLimit.value = false;
-        }
-      },
-      onFileChange(event: Event) {
-        if (event.target.files && event.target.files[0]) {
-          const file = event.target.files[0];
-          this.checkFileSize(file);
-        }
-      },
       
       async convertFileToBase64(file: File) {
       return new Promise((resolve, reject) => {
@@ -399,6 +430,17 @@
           this.validUserName = true;
           this.validEmail = true;
           this.validPhone = true;
+          this.validRestaurantName = true;
+          this.validAddress = true;
+          this.validCategory = true;
+          this.validPassword = true;
+          this.validWeekDays = true;
+          this.validStartingHour = true;
+          this.validFinishingHour = true;
+          this.validTimePeriod = true;
+          this.validNumberOfTables = true;
+          this.validMenu = true;
+
           console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
