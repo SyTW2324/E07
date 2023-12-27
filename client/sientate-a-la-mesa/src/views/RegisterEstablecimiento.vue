@@ -29,6 +29,7 @@
                 id="address"
                 v-model="address"
                 label="Dirección del establecimiento*"
+                required
                 hide-details
               ></v-text-field>
             </v-col>
@@ -38,6 +39,7 @@
                 id="description"
                 v-model="description"
                 label="Descripción*"
+                required
                 hide-details
               ></v-text-field>
             </v-col>
@@ -132,23 +134,9 @@
                 <label>Días de la semana:</label>
                 <v-row>
                   <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
-                    <v-checkbox 
-                    v-model="timetable.selectedDays" 
-                    :label="day" 
-                    :value="day"
-                    required>
-                  </v-checkbox>
+                    <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
                   </v-col>
                 </v-row>
-                <v-col cols="12" v-if="timetable.selectedDays.length < 1">
-                  <v-alert
-                    v-model="timetabledaysError"
-                    type="warning"
-                    class="my-custom-alert"
-                  >
-                    Debe seleccionar al menos un día de la semana.
-                  </v-alert>
-                </v-col>
               </v-col>
             </v-row>
 
@@ -156,41 +144,13 @@
             <!-- Hora de inicio -->
             <v-col cols="4">
               <label>Hora de inicio:</label>
-              <v-text-field
-              id="horaInicio" 
-              v-model="timetable.startingHour" 
-              type="time"
-              required
-              ></v-text-field>
-              <v-col cols="12" v-if="timetable.startingHour === null || timetable.startingHour === undefined || timetable.startingHour ===''">
-                <v-alert
-                  v-model="timetablestartError"
-                  type="warning"
-                  class="my-custom-alert"
-                >
-                  Este campo es obligatorio.
-                </v-alert>
-              </v-col>
+              <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
             </v-col>
 
             <!-- Hora de finalización -->
             <v-col cols="4">
               <label>Hora de finalización:</label>
-              <v-text-field
-              id="horaFin" 
-              v-model="timetable.finishingHour" 
-              type="time"
-              required
-              ></v-text-field>
-              <v-col cols="12" v-if="timetable.finishingHour === null || timetable.finishingHour === undefined || timetable.finishingHour === ''">
-                <v-alert
-                  v-model="timetableendError"
-                  type="warning"
-                  class="my-custom-alert"
-                >
-                  Este campo es obligatorio.
-                </v-alert>
-              </v-col>
+              <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
             </v-col>
 
             <!-- es un pdf, tamaño máximo 10mb -->
@@ -201,58 +161,26 @@
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
                 :multiple="false"
-                :maxSize="1024*1024*10" 
-                @change="onFileChange"
+                :maxSize="1024*1024*10"
               ></v-file-input>
-              <!-- warning -->
-              <v-alert v-if="exceedsSizeLimit" type="warning" class="my-custom-alert">
-                El tamaño del archivo no debe exceder los 10 MB.
-              </v-alert>
             </v-col>
 
 
-            <!-- franja de tiempo por reserva -->
+            <!-- Número de minutos -->
             <v-col cols="12" md="4">
-              <label>Tiempo de franja de reserva (minutos)*:</label>
-              <v-text-field 
-              id="franjaTiempo" 
-              v-model="available.timePeriod" 
-              type="number"
-              required
-              ></v-text-field>
-              <v-col cols="12" v-if="available.timePeriod < 1 || available.timePeriod === null">
-                <v-alert
-                  v-model="timePeriodError"
-                  type="warning"
-                  class="my-custom-alert"
-                >
-                  El tiempo de franja de reserva debe ser mayor que 0.
-                </v-alert>
-              </v-col>
+              <label>Tiempo de franja de reserva (minutos):</label>
+              <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
             </v-col>
 
-
-            <!-- Número de mesas -->
+            <!-- Número de personas -->
             <v-col cols="12" md="4">
-              <label>Número de mesas por franja horaria*:</label>
+              <label>Número de mesas por franja horaria:</label>
               <v-text-field 
               id="numberOfTables"
-              v-model="available.numberOfTables" 
-              type="number"
-              required
-              ></v-text-field>
-              <v-col cols="12" v-if="available.numberOfTables < 1">
-                <v-alert
-                  v-model="numberOfTablesError"
-                  type="warning"
-                  class="my-custom-alert"
-                >
-                  El número de mesas por franja horaria debe ser mayor que 0.
-                </v-alert>
-              </v-col>
+              v-model="available.numberOfTables" type="number"></v-text-field>
             </v-col>
 
-            <!-- imágenes del establecimiento, tamaño máximo 4mb cada una-->
+            <!-- imágenes del establecimiento, tamaño máximo 4mb -->
             <v-col cols="12" md="4">
               <v-file-input
                 v-model="pictures"
@@ -261,9 +189,7 @@
                 placeholder="Seleccione una imagen"
                 multiple
                 :maxSize="1024*1024*4"
-                @change="checkNumberOfFiles"
               ></v-file-input>
-              <v-alert v-if="exceedsFileLimit" type="error">Se ha excedido el límite de 4 imágenes.</v-alert>
             </v-col>
 
             
@@ -290,21 +216,10 @@
         - Correo: El correo debe ser válido.
         <br>
         - Teléfono: El teléfono debe tener 9 dígitos.
-        <br>
-        - Número de mesas por franja horaria: El número de mesas por franja horaria debe ser mayor que 0.
-        <br>
-        - Tiempo de franja de reserva: El tiempo de franja de reserva debe ser mayor que 0.
-        <br>
-        - Días de la semana: Debe seleccionar al menos un día de la semana.
-        <br>
-        - Hora de inicio: Este campo es obligatorio.
-        <br>
-        - Hora de finalización: Este campo es obligatorio.
-
       </v-alert>
 
       <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
-        El nombre de usuario ya existe elige otro.
+        El nombre de usuario es obligatorio
       </v-alert>
 
       <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
@@ -313,6 +228,48 @@
 
       <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
         El teléfono ya existe.
+      </v-alert>
+
+      <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert">
+        El nombre del establecimiento es obligatorio.
+      </v-alert>
+
+      <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert">
+        La dirección del establecimiento es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert">
+        La categoría es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert">
+        La contraseña es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert">
+        Debe seleccionar al menos un día de la semana.
+      </v-alert>
+
+      <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert">
+        La hora de inicio es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert">
+        La hora de finalización es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert">
+        El tiempo de franja de reserva es obligatorio.
+      </v-alert>
+
+      <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert">
+        El número de mesas por franja horaria es obligatorio.
+      </v-alert>
+
+      <v-alert v-if="!validMenu" type="error" closable>
+        El menú es obligatorio.
+        <br>
+        El tamaño del archivo no debe exceder los 10 MB.
       </v-alert>
 
       <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
@@ -343,6 +300,7 @@
   import { ref } from 'vue';
 
   const exceedsSizeLimit = ref(false);
+<<<<<<< HEAD
   let numberOfTablesError = true;
   let timePeriodError = true;
   let timetabledaysError = true;
@@ -352,6 +310,8 @@
   //const maxFiles = 4; // Número máximo de archivos
 
 
+=======
+>>>>>>> 6e5e0592525d4b42a498264aeaa001aa2b4f4fc3
   //CORS
   
     export default {
@@ -360,6 +320,16 @@
         validUserName: true,
         validEmail: true,
         validPhone: true,
+        validRestaurantName: true,
+        validAddress: true,
+        validCategory: true,
+        validPassword: true,  
+        validWeekDays: true,
+        validStartingHour: true,
+        validFinishingHour: true,
+        validTimePeriod: true,
+        validNumberOfTables: true,
+        validMenu: true,
         userRegistered: false,
         restaurantname: '',
         showPassword: false,
@@ -373,9 +343,9 @@
         address: '',
         description: '',
         timetable: {
-          selectedDays: ['Viernes', 'Sábado', 'Domingo'], //por defecto para que no se quede vacío y salte el warning
-          startingHour: '12:00',
-          finishingHour: '16:00',
+          selectedDays: [],
+          startingHour: null,
+          finishingHour: null,
         },
         daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
     
@@ -386,7 +356,7 @@
             return 'El horario es obligatorio.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a timetableRules
-        category: 'asador',
+        category: '',
         categories: ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'],
         categoryRules: [
           (value: string) => {
@@ -444,10 +414,26 @@
         profilePicture: [],
         pictures: [],
         menu: [], // es un pdf
+        menuRules: [
+          (value: File) => {
+            if (!value) return true;
 
+            const fileSize = value.size;
+            const maxFileSize = 10 * 1024 * 1024; // 10 MB
+
+            if (fileSize > maxFileSize) {
+              console.log('tamaño: ', fileSize);
+              exceedsSizeLimit.value = true;
+              return false;
+            }
+
+            return true;
+          },
+        ],
+        menuError: '',
         available: {
-          timePeriod: 30,
-          numberOfTables: 10,
+          timePeriod: null,
+          numberOfTables: null,
         },
 
       }),
@@ -467,6 +453,7 @@
           console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
+<<<<<<< HEAD
       controlShowPassword() {
         this.showPassword = !this.showPassword;
       },
@@ -512,6 +499,8 @@
           }
         }
       },
+=======
+>>>>>>> 6e5e0592525d4b42a498264aeaa001aa2b4f4fc3
       
       async convertFileToBase64(file: File) {
       return new Promise((resolve, reject) => {
@@ -531,13 +520,11 @@
       
       async RegisterRestaurantApi() {
         try {
-
           this.validUserName = true;
           this.validEmail = true;
           this.validPhone = true;
 
-
-
+          console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -641,9 +628,10 @@
         this.emailError = '';
         this.phoneError = '';
         this.passwordError = '';
+        this.menuError = '';
 
         if (exceedsSizeLimit.value === true) {
-          console.log('El tamaño del archivo excede los 6 MB, no se puede enviar');
+          console.log('El tamaño del archivo excede los 10 MB, no se puede enviar');
           return false;
         }
   
@@ -665,53 +653,127 @@
           return isValid;
         });
 
-        // comprobar dias de la semana
-        if (this.timetable.selectedDays.length < 1) {
-          // console.log('Debe seleccionar al menos un día de la semana');
-          timetabledaysError = false;
-        } else {
-          // console.log('Días de la semana seleccionados correctamente');
-          timetabledaysError = true;
+        // nombre de restaurante, comprobar que no esté vacío
+        if (this.restaurantname === '') {
+          this.validRestaurantName = false;
+          console.log('El nombre del restaurante es obligatorio');
+        }
+        else {
+          this.validRestaurantName = true;
         }
 
-        // comprobar franja horaria
-        if (this.timetable.startingHour === null || this.timetable.startingHour === undefined || this.timetable.startingHour === '') {
-          console.log('Debe seleccionar una hora de inicio');
-          timetablestartError = false;
-        } else {
-          console.log('Hora de inicio seleccionada correctamente');
-          timetablestartError = true;
+        // dirección del restaurante, comprobar que no esté vacío
+        if (this.address === '') {
+          this.validAddress = false;
+          console.log('La dirección del restaurante es obligatoria');
+        }
+        else {
+          this.validAddress = true;
         }
 
-        if (this.timetable.finishingHour === null || this.timetable.finishingHour === undefined || this.timetable.finishingHour === '') {
-          console.log('Debe seleccionar una hora de finalización');
-          timetableendError = false;
-        } else {
-          console.log('Hora de finalización seleccionada correctamente');
-          timetableendError = true;
+        // categoría del restaurante, comprobar que no esté vacío
+        if (this.category === '') {
+          this.validCategory = false;
+          console.log('La categoría del restaurante es obligatoria');
+        }
+        else {
+          this.validCategory = true;
+        }
+
+        // nombre de usuario, comprobar que no esté vacío
+        if (this.username === '') {
+          this.validUserName = false;
+          console.log('El nombre de usuario es obligatorio');
+        }
+        else {
+          this.validUserName = true;
+        }
+
+        // contraseña, comprobar que no esté vacío
+        if (this.password === '') {
+          this.validPassword = false;
+          console.log('La contraseña es obligatoria');
+        }
+        else {
+          this.validPassword = true;
+        }
+
+        // días de la semana, comprobar que al menos haya uno seleccionado
+        if (this.timetable.selectedDays.length === 0) {
+          this.validWeekDays = false;
+          console.log('Debe seleccionar al menos un día de la semana');
+        }
+        else {
+          this.validWeekDays = true;
+        }
+
+        // hora de inicio, comprobar que no esté vacío
+        if (this.timetable.startingHour === null || this.timetable.startingHour === '') {
+          this.validStartingHour = false;
+          console.log('La hora de inicio es obligatoria');
+        }
+        else {
+          console.log('La hora de inicio es', this.timetable.startingHour);
+          this.validStartingHour = true;
+        }
+
+        // hora de finalización, comprobar que no esté vacío
+        if (this.timetable.finishingHour === null || this.timetable.finishingHour === '') {
+          this.validFinishingHour = false;
+          console.log('La hora de finalización es obligatoria');
+        }
+        else {
+          console.log('La hora de finalización es', this.timetable.finishingHour);  
+          this.validFinishingHour = true;
+        }
+
+        // tiempo de franja de reserva, comprobar que no esté vacío y que sea mayor que 0
+        if (this.available.timePeriod === null || this.available.timePeriod <= 0) {
+          this.validTimePeriod = false;
+          console.log('El tiempo de franja de reserva es obligatorio');
+        }
+        else {
+          this.validTimePeriod = true;
+        }
+
+        // número de mesas por franja horaria, comprobar que no esté vacío y que sea mayor que 0
+        if (this.available.numberOfTables === null || this.available.numberOfTables <= 0) {
+          this.validNumberOfTables = false;
+          console.log('El número de mesas por franja horaria es obligatorio');
+        }
+        else {
+          this.validNumberOfTables = true;
         }
 
 
-        // comprobar tiempo de franja de reserva
-        if (this.available.timePeriod < 1) {
-          // console.log('El tiempo de franja de reserva debe ser mayor que 0');
-          timePeriodError = false;
-        } else {
-          // console.log('El tiempo de franja de reserva es correcto');
-          timePeriodError = true;
-        }
+        // menú, tamaño no debe exceder 10mb
+        const isMenuValid = this.menuRules.every(rule => {
+          const menuFile = Array.isArray(this.menu) ? this.menu[0] : this.menu as File;
+          console.log("comprobando reglas del menu")
+          if (!menuFile) {
+            // Menú vacío, no es válido
+            this.menuError = 'El menú es obligatorio.';
+            this.validMenu = false;
+            return false;
+          }
 
-        // comprobar número de mesas
-        if (this.available.numberOfTables < 1) {
-          numberOfTablesError = false;
-        } else {
-          numberOfTablesError = true;
-        }
+          const isValidSize = rule(menuFile) === true;
+          const isValid = isValidSize && !exceedsSizeLimit.value;
 
-        //! FALTA COMPROBAR OTROS PARÁMETROS COMO EL NOMBRE DE USUARIO
-        // username, nombre de restaurante,direccion, 
+          if (!isValid) {
+
+            this.menuError = isValidSize ? rule(menuFile) as unknown as string : 'El tamaño del menú excede los 10 MB.';
+            this.validMenu = false;
+          }
+
+          return isValid;
+        });
+
+  
         // Actualizar el estado "valid" si es necesario
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && numberOfTablesError && timetabledaysError && timetablestartError && timetableendError && timePeriodError;
+        // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && isMenuValid;
+  
         return this.valid;
       },
     },
