@@ -15,8 +15,8 @@
         <v-row>
           <v-col v-for="(restaurant, index) in paginatedRestaurants" :key="index" cols="12" md="4">
             <v-card>
-              <v-card-title>{{ restaurant }}</v-card-title>
-              <v-card-subtitle>{{ restaurant }}</v-card-subtitle>
+              <v-card-title>{{ restaurant[0] }}</v-card-title>
+              <v-card-subtitle>{{ restaurant[1] }}</v-card-subtitle>
               <v-card-text class="d-flex justify-space-between">
                 <v-chip prepend-icon="mdi-brightness-5" @click="">Se</v-chip>
                 <v-chip prepend-icon="mdi-alarm-check" @click="">vienen</v-chip>
@@ -28,9 +28,9 @@
                 size="large"
                 type="submit"
                 variant="elevated"
-                @click="$router.push(`/establecimientos/${restaurant}`)"
+                @click="$router.push(`/establecimientos/${restaurant[1]}`)"
               >
-                <p style="color: teal;"> More info</p>
+                <p style="color: teal;"> Más información</p>
               </v-btn>
             </v-card>
           </v-col>
@@ -59,7 +59,7 @@ import { onMounted } from 'vue'
 import { baseUrl } from '../env/env-variables';
 
 const user = useAuthStore();
-const restaurants = ref < string[] >();
+const restaurants = ref < [string, string] []>();
 const itemsPerPage = 3;
 const currentPage = ref(1);
 
@@ -87,10 +87,12 @@ onMounted(async () => {
   // Realizar la solicitud a tu backend para obtener la lista de restaurantes
   try {
  
-    const response = await axios.get(`${baseUrl}restaurants/all`);
-    let names: string[] = [];
+    const response = await axios.get(`${baseUrl}restaurants/info/?userName=all`);
+
+    // array de tuplas string
+    let names: [string, string] [] = [];
     for (let i = 0; i < response.data.length; i++) {
-      names.push(response.data[i].restaurantName);
+      names.push([response.data[i].restaurantName, response.data[i].userName]);
     }
     restaurants.value = names;
 
