@@ -17,7 +17,7 @@
             <v-avatar size="200" color="grey" >
               <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
             </v-avatar>
-          </v-col>reservationId
+          </v-col>
           <v-col>
             <p>Nombre: {{ name }}</p>
             <p>Apellidos: {{ surname }}</p>
@@ -66,7 +66,6 @@
             </v-card>
           </v-col>
         </v-row>
-        <v-btn @onClick="cancelReservation('1')" color="teal">prueba</v-btn>
       </v-container>
     </div>
   </v-main>
