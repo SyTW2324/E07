@@ -669,17 +669,26 @@
           this.validNumberOfTables = true;
         }
 
+
         // menú, tamaño no debe exceder 10mb
         const isMenuValid = this.menuRules.every(rule => {
-          console.log('comprobando menu')
           const menuFile = Array.isArray(this.menu) ? this.menu[0] : this.menu as File;
-          const isValid = rule(menuFile) === true;
+
+          if (!menuFile) {
+            // Menú vacío, no es válido
+            this.menuError = 'El menú es obligatorio.';
+            this.validMenu = false;
+            return false;
+          }
+
+          const isValidSize = rule(menuFile) === true;
+          const isValid = isValidSize && !exceedsSizeLimit.value;
+
           if (!isValid) {
-            const menuFile = Array.isArray(this.menu) ? this.menu[0] : this.menu as File;
-            this.menuError = rule(menuFile) ? rule(menuFile) as unknown as string : '';
-            console.log('menu error: ', this.menuError);
+            this.menuError = isValidSize ? rule(menuFile) as unknown as string : 'El tamaño del menú excede los 10 MB.';
             this.validMenu = false;
           }
+
           return isValid;
         });
 
