@@ -387,21 +387,6 @@ import { baseUrl } from '../env/env-variables';
 
       return this.valid;
     },
-    // validUserName() {
-    //   if (validUserNameVar == false) {
-    //     return false
-    //   }
-    // },
-    // validEmail() {
-    //   if (validEmailVar == false) {
-    //     return false
-    //   }
-    // },
-    // validPhone() {
-    //   if (validPhoneVar == false) {
-    //     return false
-    //   }
-    // },
   },
   };
 </script>

@@ -12,6 +12,7 @@ import HomeEstablecimiento from '../views/HomeEstablecimiento.vue'
 import MyProfileRestaurants from '../views/MiEstablecimiento.vue'
 import Establecimiento from '../views/EstablecimientoVista.vue'
 import E404 from '../views/404.vue'
+import EditUserProfile from '../views/EditUserProfile.vue'
 
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -79,7 +80,11 @@ const routes: RouteRecordRaw[] = [
     component: E404
 
   },
-
+  {
+    path: '/edit-user-profile',
+    name: 'edit-user-profile',
+    component: EditUserProfile
+  } 
 
 ];
 
@@ -92,8 +97,8 @@ const router =  createRouter({
 router.beforeEach( async (to) => {
 
   const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants'];
-  const userPages = ['/my-profile', '/home-base', '/establecimientos'];
-  const restaurantPages = ['/my-profile-restaurants', '/home-restaurants'];
+  const userPages = ['/my-profile', '/home-base', '/establecimientos', '/edit-user-profile']; // Página a las que solo puede acceder un usuario
+  const restaurantPages = ['/my-profile-restaurants', '/home-restaurants']; // Página a las que solo puede acceder un restaurante
 
   const authRequired = !publicPages.includes(to.path);
 

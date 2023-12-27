@@ -30,7 +30,9 @@
             <p>Telefono: {{ phoneNumber }}</p>
   
           </v-container>
-          <v-btn color="teal">Editar</v-btn>
+          <router-link to="/edit-user-profile">
+            <v-btn color="teal">Editar</v-btn>
+          </router-link>
         </v-col>
   
         <v-col>

@@ -45,6 +45,21 @@ let email: string = '';
       <img style=" max-width: 400px; max-height: 400px;" src="../img/icoWeb.png" alt="Logo"> 
     </v-container>
 
+    <v-container style="padding: 2em;">
+      <v-card class="mx-auto my-custom-card-home"  color="red-accent-4" style=""> 
+            <v-card-title> Página en desarrollo</v-card-title>
+            <v-card-text>
+              <p>Esta paǵina está en desarrollo, todavía no puedes recuperar tu contraseña.</p>
+              <p>Estamos trabajando en ello.</p>
+            </v-card-text>
+            <v-card-actions>
+              <router-link to="/login">
+                <v-btn color="white" >Ir al Inicio de sesión</v-btn>
+              </router-link>
+            </v-card-actions>
+          </v-card>
+    </v-container>
+
    <v-container >
 
       <v-card class="mx-auto px-6 py-8" max-width="400" style="padding: ;"    >
