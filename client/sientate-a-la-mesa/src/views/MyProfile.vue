@@ -12,7 +12,7 @@
       <v-container class="d-flex align-center justify-center">
         <v-col>
           <v-container>
-            <v-avatar size="20%" color="grey">
+            <v-avatar size="30%" color="grey">
               <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
             </v-avatar>
   
