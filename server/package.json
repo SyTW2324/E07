@@ -7,7 +7,6 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js deploy",
-    "start-Deploy": "npm run build && npm run start",
     "dev": "tsc-watch --onSuccess \"node dist/index.js dev \"",
     "startTest": "node dist/index.js test",
     "doc": "typedoc",
