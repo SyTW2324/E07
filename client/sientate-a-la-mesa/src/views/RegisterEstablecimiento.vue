@@ -252,8 +252,10 @@
         El número de mesas por franja horaria es obligatorio.
       </v-alert>
 
-      <v-alert v-if="!validMenu" type="error" closable class="my-custom-alert">
+      <v-alert v-if="!validMenu" type="error" closable>
         El menú es obligatorio.
+        <br>
+        El tamaño del archivo no debe exceder los 10 MB.
       </v-alert>
 
       <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
@@ -385,7 +387,22 @@
         profilePicture: [],
         pictures: [],
         menu: [], // es un pdf
+        menuRules: [
+          (value: File) => {
+            if (!value) return true;
 
+            const fileSize = value.size;
+            const maxFileSize = 10 * 1024 * 1024; // 10 MB
+
+            if (fileSize > maxFileSize) {
+              exceedsSizeLimit.value = true;
+              return false;
+            }
+
+            return true;
+          },
+        ],
+        menuError: '',
         available: {
           timePeriod: null,
           numberOfTables: null,
@@ -535,9 +552,10 @@
         this.emailError = '';
         this.phoneError = '';
         this.passwordError = '';
+        this.menuError = '';
 
         if (exceedsSizeLimit.value === true) {
-          console.log('El tamaño del archivo excede los 6 MB, no se puede enviar');
+          console.log('El tamaño del archivo excede los 10 MB, no se puede enviar');
           return false;
         }
   
@@ -652,17 +670,23 @@
         }
 
         // menú, tamaño no debe exceder 10mb
-        if (this.menu.length === 0) {
-          this.validMenu = false;
-        }
-        else {
-          this.validMenu = true;
-        }
+        const isMenuValid = this.menuRules.every(rule => {
+          console.log('comprobando menu')
+          const menuFile = Array.isArray(this.menu) ? this.menu[0] : this.menu as File;
+          const isValid = rule(menuFile) === true;
+          if (!isValid) {
+            const menuFile = Array.isArray(this.menu) ? this.menu[0] : this.menu as File;
+            this.menuError = rule(menuFile) ? rule(menuFile) as unknown as string : '';
+            console.log('menu error: ', this.menuError);
+            this.validMenu = false;
+          }
+          return isValid;
+        });
 
   
         // Actualizar el estado "valid" si es necesario
         // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu;
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && isMenuValid;
   
         return this.valid;
       },
