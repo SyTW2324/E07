@@ -147,7 +147,7 @@
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
                 :multiple="false"
-                :maxSize="1024*1024*10" 
+                :maxSize="1024*1024*10"
               ></v-file-input>
             </v-col>
 
@@ -205,7 +205,7 @@
       </v-alert>
 
       <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
-        El nombre de usuario ya existe elige otro.
+        El nombre de usuario es obligatorio
       </v-alert>
 
       <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
@@ -614,20 +614,22 @@
         }
 
         // hora de inicio, comprobar que no esté vacío
-        if (this.timetable.startingHour === null) {
+        if (this.timetable.startingHour === null || this.timetable.startingHour === '') {
           this.validStartingHour = false;
           console.log('La hora de inicio es obligatoria');
         }
         else {
+          console.log('La hora de inicio es', this.timetable.startingHour);
           this.validStartingHour = true;
         }
 
         // hora de finalización, comprobar que no esté vacío
-        if (this.timetable.finishingHour === null) {
+        if (this.timetable.finishingHour === null || this.timetable.finishingHour === '') {
           this.validFinishingHour = false;
           console.log('La hora de finalización es obligatoria');
         }
         else {
+          console.log('La hora de finalización es', this.timetable.finishingHour);  
           this.validFinishingHour = true;
         }
 
