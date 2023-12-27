@@ -107,7 +107,7 @@
               hide-details
               required
               ></v-text-field>
-              <v-btn @click="controlShowPassword" flat>
+              <v-btn @click="controlShowPassword" icon>
                 <v-icon v-if="showPassword == false">mdi-eye</v-icon>
                 <v-icon v-else>mdi-eye-off</v-icon>
               </v-btn>
@@ -349,7 +349,7 @@
   let timetablestartError = true;
   let timetableendError = true;
   let exceedsFileLimit = false;
-  const maxFiles = 4; // Número máximo de archivos
+  //const maxFiles = 4; // Número máximo de archivos
 
 
   //CORS

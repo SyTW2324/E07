@@ -12,11 +12,15 @@ import { useAuthStore } from '../stores/useAuthStore';
     data: () => ({
       username: '',
       password: '',
+      showPassword: false,
       loggedIn: true,
       serverError: false,
       requiredField: false,
     }),
     methods: {
+      controlShowPassword(): void {
+        this.showPassword = !this.showPassword;
+      },
       async loginOne(): Promise<void> {
         try {
           this.requiredField = false;
@@ -64,17 +68,18 @@ import { useAuthStore } from '../stores/useAuthStore';
         
         @submit.prevent="loginOne"
       >
-        
-        <v-text-field
-          name="username"
-          v-model="username"
-          class="mb-2"
-          label="Usuario"
-          placeholder="Introduce tu nombre de usuario"
-          id="username"
+        <v-col class="d-flex align-center justify-space-between">
+          <v-text-field
+            name="username"
+            v-model="username"
+            class="mb-2"
+            label="Usuario"
+            placeholder="Introduce tu nombre de usuario"
+            id="username"
 
-        ></v-text-field>
-
+          ></v-text-field>
+        </v-col>
+<!-- 
         <v-text-field
           v-model="password"
           name="password"
@@ -83,8 +88,30 @@ import { useAuthStore } from '../stores/useAuthStore';
           placeholder="Introduce tu contraseña"
           type="password"
           id="password"
-        >
-      </v-text-field>
+        </v-text-field>
+        > -->
+        <v-col class="d-flex align-center justify-space-between">
+          <v-text-field v-if="showPassword == false"
+          id="password"
+          v-model="password"
+          label="Contraseña*"
+          type="password"
+          hide-details
+          required
+          ></v-text-field>
+          <v-text-field v-else
+          id="password"
+          v-model="password"
+          label="Contraseña*"
+          type="text"
+          hide-details
+          required
+          ></v-text-field>
+          <v-btn @click="controlShowPassword"  icon>
+            <v-icon v-if="showPassword == false">mdi-eye</v-icon>
+            <v-icon v-else>mdi-eye-off</v-icon>
+          </v-btn>
+        </v-col>
 
         <br>
 
