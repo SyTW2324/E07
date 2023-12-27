@@ -68,16 +68,30 @@
               required
             ></v-text-field>
           </v-col>
-
-          <v-col cols="12" md="4">
-            <v-text-field
-              id="password"
-              v-model="password"
-              :rules="passwordRules"
-              label="Contraseña*"
-              hide-details
-              required
+          
+          <v-col cols="12" md="4" class="d-flex align-center justify-space-between">
+            <v-text-field v-if="showPassword == false"
+            id="password"
+            v-model="password"
+            :rules="passwordRules"
+            label="Contraseña*"
+            type="password"
+            hide-details
+            required
             ></v-text-field>
+            <v-text-field v-else
+            id="password"
+            v-model="password"
+            :rules="passwordRules"
+            label="Contraseña*"
+            type="text"
+            hide-details
+            required
+            ></v-text-field>
+            <v-btn @click="controlShowPassword" flat>
+              <v-icon v-if="showPassword == false">mdi-eye</v-icon>
+              <v-icon v-else>mdi-eye-off</v-icon>
+            </v-btn>
           </v-col>
 
           <v-col cols="12" md="4">
@@ -173,6 +187,7 @@ import { baseUrl } from '../env/env-variables';
       address: '',
       profilePhoto: [],
       nameError: '',
+      showPassword: false,
       nameRules: [
         (value: string) => {
           if (value) return true;
@@ -240,7 +255,9 @@ import { baseUrl } from '../env/env-variables';
         console.log('Formulario inválido. Por favor, corrija los errores.');
       }
     },
-
+    controlShowPassword() {
+      this.showPassword = !this.showPassword;
+    },
     async convertFileToBase64(file: File) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
