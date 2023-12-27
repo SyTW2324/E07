@@ -4,7 +4,13 @@
 <v-app>
   <Barnav></Barnav>
   <v-main>
-    <v-container>
+    <v-container v-if="allInfoIsLoaded == 0" class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;">
+          <v-progress-circular
+          indeterminate
+          size="150" 
+          color="teal"></v-progress-circular> 
+    </v-container>
+    <v-container v-if="allInfoIsLoaded == 1">
       <v-container class="d-flex align-center justify-center">
         <h1>Mi perfil</h1>
       </v-container>
@@ -91,6 +97,8 @@ interface Reservation {
   date: string;
   reservationId: string;
 }
+
+let allInfoIsLoaded = ref(0); // 0 = no cargado, 1 = cargado, 2 = error
 
 let username = ref("");
 let name = ref("");
@@ -185,24 +193,36 @@ async function getUser() {
               nextReservations.value.push(newReservation);
             } else {
               console.log("Error al obtener las reservas");
+              allInfoIsLoaded.value = 2;
             }
           }
         } 
         if (response.data.message.historicReservations.length > 0) {
-          historicReservationsFlag.value = true;
-          for (let i in response.data.message.historicReservations) {
-            const response = await axios.get(`${baseUrl}reservations/?id=${i}`);
+          historicReservationsFlag.value = true
+          console.log("dentro de historicReservations");
+          console.log(response.data.message.historicReservations);
+          reservations = response.data.message.historicReservations;
+          for (let i in reservations) {
+            const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
             if (response.data.code === 0) {
+              const date = new Date(response.data.message.day);
+              //pasar la fecha a string
+              const dateString = date.getDate().toLocaleString() + "/" + (date.getMonth() + 1).toLocaleString() + "/" + date.getFullYear().toLocaleString() + " " + date.getHours().toLocaleString() + ":" + date.getMinutes().toLocaleString();
+              
+              
+
               const newReservation: Reservation = {
                 restaurant: response.data.message.restaurant as string,
-                date: response.data.message.date as string,
-                reservationId: i as string
+                date: dateString as string ,
+                reservationId: reservations[i] as string
               }
               historicReservations.value.push(newReservation);
             } else {
               console.log("Error al obtener las reservas");
+              allInfoIsLoaded.value = 2;
             }
           }
+
         }
 
         if (authStore.getProfilePhoto() === " ") {
@@ -214,7 +234,10 @@ async function getUser() {
       } else {
         authStore.logout();
       }
-
+      if (allInfoIsLoaded.value === 2) {
+        router.push({ name: '404' });
+      }
+      allInfoIsLoaded.value = 1;
   } else {
     authStore.logout();
   }

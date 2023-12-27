@@ -10,6 +10,7 @@ import { UserModel } from '../../models/users/users-model.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
 import { jwtDecode } from 'jwt-decode';
+import { addHistoricReservations } from '../../models/users/users.js';
 
 
 export const usersRouter = express.Router();
@@ -69,6 +70,10 @@ usersRouter.get('/users', async (req, res) => {
         const decodedToken = jwtDecode(req.query.token as string);
         console.log(decodedToken);
         if (Number(decodedToken.exp) > (Date.now() / 1000)) {
+          const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
+          if (upDateHistoricReservations  === false) {
+            return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
+          }
           const user = await UserModel.findOne({userName: req.query.userName});
           console.log(user);
           if(user){
