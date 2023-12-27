@@ -70,6 +70,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           v-model="username"
           class="mb-2"
           label="Usuario"
+          placeholder="Introduce tu nombre de usuario"
           id="username"
 
         ></v-text-field>
