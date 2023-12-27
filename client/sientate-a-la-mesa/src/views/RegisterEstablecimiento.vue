@@ -430,16 +430,6 @@
           this.validUserName = true;
           this.validEmail = true;
           this.validPhone = true;
-          this.validRestaurantName = true;
-          this.validAddress = true;
-          this.validCategory = true;
-          this.validPassword = true;
-          this.validWeekDays = true;
-          this.validStartingHour = true;
-          this.validFinishingHour = true;
-          this.validTimePeriod = true;
-          this.validNumberOfTables = true;
-          this.validMenu = true;
 
           console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
@@ -568,9 +558,109 @@
           if (!isValid) this.passwordError = rule(this.password) as string;
           return isValid;
         });
+
+        // nombre de restaurante, comprobar que no esté vacío
+        if (this.restaurantname === '') {
+          this.validRestaurantName = false;
+          console.log('El nombre del restaurante es obligatorio');
+        }
+        else {
+          this.validRestaurantName = true;
+        }
+
+        // dirección del restaurante, comprobar que no esté vacío
+        if (this.address === '') {
+          this.validAddress = false;
+          console.log('La dirección del restaurante es obligatoria');
+        }
+        else {
+          this.validAddress = true;
+        }
+
+        // categoría del restaurante, comprobar que no esté vacío
+        if (this.category === '') {
+          this.validCategory = false;
+          console.log('La categoría del restaurante es obligatoria');
+        }
+        else {
+          this.validCategory = true;
+        }
+
+        // nombre de usuario, comprobar que no esté vacío
+        if (this.username === '') {
+          this.validUserName = false;
+          console.log('El nombre de usuario es obligatorio');
+        }
+        else {
+          this.validUserName = true;
+        }
+
+        // contraseña, comprobar que no esté vacío
+        if (this.password === '') {
+          this.validPassword = false;
+          console.log('La contraseña es obligatoria');
+        }
+        else {
+          this.validPassword = true;
+        }
+
+        // días de la semana, comprobar que al menos haya uno seleccionado
+        if (this.timetable.selectedDays.length === 0) {
+          this.validWeekDays = false;
+          console.log('Debe seleccionar al menos un día de la semana');
+        }
+        else {
+          this.validWeekDays = true;
+        }
+
+        // hora de inicio, comprobar que no esté vacío
+        if (this.timetable.startingHour === null) {
+          this.validStartingHour = false;
+          console.log('La hora de inicio es obligatoria');
+        }
+        else {
+          this.validStartingHour = true;
+        }
+
+        // hora de finalización, comprobar que no esté vacío
+        if (this.timetable.finishingHour === null) {
+          this.validFinishingHour = false;
+          console.log('La hora de finalización es obligatoria');
+        }
+        else {
+          this.validFinishingHour = true;
+        }
+
+        // tiempo de franja de reserva, comprobar que no esté vacío y que sea mayor que 0
+        if (this.available.timePeriod === null || this.available.timePeriod <= 0) {
+          this.validTimePeriod = false;
+          console.log('El tiempo de franja de reserva es obligatorio');
+        }
+        else {
+          this.validTimePeriod = true;
+        }
+
+        // número de mesas por franja horaria, comprobar que no esté vacío y que sea mayor que 0
+        if (this.available.numberOfTables === null || this.available.numberOfTables <= 0) {
+          this.validNumberOfTables = false;
+          console.log('El número de mesas por franja horaria es obligatorio');
+        }
+        else {
+          this.validNumberOfTables = true;
+        }
+
+        // menú, tamaño no debe exceder 10mb
+        if (this.menu.length === 0) {
+          this.validMenu = false;
+        }
+        else {
+          this.validMenu = true;
+        }
+
   
         // Actualizar el estado "valid" si es necesario
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid;
+        // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu;
   
         return this.valid;
       },
