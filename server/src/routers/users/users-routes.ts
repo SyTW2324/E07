@@ -126,5 +126,72 @@ usersRouter.delete('/users', async (req, res) => {
   }
 });
 
+usersRouter.put('/users', async (req, res) => {
+  try{
+    if (req.query.token && req.query.userName) {
+      const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
+      if (verified) {
+        const decodedToken = jwtDecode(req.query.token as string);
+        if (Number(decodedToken.exp) > (Date.now() / 1000)) {
+          const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
+          if (upDateHistoricReservations  === false) {
+            return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
+          }
+          const atributesModifiedEnable = ['password', 'email', 'phoneNumber', 'address', 'profilePhoto'];
+          const modifiedAtributes = Object.keys(req.body);
+          const isValidOperation = modifiedAtributes.every((atribute) => atributesModifiedEnable.includes(atribute));
+          if (!isValidOperation) {
+            return res.status(400).send({code: 1, message: "Atributos no modificables"});
+          }
+          const user = await UserModel.findOne({userName: req.query.userName});
+          if(user){
+            if (req.body.password) {
+              user.password = req.body.password;
+            }
+            if (req.body.email) {
+              user.email = req.body.email;
+            }
+            if (req.body.phoneNumber) {
+              user.phoneNumber = req.body.phoneNumber;
+            }
+            if (req.body.profilePhoto) {
+              user.profilePhoto = req.body.profilePhoto;
+            }
+            if (req.body.address) {
+              user.address = req.body.address;
+            }
+            const userSchemaValidation = await validateUserSchema(user);
+            if (userSchemaValidation.code !== 0) {
+              if (userSchemaValidation.code === 2) {
+                return res.status(400).send({code: 3, message: "Ya existe ese nombre de usuario"});
+              }
+              else if (userSchemaValidation.code === 3) {
+                return res.status(400).send({code: 4, message: "Ya existe ese correo electrónico"});
+              }
+              else if (userSchemaValidation.code === 4) {
+                return res.status(400).send({code: 5, message: "Ya existe ese número de teléfono"});
+              }
 
+            }
+            const userMessage = await user.save();
+            return res.status(200).send({code: 0, message: "Usuario modificado correctamente"});
+          }
+          else{
+            return res.status(404).send({code: 2, message: "Usuario no encontrado"});
+          }
+  
+        } else {
+          return res.status(400).send({code: 6, message: "Token expirado"});
+        }
+      } else {
+        return res.status(400).send({code: 7, message: "Token inválido"});
+      }
+    } else {
+      return res.status(400).send({code: 8, message: "Falta el token en la query"});
+    }
+  }  
+  catch{
+    return res.status(500).send();
+  }
+});
 
