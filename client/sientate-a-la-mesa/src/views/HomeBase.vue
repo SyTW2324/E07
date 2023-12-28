@@ -17,7 +17,7 @@
             </v-card-text>
           </v-card>
         </v-container>
-      <v-container>
+        <v-container>
         <v-row>
           <v-col v-for="(restaurant, index) in paginatedRestaurants" :key="index" cols="12" md="4">
             <v-card>
@@ -102,7 +102,7 @@ onMounted(async () => {
       names.push([response.data[i].restaurantName, response.data[i].userName, response.data[i].category, response.data[i].description]);
     }
     restaurants.value = names;
-
+    allInfoIsLoaded.value = 1;
   } catch (error) {
     console.error('Error al obtener restaurantes', error);
   }
