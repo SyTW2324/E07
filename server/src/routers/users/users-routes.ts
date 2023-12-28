@@ -129,7 +129,6 @@ usersRouter.delete('/users', async (req, res) => {
 usersRouter.put('/users', async (req, res) => {
   try{
     if (req.query.token && req.query.userName) {
-      console.log("Editando usuario")
       const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
@@ -161,6 +160,7 @@ usersRouter.put('/users', async (req, res) => {
             if (req.body.address) {
               user.address = req.body.address;
             }
+            console.log(user);
             const email = req.body.email ? true : false;
             const phoneNumber = req.body.phoneNumber ? true : false;
             const userSchemaValidation = await validateUserSchemaEdit(user, email, phoneNumber);
@@ -168,7 +168,10 @@ usersRouter.put('/users', async (req, res) => {
             if (userSchemaValidation.code !== 0) {
               return res.status(400).send(userSchemaValidation);
             }
-            UserModel.findOneAndUpdate({userName: req.query.userName}, user);
+            await UserModel.findOneAndUpdate({userName: req.query.userName}, user, {
+              new: true,
+              runValidators: true,
+            });
             return res.status(200).send({code: 0, message: "Usuario modificado correctamente"});
           }
           else{

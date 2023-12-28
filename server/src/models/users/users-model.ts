@@ -126,7 +126,9 @@ export async function validateUserSchemaEdit(user: userDocumentInterface, email:
                 return { code: 3, errors: 'Ya existe ese correo electrónico' };
             }
         }
-    } else if (phoneNumber == false) {
+    } 
+    
+    if (phoneNumber == true) {
         const existingUser = await UserModel.findOne({ phoneNumber: user.phoneNumber });
         const existingRestaurant = await RestaurantModel.findOne({ phoneNumber: user.phoneNumber });
 

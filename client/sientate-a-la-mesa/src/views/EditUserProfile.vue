@@ -12,20 +12,6 @@
     </v-container>
   </v-main>
   <v-main v-if="allInfoIsLoaded == 1">
-    <v-container style="padding: 2em;">
-      <v-card class="mx-auto my-custom-card-home"  color="red-accent-4" style=""> 
-            <v-card-title> Página en desarrollo</v-card-title>
-            <v-card-text>
-              <p>Esta paǵina está en desarrollo, todavía no puedes editar tu perfil.</p>
-              <p>Pronto estará disponible.</p>
-            </v-card-text>
-            <v-card-actions>
-              <router-link to="/home-base">
-                <v-btn color="white" >Volver al inicio</v-btn>
-              </router-link>
-            </v-card-actions>
-          </v-card>
-      </v-container>
     <v-container class="d-flex align-center justify-center">
       <h1>Editar perfil</h1>
     </v-container>
@@ -130,7 +116,7 @@
             <v-col cols="12" md="4">
               <v-file-input
                 label="Foto de perfil"
-                :v-model="modifiedProfilePhoto"
+                v-model="modifiedProfilePhoto"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 :multiple="false"
@@ -336,12 +322,13 @@ async function submitForm() {
   }
 
   if (modifiedProfilePhoto.value.length > 0) {
-    if (modifiedProfilePhoto.value[0].size > 1024 * 1024 * 4) {
+    if (modifiedProfilePhoto.value[0].size > (1024 * 1024 * 4)) {
       validProfilePhoto.value = false;
       return
     } else {
       validProfilePhoto.value = true;
-      const base64 = await convertFileToBase64(modifiedProfilePhoto.value[0]);
+      const base64: string  = await convertFileToBase64(modifiedProfilePhoto.value[0]) as string;
+      console.log(base64);
       if (base64) {
         modifiedUser = {
           ...modifiedUser,
@@ -357,7 +344,7 @@ async function submitForm() {
   if (response.data.code === 0) {
     userRegistered.value = true;
     useAuthStore().logout();
-    useAuthStore().login(username.value, modifiedPassword.value);
+    useAuthStore().loginAfterEdit(username.value, modifiedPassword.value);
   }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -383,11 +370,11 @@ async function submitForm() {
   }
 }
 
-async function convertFileToBase64(file: File): Promise<string | ArrayBuffer | null> {
+async function convertFileToBase64(file: File){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload =  () => {
       resolve(reader.result);
     };
 
