@@ -444,36 +444,6 @@
         this.showPassword = !this.showPassword;
       },
       
-      // checkNumberOfFiles() {
-      // if (this.pictures.length > maxFiles) {
-      //   console.log('Se ha excedido el límite de 4 imágenes');
-      //   exceedsFileLimit = true;
-      //   // Puedes manejar el caso de exceder el límite aquí, como deshabilitar el botón de enviar.
-      // } else {
-      //   console.log('Número de imágenes correcto');
-      //   exceedsFileLimit = false;
-      // }
-      // },
-      checkFileSize(file: File) {
-        console.log('tamaño del fichero: ', file.size);
-        if (file.size > 1024*1024*6) {
-          exceedsSizeLimit.value = true;
-        } else {
-          exceedsSizeLimit.value = false;
-        }
-      },
-      onFileChange(event: Event) {
-        const target = event.target as HTMLInputElement;
-        if (target && target.files && target.files[0]) {
-          const file = target.files[0];
-          if (file.size > 1024 * 1024 * 6) {
-            exceedsSizeLimit.value = true;
-          } else {
-            exceedsSizeLimit.value = false;
-          }
-        }
-      },
-      
       async convertFileToBase64(file: File) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
