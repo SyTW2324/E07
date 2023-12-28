@@ -300,18 +300,6 @@
   import { ref } from 'vue';
 
   const exceedsSizeLimit = ref(false);
-<<<<<<< HEAD
-  let numberOfTablesError = true;
-  let timePeriodError = true;
-  let timetabledaysError = true;
-  let timetablestartError = true;
-  let timetableendError = true;
-  let exceedsFileLimit = false;
-  //const maxFiles = 4; // Número máximo de archivos
-
-
-=======
->>>>>>> 6e5e0592525d4b42a498264aeaa001aa2b4f4fc3
   //CORS
   
     export default {
@@ -452,23 +440,10 @@
           console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
-<<<<<<< HEAD
       controlShowPassword() {
         this.showPassword = !this.showPassword;
       },
-      checkNumberOfFiles() {
-        this.$nextTick(() => {
-          if (this.pictures.length > 4) {
-            console.log('Se ha excedido el límite de 4 imágenes');
-            exceedsFileLimit = true;
-            this.$forceUpdate(); // Forzar la actualización del DOM
-          } else {
-            console.log('Número de imágenes correcto');
-            exceedsFileLimit = false;
-            this.$forceUpdate(); // Forzar la actualización del DOM
-          }
-        });
-      },
+      
       // checkNumberOfFiles() {
       // if (this.pictures.length > maxFiles) {
       //   console.log('Se ha excedido el límite de 4 imágenes');
@@ -498,8 +473,6 @@
           }
         }
       },
-=======
->>>>>>> 6e5e0592525d4b42a498264aeaa001aa2b4f4fc3
       
       async convertFileToBase64(file: File) {
       return new Promise((resolve, reject) => {
