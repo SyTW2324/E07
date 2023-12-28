@@ -21,13 +21,17 @@ let selectedDate = ref<string | null>(null);
 let calendar = ref<boolean>(true);
 let pictures = ref<string[]>([]);
 const authStore = useAuthStore();
-let carga = ref(false);
 let description = ref<string>('');
 let menu = ref<string>('');
 let email = ref<string>('');
 let phoneNumber = ref<string>('');
 let restaurantAddress = ref<string>('');
 let category = ref<string>('');
+
+let ReservaExitosa = ref(false);
+
+
+let carga = ref(false);
 
 
 onBeforeMount(async () => {
@@ -60,8 +64,6 @@ async function fetchRestaurantData() {
     pictures.value = restaurant.data.pictures.map((picture: string) => {
       const image = new Image();
       image.src = picture;
-      image.onload = () => (loading.value = false);
-      image.onerror = () => (loading.value = false);
       return picture;
     });
 
@@ -71,9 +73,6 @@ async function fetchRestaurantData() {
 
     // hacer que espere aqui hasta que se carguen los datos
 
-    
-
-    await esperar(5500);
     carga.value = true; 
 
   } catch (error) {
@@ -83,9 +82,9 @@ async function fetchRestaurantData() {
   }
 }
 
-function esperar(ms: number | undefined) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// function esperar(ms: number | undefined) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }
 
 // Función para reservar
 async function reserve(selection: string | null) {
@@ -119,6 +118,10 @@ async function reserve(selection: string | null) {
 
   if (response.data.code === 0) {
     calendar.value = true;
+
+    //! Alerta de reserva exitosa
+    ReservaExitosa.value = true;
+
   } 
 
 
@@ -143,7 +146,9 @@ async function selectionDay() {
   }  
 }
 
-
+function onClick() {
+        ReservaExitosa.value = false
+      }
 
 
 
@@ -152,7 +157,7 @@ async function selectionDay() {
 <template>
   <v-app>
     <Barnav></Barnav>
-    <v-main v-show="!carga">
+    <v-main v-if="!carga">
 
       <!-- CARGA circulo -->
       <v-container class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;"> 
@@ -163,7 +168,21 @@ async function selectionDay() {
       </v-container>
 
     </v-main>
-    <v-main v-show="carga">
+    <v-main v-if="carga">
+      <v-snackbar
+        v-model="ReservaExitosa"
+        location="center"
+        color="success"
+        width="50%"
+        height="30%"
+        
+      >
+                  Reserva exitosa! Le esperamos próximamente!
+           Más información acerca de tu reserva en la página mi perfil
+          <template v-slot:actions>
+            <v-btn @click="onClick()">Aceptar</v-btn>
+          </template>
+        </v-snackbar>
         <v-container style="padding-top: 4em; padding: 4em;">
           <v-row justify="center">
             <v-col>
@@ -205,6 +224,7 @@ async function selectionDay() {
                     <v-btn color="teal" variant="text" @click="reserve(selection)">Reservar</v-btn>
                   </v-card-actions>
                 </v-card>
+                
               </v-container>
         <v-container>
           <v-card class="mx-auto"  theme=""> 

@@ -90,7 +90,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           id="password"
         </v-text-field>
         > -->
-        <v-col class="d-flex align-center justify-space-between">
+        <v-col class="d-flex align-center justify-space-between" >
           <v-text-field v-if="showPassword == false"
           id="password"
           v-model="password"
@@ -98,6 +98,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           type="password"
           hide-details
           required
+          style="padding-right: 1em;"
           ></v-text-field>
           <v-text-field v-else
           id="password"
@@ -106,8 +107,9 @@ import { useAuthStore } from '../stores/useAuthStore';
           type="text"
           hide-details
           required
+          style="padding-right: 1em;"
           ></v-text-field>
-          <v-btn @click="controlShowPassword"  icon>
+          <v-btn  @click="controlShowPassword"  icon >
             <v-icon v-if="showPassword == false">mdi-eye</v-icon>
             <v-icon v-else>mdi-eye-off</v-icon>
           </v-btn>
