@@ -17,7 +17,7 @@
             </v-card-text>
           </v-card>
         </v-container>
-
+      </v-container>
       <v-container>
         <v-row>
           <v-col v-for="(restaurant, index) in paginatedRestaurants" :key="index" cols="12" md="4">
