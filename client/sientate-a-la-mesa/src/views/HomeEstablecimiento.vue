@@ -111,8 +111,7 @@ async function getRestaurant() {
         }
 
         //pictures
-        if(pictures.value === null) {
-          console.log("no hay fotos");
+        if(pictures.value.length === 0) {
           pictures.value = [];
           pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
         }
