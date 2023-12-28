@@ -122,7 +122,7 @@
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 :multiple="false"
-                :maxSize="1024*1024*2"
+                :maxSize="1024*1024*4"
               ></v-file-input>
             </v-col>
 
