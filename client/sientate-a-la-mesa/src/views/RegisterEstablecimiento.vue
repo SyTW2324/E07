@@ -266,7 +266,7 @@
         El número de mesas por franja horaria es obligatorio.
       </v-alert>
 
-      <v-alert v-if="!validMenu" type="error" closable>
+      <v-alert v-if="!validMenu" type="error">
         El menú es obligatorio.
         <br>
         El tamaño del archivo no debe exceder los 10 MB.
@@ -689,7 +689,7 @@
         // exceedsSizeLimit.value = true;
         // utilizar menuRules para comprobar si el menu es valido o no
         const rule = this.menuRules[0];
-
+        this.validMenu = true;
         if (!this.menu || this.menu.length === 0) {
           this.menuError = 'El menú es obligatorio.';
           this.validMenu = false;
@@ -700,16 +700,14 @@
           if (!isValid) {
             this.menuError = rule(this.menu[0]) as unknown as string;
             this.validMenu = false;
-            console.log('Fallo, el menú no cumple con alguna regla.');
+            console.log('Fallo, el menú supera los 10mb');
           }
         }
 
-
-  
         // Actualizar el estado "valid" si es necesario
         // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
         this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu;
-
+        console.log('this.validMenu', this.validMenu);
         return this.valid;
       },
     },
