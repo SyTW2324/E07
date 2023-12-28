@@ -102,7 +102,6 @@ router.beforeEach( async (to) => {
 
   const auth = useAuthStore();
   const expired = auth.isExpired();
-  console.log('expired', expired);
   if (authRequired && (!auth.user || expired === false))  {
     //auth.returnUrl = to.fullPath;
     auth.logout();

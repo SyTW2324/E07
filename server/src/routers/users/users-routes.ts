@@ -19,7 +19,6 @@ usersRouter.post('/users', async (req, res) => {
 
   try {
 
-    console.log('Petición POST a /users');
     if(req.body.name && req.body.surname && req.body.userName && req.body.password && req.body.email && req.body.phoneNumber && req.body.address) {
       const user = new UserModel({
         name: req.body.name,
@@ -33,10 +32,8 @@ usersRouter.post('/users', async (req, res) => {
         nextReservations: [],
         historicReservations: []
       })
-      console.log("peticion correcta");
-      console.log(req.body);
+
       if (req.body.profilePhoto) {
-        console.log("foto", req.body.profilePhoto);
         user.profilePhoto = req.body.profilePhoto;
       }
       const userSchemaValidation = await validateUserSchema(user);
@@ -67,10 +64,8 @@ usersRouter.get('/users', async (req, res) => {
       const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
-        console.log(decodedToken);
         if (Number(decodedToken.exp) > (Date.now() / 1000)) {
           const user = await UserModel.findOne({userName: req.query.userName});
-          console.log(user);
           if(user){
             // renderizar la página de perfil de usuario y guardarla en una carpeta
             const userSend = {
@@ -108,19 +103,16 @@ usersRouter.delete('/users', async (req, res) => {
   try{
     
     if(req.query.userName){
-      console.log(req.query.userName);
       const user = await UserModel.findOneAndDelete({userName: req.query.userName});
       if(user){
         
         return res.status(200).send(user);
       }
       else{
-        console.log("Usuario no encontrado");
         return res.status(404).send({code: 4, message: "Usuario no encontrado"});
       }
     }
     else{
-      console.log("Falta el nombre de usuario");
       return res.status(400).send({code: 3, message: "Falta el nombre de usuario"});
     }
   }  

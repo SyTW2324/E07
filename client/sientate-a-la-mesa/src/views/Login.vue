@@ -34,7 +34,7 @@ import { useAuthStore } from '../stores/useAuthStore';
             }
           }
         }catch(error) {
-          console.log(error);
+          console.error('Error al iniciar sesión', error);
         }
       }
     },

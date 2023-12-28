@@ -33,6 +33,6 @@ app.options('*', (req, res) => {
 
 
 app.listen(portNumber, () => {
-  console.log(`Server is up on port ${portNumber}`);
+  console.info(`Server is up on port ${portNumber}`);
 });
 

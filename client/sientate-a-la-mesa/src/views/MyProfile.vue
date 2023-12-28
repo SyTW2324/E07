@@ -107,12 +107,10 @@ let historicReservations = ref<Reservation[]>([]);
 
 async function getUser() {
   const authStore = useAuthStore();
-  console.log("dentro de getUser");
   if (authStore.user) {
   if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
       const response = await axios.get(`${baseUrl}users/?token=${userToken}&userName=${authStore.user.username}`)
-      console.log(response);
       if (response.data.code === 0) {
         username.value = response.data.message.userName;
         name.value = response.data.message.name;
@@ -123,9 +121,6 @@ async function getUser() {
         let reservations = response.data.message.nextReservations;
         if (response.data.message.nextReservations.length > 0) {
           nextReservationsFlag.value = true
-          console.log("dentro de nextReservations");
-          console.log(response.data.message.nextReservations);
-          console.log(reservations)
           for (let i in reservations) {
             const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
             if (response.data.code === 0) {
@@ -141,8 +136,6 @@ async function getUser() {
                 reservationId: reservations[i] as string
               }
               nextReservations.value.push(newReservation);
-            } else {
-              console.log("Error al obtener las reservas");
             }
           }
         } 
@@ -157,9 +150,7 @@ async function getUser() {
                 reservationId: i as string
               }
               historicReservations.value.push(newReservation);
-            } else {
-              console.log("Error al obtener las reservas");
-            }
+            } 
           }
         }
 
@@ -186,14 +177,12 @@ getUser();
 
 async function cancelReservation(reservationId: string) {
   try {
-    console.log("dentro de cancelReservation");
     const authStore = useAuthStore();
     if (authStore.user) {
     if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
       const response = await axios.delete(`${baseUrl}reservations/?token=${userToken}&userName=${authStore.user.username}&reservationId=${reservationId}`)
       if (response.data.code === 0) {
-        console.log("Reserva cancelada");
         // Recargar la página
         router.push({ name: 'home-base' });
         
@@ -208,7 +197,8 @@ async function cancelReservation(reservationId: string) {
     if (axios.isAxiosError(error) && error.response) {
         const response = error.response;
         if (response.status === 400 || response.status === 404 || response.status === 500) {
-          console.log(response.data.message);
+          
+          console.error('Error al realizar la solicitud:', response.data.message);
         } else {
           console.error('Error al realizar la solicitud:', error.message);
         }

@@ -81,13 +81,10 @@ let menu = ref("");
 
 async function getRestaurant() {
   const authStore = useAuthStore();
-  console.log("dentro de getUser");
   if (authStore.user) {
   if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
       const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-      console.log("response:", response);
-
       if (response.data.code === 0) {
         userName.value = response.data.message.userName;
         restaurantName.value = response.data.message.restaurantName;
@@ -113,14 +110,11 @@ async function getRestaurant() {
 
         // pictures
         if(authStore.getPictures() === null) {
-          console.log('no hay pictures')
           pictures.value = [];
           pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
           pictures.value[1] = "https://previews.123rf.com/images/shushanto/shushanto2209/shushanto220900703/191842443-imagen-de-fondo-de-la-ilustraci%C3%B3n-del-arte-conceptual-de-la-destrucci%C3%B3n-de-los-planetas.jpg"
         } else {
-          console.log('hay pictures')
           pictures.value = authStore.getPictures() as string[];
-          console.log('post get')
         }
 
       } else {

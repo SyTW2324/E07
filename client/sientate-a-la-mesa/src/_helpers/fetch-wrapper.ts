@@ -50,8 +50,7 @@ function authHeader(url: string): Record<string, string> {
 function handleResponse(response: Response): Promise<any> {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
-        console.log(response);
-        console.log(data);
+
         if (!response.ok) {
             const { user, logout } = useAuthStore();
             if ([401, 403].includes(response.status) && user) {

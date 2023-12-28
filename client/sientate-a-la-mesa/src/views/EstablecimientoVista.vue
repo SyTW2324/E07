@@ -33,11 +33,6 @@ let category = ref<string>('');
 onBeforeMount(async () => {
 
   fetchRestaurantData();
-
-  
-
-  console.log("dentro de onMounted");
-
  });
 
 async function fetchRestaurantData() {
@@ -69,7 +64,6 @@ async function fetchRestaurantData() {
       image.onerror = () => (loading.value = false);
       return picture;
     });
-    console.log(restaurant.data.pictures);
 
 
 
@@ -96,10 +90,6 @@ function esperar(ms: number | undefined) {
 // Función para reservar
 async function reserve(selection: string | null) {
   loading.value = true;
-  
-
-  console.log('Reservando...');
-  console.log('Seleccionado:', availableHours.value[Number(selection)]);
 
   //  una reserva exitosa después de 2 segundos
 
@@ -115,9 +105,6 @@ async function reserve(selection: string | null) {
   date.setMonth(selectedDate.value ? new Date(selectedDate.value).getMonth() : 0);
   date.setFullYear(selectedDate.value ? new Date(selectedDate.value).getFullYear() : 0);
 
-  console.log(date);
-
-  console.log("------------------------------------------");
   
   const body = {
     token: authStore.getToken(),
@@ -129,15 +116,10 @@ async function reserve(selection: string | null) {
 
   const response = await axios.post(`${baseUrl}reservations`, body);
 
-  console.log(response);
 
   if (response.data.code === 0) {
-    console.log('Reserva exitosa');
     calendar.value = true;
-  } else {
-    console.log('Error al reservar');
-  }
-
+  } 
 
 
 
@@ -149,13 +131,11 @@ async function reserve(selection: string | null) {
 }
 
 async function selectionDay() {
-  console.log(selectedDate.value)
   
     //!OJO FORMATO MES/DIA/AÑO
   const selectedDateValue = selectedDate.value ? new Date(selectedDate.value) : null;
   const day = selectedDateValue ? (selectedDateValue.getMonth() + 1) + '/' + selectedDateValue.getDate() + '/' + selectedDateValue.getFullYear() : '';
 
-  console.log(day);
   calendar.value = false;
   const availableHoursGet = await axios.get(`${baseUrl}reservationsAvilable/?RestaurantName=${restaurantName.value}&day=${day}`);
   if (availableHoursGet.data.code === 0) {
@@ -201,7 +181,7 @@ async function selectionDay() {
       <v-container class="d-flex align-center justify-center" > 
         <v-container v-show="calendar"  >
                 <v-row>
-                  <v-date-picker v-model="selectedDate" show-adjacent-months>Reserva ya!</v-date-picker>
+                  <v-date-picker v-model="selectedDate" title="Seleciona el día deseado" show-adjacent-months>Reserva ya!</v-date-picker>
                 </v-row>
                 <v-row justify="center" class="mt-3">
                   <v-btn @click="selectionDay()">Selección</v-btn>

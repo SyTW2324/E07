@@ -20,12 +20,6 @@ let email: string = '';
 
 
 
-// function loginOne() {
-//     const authStore = useAuthStore();
-
-//     return authStore.login(username, password)
-//         .catch(error => console.log(error));
-// }
 
 </script>
 

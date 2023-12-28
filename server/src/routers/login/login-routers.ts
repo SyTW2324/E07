@@ -20,9 +20,7 @@ export const loginRouter = express.Router();
  loginRouter.post('/login/authenticate', async (req, res) => {
   
     try {
-  
-      console.log('Petición POST a /login');
-      console.log(req.body.userName);
+
       if(req.body.userName && req.body.password) {
         // const login: loginInterface = {
         //   userName: req.body.userName,
@@ -34,7 +32,6 @@ export const loginRouter = express.Router();
           // if (loginSchemaValidation.code !== 0) {
           //   return res.status(400).send(loginSchemaValidation);
           // }
-          console.log(user);
           if(user && user.password === req.body.password){
             // const newLogin = new LoginModel(login);
             // const loginMessage = await newLogin.save();
@@ -68,7 +65,6 @@ export const loginRouter = express.Router();
             }
             return res.status(200).send({ code: 0, message: resMessage});
           } else{
-            console.log("Contraseña incorrecta");
             return res.status(404).send({code: 4, message: "Contraseña incorrecta"});
           }
   
