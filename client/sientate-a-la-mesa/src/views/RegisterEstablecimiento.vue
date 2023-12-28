@@ -118,11 +118,11 @@
             <v-col cols="12" md="4">
               <v-file-input
                 v-model="profilePicture"
-                label="Foto de perfil"
+                label="Foto de perfil (límite 2mb)"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 :multiple="false"
-                :maxSize="1024*1024*4"
+                :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
 
@@ -152,15 +152,15 @@
               <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
             </v-col>
 
-            <!-- es un pdf, tamaño máximo 10mb -->
+            <!-- es un pdf, tamaño máximo 4mb -->
             <v-col cols="12" md="4"> 
               <v-file-input
                 v-model="menu"
-                label="Menú"
+                label="Menú (límite 4mb)"
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
                 :multiple="false"
-                :maxSize="1024*1024*10"
+                :maxSize="1024*1024*4"
               ></v-file-input>
             </v-col>
 
@@ -179,15 +179,15 @@
               v-model="available.numberOfTables" type="number"></v-text-field>
             </v-col>
 
-            <!-- imágenes del establecimiento, tamaño máximo 4mb -->
+            <!-- imágenes del establecimiento, tamaño máximo 2mb -->
             <v-col cols="12" md="4">
               <v-file-input
                 v-model="pictures"
-                label="Imágenes de portada del establecimiento"
+                label="Imágenes de portada del establecimiento (limite 2mb)"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 multiple
-                :maxSize="1024*1024*4"
+                :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
 
@@ -268,7 +268,7 @@
       </v-alert>
 
       <v-alert v-if="!validMenu" type="error">
-        El tamaño del archivo no debe exceder los 10 MB.
+        El tamaño del archivo no debe exceder los 4 MB.
       </v-alert>
 
       <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert">
@@ -276,9 +276,9 @@
       </v-alert>
 
       <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert">
-        El tamaño de las imágenes no puede exceder los 5 MB.
+        El tamaño de las imágenes no puede exceder los 2 MB.
         <br>
-        El número máximo de imágenes es 5.
+        El número máximo de imágenes es 4.
       </v-alert>
 
       <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
@@ -416,7 +416,7 @@
             if (!value) return true;
 
             const fileSize = value.size;
-            const maxFileSize = 3 * 1024 * 1024; // 4 MB
+            const maxFileSize = 2 * 1024 * 1024; // 2 MB
             console.log('Tamaño del archivo', fileSize);
             console.log('Tamaño máximo', maxFileSize);
             if (fileSize > maxFileSize) {
@@ -428,20 +428,6 @@
         ],
         profilePictureError: '',
         pictures: [],
-        picturesRules: [
-          (value: File) => {
-            if (!value) return true;
-
-            const fileSize = value.size;
-            const maxFileSize = 5 * 1024 * 1024; // 5 MB
-
-            if (fileSize > maxFileSize) {
-              return false;
-            }
-            
-            return true;
-          },
-        ],
         picturesError: '',
         menu: [], // es un pdf
         menuRules: [
@@ -449,7 +435,7 @@
             if (!value) return true;
 
             const fileSize = value.size;
-            const maxFileSize = 10 * 1024 * 1024; // 10 MB
+            const maxFileSize = 4 * 1024 * 1024; // 4 MB
 
             if (fileSize > maxFileSize) {
               return false;
@@ -739,7 +725,7 @@
         if (!isValid2) {
           this.menuError = rule(this.menu[0]) as unknown as string;
           this.validMenu = false;
-          console.log('Fallo, el menú supera los 10mb');
+          console.log('Fallo, el menú supera los 4mb');
         }
         
 
@@ -751,29 +737,26 @@
         if (!isValid) {
           this.profilePictureError = rule2(this.profilePicture[0]) as unknown as string;
           this.validProfilePicture = false;
-          console.log('Fallo, la foto de perfil supera los 4mb');
+          console.log('Fallo, la foto de perfil supera los 2mb');
         }
 
         // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
         this.validPictures = true;
-        if (this.pictures.length > 5) {
+        if (this.pictures.length > 4) {
           this.validPictures = false;
-          console.log('Fallo, el número de imágenes está limitado a 5');
+          console.log('Fallo, el número de imágenes está limitado a 4');
         }
         else {
           for (let i = 0; i < this.pictures.length; i++) {
-            const rule3 = this.picturesRules[0]; // las reglas son las mismas que para la foto de perfil
+            const rule3 = this.profilePictureRules[0]; // las reglas son las mismas que para la foto de perfil
             const isValid3 = rule3(this.pictures[i]) === true;
             if (!isValid3) {
               this.picturesError = rule3(this.pictures[i]) as unknown as string;
               this.validPictures = false; // si alguna imagen no es válida, el formulario ya no es válido
-              console.log('Fallo, alguna/s imagen/es superan los 4mb');
+              console.log('Fallo, alguna/s imagen/es superan los 2mb');
             }
           }
         }
-
-
-
 
         // Actualizar el estado "valid" si es necesario
         this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
