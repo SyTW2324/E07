@@ -22,7 +22,7 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
 
   try {
 
-    if(req.body.userName && req.body.passwd && req.body.email && req.body.restaurantName && req.body.restaurantAddress && req.body.description && req.body.timeTable && req.body.category && req.body.phoneNumber  && req.body.availability) {
+    if(req.body.userName && req.body.passwd && req.body.email && req.body.restaurantName && req.body.restaurantAddress && req.body.timeTable && req.body.category && req.body.phoneNumber  && req.body.availability) {
       const restaurant = new  RestaurantModel({
         userName: req.body.userName,
         passwd: req.body.passwd,

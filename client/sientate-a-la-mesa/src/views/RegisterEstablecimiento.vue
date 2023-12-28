@@ -39,7 +39,6 @@
                 id="description"
                 v-model="description"
                 label="Descripción*"
-                required
                 hide-details
               ></v-text-field>
             </v-col>
@@ -220,6 +219,8 @@
 
       <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
         El nombre de usuario es obligatorio
+        <br>
+        El nombre de usuario ya existe.
       </v-alert>
 
       <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
@@ -267,9 +268,11 @@
       </v-alert>
 
       <v-alert v-if="!validMenu" type="error">
-        El menú es obligatorio.
-        <br>
         El tamaño del archivo no debe exceder los 10 MB.
+      </v-alert>
+
+      <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert">
+        El tamaño de la foto de perfil no puede exceder los 4 MB.
       </v-alert>
 
       <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
@@ -318,6 +321,7 @@
         validTimePeriod: true,
         validNumberOfTables: true,
         validMenu: true,
+        validProfilePicture: true,
         userRegistered: false,
         restaurantname: '',
         showPassword: false,
@@ -400,6 +404,22 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
         profilePicture: [],
+        profilePictureRules: [
+          (value: File) => {
+            if (!value) return true;
+
+            const fileSize = value.size;
+            const maxFileSize = 4 * 1024 * 1024; // 4 MB
+            console.log('Tamaño del archivo', fileSize);
+
+            if (fileSize > maxFileSize) {
+              return false;
+            }
+            
+            return true;
+          },
+        ],
+        profilePictureError: '',
         pictures: [],
         menu: [], // es un pdf
         menuRules: [
@@ -431,13 +451,13 @@
   
         if (isValid) {
           // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-          console.error('Formulario válido. Enviar datos.');
+          console.log('Formulario válido. Enviar datos.');
           this.RegisterRestaurantApi();
         } else {
           // al usuario debe mostrarle en la web el problema 
           // y no enviar el formulario hasta que no lo corrija
           
-          console.error('Formulario inválido. Por favor, corrija los errores.');
+          console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
       controlShowPassword() {
@@ -466,6 +486,7 @@
           this.validEmail = true;
           this.validPhone = true;
 
+          console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -505,17 +526,20 @@
             "menu": pdfBase64,
             "availability": this.available,
           };
+          console.log('Datos a enviar', newRestaurantJson);
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
+          console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
           //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
           if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
+            console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
             const authStore = useAuthStore();
-            return authStore.login(this.username, this.password).catch(error => console.error(error));
+            return authStore.login(this.username, this.password).catch(error => console.log(error));
           
           }
         } catch (error) {
@@ -524,6 +548,8 @@
           const textContainer = this.$refs.textContainer as HTMLElement;
           const textElement = document.createElement('h3');
   
+          console.error('Error al realizar la solicitud:', response.status, response.statusText);
+          console.error('Código de error:', response.data.code);
           if (response.status === 400) {
             console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
@@ -567,6 +593,8 @@
         this.phoneError = '';
         this.passwordError = '';
         this.menuError = '';
+        this.validEmail = true;
+        this.validPhone = true;
 
         
   
@@ -686,24 +714,48 @@
         // utilizar menuRules para comprobar si el menu es valido o no
         const rule = this.menuRules[0];
         this.validMenu = true;
-        if (!this.menu || this.menu.length === 0) {
-          this.menuError = 'El menú es obligatorio.';
+        const isValid2 = rule(this.menu[0]) === true;
+        if (!isValid2) {
+          this.menuError = rule(this.menu[0]) as unknown as string;
           this.validMenu = false;
-          console.log('Error, el menú está vacío.');
-        } else {
-          const isValid = rule(this.menu[0]) === true;
-
-          if (!isValid) {
-            this.menuError = rule(this.menu[0]) as unknown as string;
-            this.validMenu = false;
-            console.log('Fallo, el menú supera los 10mb');
-          }
+          console.log('Fallo, el menú supera los 10mb');
         }
+        
+
+        // foto de perfil, tamaño no debe exceder 4mb, pero no es obligatoria
+        // utilizar profilePictureRules para comprobar si la foto de perfil es valida o no
+        const rule2 = this.profilePictureRules[0];
+        this.validProfilePicture = true;
+        const isValid = rule2(this.profilePicture[0]) === true;
+        if (!isValid) {
+          this.profilePictureError = rule2(this.profilePicture[0]) as unknown as string;
+          this.validProfilePicture = false;
+          console.log('Fallo, la foto de perfil supera los 4mb');
+        }
+
+
 
         // Actualizar el estado "valid" si es necesario
         // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu;
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture;
+        console.log('this.validProfilePicture', this.validProfilePicture);
+        console.log('isEmailValid', isEmailValid);
+        console.log('isPhoneValid', isPhoneValid);
+        console.log('isPasswordValid', isPasswordValid);
+        console.log('this.validUserName', this.validUserName);
+        console.log('this.validEmail', this.validEmail);
+        console.log('this.validPhone', this.validPhone);
+        console.log('this.validRestaurantName', this.validRestaurantName);
+        console.log('this.validAddress', this.validAddress);
+        console.log('this.validCategory', this.validCategory);
+        console.log('this.validPassword', this.validPassword);
+        console.log('this.validWeekDays', this.validWeekDays);
+        console.log('this.validStartingHour', this.validStartingHour);
+        console.log('this.validFinishingHour', this.validFinishingHour);
+        console.log('this.validTimePeriod', this.validTimePeriod);
+        console.log('this.validNumberOfTables', this.validNumberOfTables);
         console.log('this.validMenu', this.validMenu);
+        console.log('this.valid', this.valid);
         return this.valid;
       },
     },
