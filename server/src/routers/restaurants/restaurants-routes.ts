@@ -92,7 +92,9 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
               restaurantAddress: restaurant.restaurantAddress,
               timeTable: restaurant.timeTable,
               category: restaurant.category,
-              menu: restaurant.menu
+              menu: restaurant.menu,
+              description: restaurant.description,
+              pictures: restaurant.pictures,
             }
             return res.status(200).send({code: 0, message: restaurantSend});
           }
