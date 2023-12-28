@@ -150,31 +150,19 @@
   
       </v-container>
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
-        <!-- <v-alert v-if="!valid" type="warning" closable class="my-custom-alert">
-          Por favor, corrija los errores en el formulario.
-          <br>
-          - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
-          <br>
-          - Correo: El correo debe ser válido.
-          <br>
-          - Teléfono: El teléfono debe tener 9 dígitos.
-        </v-alert> -->
-  
-        <!-- <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
-          El nombre de usuario ya existe elige otro.
-        </v-alert> -->
-  
-        <!-- <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
+        
+
+        <v-alert v-if="existEmail == true" type="error" closable class="my-custom-alert">
           El correo ya existe.
         </v-alert>
-   -->
-        <!-- <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
+  
+        <v-alert v-if="existPhone == true" type="error" closable class="my-custom-alert">
           El teléfono ya existe.
-        </v-alert> -->
-<!--   
-        <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
+        </v-alert>
+  
+        <v-alert v-if="userRegistered == true" type="success" closable class="my-custom-alert">
           Usuario registrado correctamente.
-        </v-alert> -->
+        </v-alert>
       </v-container>
   </v-main>
   
@@ -199,6 +187,7 @@ import { baseUrl } from '../env/env-variables';
 // Flags
 let allInfoIsLoaded = ref(0); // 0 = no cargado, 1 = cargado, 2 = error
 let showPassword = ref(false);
+let userRegistered = ref(false);
 
 // Datos del usuario logueado
 let username = ref("");
@@ -219,6 +208,10 @@ let validPassword = ref(true);
 let validEmail = ref(true);
 let validPhone = ref(true);
 let validProfilePhoto = ref(true);
+
+// Flags alertas atributos ya existentes
+let existEmail = ref(false);
+let existPhone = ref(false);
 
 /// Datos modificados
 let modifiedProfilePhoto = ref<File[]>([]);
@@ -282,8 +275,15 @@ function checkEmail(): boolean {
 }
 
 async function submitForm() {
+
+  try {
   // Inicialiación de flags
   validPassword.value = true;
+  validEmail.value = true;
+  validPhone.value = true;
+  validProfilePhoto.value = true;
+  existEmail.value = false;
+  existPhone.value = false;
 
   // Usuario modificado
   let modifiedUser = {}
@@ -348,6 +348,37 @@ async function submitForm() {
           profilePhoto: base64
         }
       }
+    }
+    
+  }
+
+  const response = await axios.put(`${baseUrl}users/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedUser);
+
+  if (response.data.code === 0) {
+    userRegistered.value = true;
+    useAuthStore().logout();
+    useAuthStore().login(username.value, modifiedPassword.value);
+  }
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      const response = error.response;
+
+      if (response.status === 400) {
+        if (response.data.code === 3) {
+          existEmail.value = true;
+        } else if (response.data.code === 4) {
+          existPhone.value = true;
+        } else {
+          console.error('Error al realizar la solicitud:', error.message);
+
+        }
+      } else {
+        console.error('Error al realizar la solicitud:', error.message);
+        // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+      } 
+    } else {
+      console.error('Error al realizar la solicitud');
+      // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
     }
   }
 }
