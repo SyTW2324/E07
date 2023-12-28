@@ -22,6 +22,23 @@
           <router-link v-else to="/home-base" style="text-decoration: none; color: #ffffff;"><p>Siéntate a la mesa</p>
           </router-link>
         </v-app-bar-title>
+
+        <v-container style="width: 8em;">
+          <v-btn
+          class="text-capitalize"
+          block
+          color="#ffbd59"
+          size=""
+          
+          type="submit"
+
+        
+          @click="$router.push('/home-base')"
+          variant="elevated"
+          >
+          <p style="color: teal; font-weight:lighter; " > Inicio</p>
+          </v-btn>
+        </v-container>
        
       
 
@@ -136,7 +153,7 @@
 
 <script setup lang="ts">
 
-import icoWeb from '../img/icoWeb.png'
+import icoWeb from '../img/icono-restaurante.png'
 import usuario from '../img/usuario.png'
 import { useAuthStore } from '../stores/useAuthStore';
 

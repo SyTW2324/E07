@@ -9,7 +9,7 @@ describe('Registro de usuario', () => {
     }
     
     const response = await axios.delete(`${baseUrl}users?userName=${userDelete.userName}`);    
-    console.log(response.data);
+    
 
   })
 

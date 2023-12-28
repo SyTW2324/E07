@@ -88,12 +88,10 @@
   
   async function getRestaurant() {
     const authStore = useAuthStore();
-    console.log("dentro de getUser");
     if (authStore.user) {
     if (authStore.isExpired() === true) {
         const userToken = authStore.getToken();
         const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-        console.log("response:", response);
 
         if (response.data.code === 0) {
           userName.value = response.data.message.userName;
