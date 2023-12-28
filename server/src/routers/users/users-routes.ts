@@ -5,7 +5,7 @@
  */
 import express from 'express';
 
-import { validateUserSchema } from '../../models/users/users-model.js';
+import { validateUserSchema, validateUserSchemaEdit } from '../../models/users/users-model.js';
 import { UserModel } from '../../models/users/users-model.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
@@ -129,6 +129,7 @@ usersRouter.delete('/users', async (req, res) => {
 usersRouter.put('/users', async (req, res) => {
   try{
     if (req.query.token && req.query.userName) {
+      console.log("Editando usuario")
       const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
@@ -144,7 +145,7 @@ usersRouter.put('/users', async (req, res) => {
             return res.status(400).send({code: 1, message: "Atributos no modificables"});
           }
           const user = await UserModel.findOne({userName: req.query.userName});
-          if(user){
+          if(user !== null){
             if (req.body.password) {
               user.password = req.body.password;
             }
@@ -160,20 +161,14 @@ usersRouter.put('/users', async (req, res) => {
             if (req.body.address) {
               user.address = req.body.address;
             }
-            const userSchemaValidation = await validateUserSchema(user);
+            const email = req.body.email ? true : false;
+            const phoneNumber = req.body.phoneNumber ? true : false;
+            const userSchemaValidation = await validateUserSchemaEdit(user, email, phoneNumber);
+            console.log(userSchemaValidation);
             if (userSchemaValidation.code !== 0) {
-              if (userSchemaValidation.code === 2) {
-                return res.status(400).send({code: 3, message: "Ya existe ese nombre de usuario"});
-              }
-              else if (userSchemaValidation.code === 3) {
-                return res.status(400).send({code: 4, message: "Ya existe ese correo electrónico"});
-              }
-              else if (userSchemaValidation.code === 4) {
-                return res.status(400).send({code: 5, message: "Ya existe ese número de teléfono"});
-              }
-
+              return res.status(400).send(userSchemaValidation);
             }
-            const userMessage = await user.save();
+            UserModel.findOneAndUpdate({userName: req.query.userName}, user);
             return res.status(200).send({code: 0, message: "Usuario modificado correctamente"});
           }
           else{
