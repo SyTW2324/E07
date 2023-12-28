@@ -431,13 +431,13 @@
   
         if (isValid) {
           // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-          console.log('Formulario válido. Enviar datos.');
+          console.error('Formulario válido. Enviar datos.');
           this.RegisterRestaurantApi();
         } else {
           // al usuario debe mostrarle en la web el problema 
           // y no enviar el formulario hasta que no lo corrija
           
-          console.log('Formulario inválido. Por favor, corrija los errores.');
+          console.error('Formulario inválido. Por favor, corrija los errores.');
         }
       },
       controlShowPassword() {
@@ -466,7 +466,6 @@
           this.validEmail = true;
           this.validPhone = true;
 
-          console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -506,20 +505,17 @@
             "menu": pdfBase64,
             "availability": this.available,
           };
-          console.log('Datos a enviar', newRestaurantJson);
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
-          console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
           //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
           if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
-            console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
             const authStore = useAuthStore();
-            return authStore.login(this.username, this.password).catch(error => console.log(error));
+            return authStore.login(this.username, this.password).catch(error => console.error(error));
           
           }
         } catch (error) {

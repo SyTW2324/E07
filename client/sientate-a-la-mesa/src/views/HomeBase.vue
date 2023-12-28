@@ -18,36 +18,35 @@
           </v-card>
         </v-container>
 
-        <v-container>
-          <v-row>
-            <v-col v-for="(restaurant, index) in paginatedRestaurants" :key="index" cols="12" md="4">
-              <v-card>
-                <v-card-title>{{ restaurant[0] }}</v-card-title>
-                <v-card-subtitle>{{ restaurant[1] }}</v-card-subtitle>
-                <v-card-text class="d-flex justify-space-between">
-                  <v-chip prepend-icon="mdi-brightness-5" @click="">Se</v-chip>
-                  <v-chip prepend-icon="mdi-alarm-check" @click="">vienen</v-chip>
-                  <v-chip icon="mdi-blinds" @click="">cositas</v-chip>
-                </v-card-text>
-                <v-btn
-                  block
-                  color="white"
-                  size="large"
-                  type="submit"
-                  variant="elevated"
-                  @click="$router.push(`/establecimientos/${restaurant[1]}`)"
-                >
-                  <p style="color: teal;"> Más información</p>
-                </v-btn>
-              </v-card>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12">
-              <v-pagination v-model="currentPage" :length="totalPages" @input="changePage" />
-            </v-col>
-          </v-row>
-        </v-container>
+      <v-container>
+        <v-row>
+          <v-col v-for="(restaurant, index) in paginatedRestaurants" :key="index" cols="12" md="4">
+            <v-card>
+              <v-card-title>{{ restaurant[0] }}</v-card-title>
+              <v-card-subtitle>{{ restaurant[3] }}</v-card-subtitle>
+              <v-card-text class="d-flex justify-space-between">
+                <!-- <v-chip prepend-icon="mdi-brightness-5" @click="">Se</v-chip>
+                <v-chip prepend-icon="mdi-alarm-check" @click="">vienen</v-chip> -->
+                <v-chip icon="mdi-blinds" @click="">Categoria: {{ restaurant[2] }}</v-chip>
+              </v-card-text>
+              <v-btn
+                block
+                color="white"
+                size="large"
+                type="submit"
+                variant="elevated"
+                @click="$router.push(`/establecimientos/${restaurant[1]}`)"
+              >
+                <p style="color: teal;"> Más información</p>
+              </v-btn>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
+            <v-pagination v-model="currentPage" :length="totalPages" @input="changePage" />
+          </v-col>
+        </v-row>
       </v-container>
     </v-main>
 
@@ -67,7 +66,7 @@ import { onMounted } from 'vue'
 import { baseUrl } from '../env/env-variables';
 
 const user = useAuthStore();
-const restaurants = ref < [string, string] []>();
+const restaurants = ref < [string, string, string, string] []>();
 const itemsPerPage = 3;
 const currentPage = ref(1);
 
@@ -98,14 +97,12 @@ onMounted(async () => {
     const response = await axios.get(`${baseUrl}restaurants/info/?userName=all`);
 
     // array de tuplas string
-    let names: [string, string] [] = [];
+    let names: [string, string, string, string] [] = [];
     for (let i = 0; i < response.data.length; i++) {
-      names.push([response.data[i].restaurantName, response.data[i].userName]);
+      names.push([response.data[i].restaurantName, response.data[i].userName, response.data[i].category, response.data[i].description]);
     }
     restaurants.value = names;
 
-    console.log("adios");
-    allInfoIsLoaded.value = 1;
   } catch (error) {
     console.error('Error al obtener restaurantes', error);
   }

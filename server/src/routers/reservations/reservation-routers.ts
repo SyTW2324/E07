@@ -26,12 +26,10 @@ export const reservationsRouter = express.Router();
 // Tengo que pasarle un dia, para ese dia calcular los periodos disponibles y devolverlos, 
 //pero hay que comprobar que no haya ninguna reserva para ese dia y esa hora 
 reservationsRouter.get('/reservationsAvilable/', async (req, res) => {
-  console.log("GET /reservations recibido fuera del try")
-  console.log(req.body);
+
 
   try {
     if (req.query.RestaurantName && req.query.day)  {
-      console.log("GET /reservationsAvilable recibido dentro del try")
       const restaurant = await RestaurantModel.findOne({restaurantName: req.query.RestaurantName});
       
       let availableHours; //array de strings con los periodos disponibles
@@ -109,7 +107,6 @@ reservationsRouter.get('/reservationsAvilable/', async (req, res) => {
 }
 );
 reservationsRouter.get('/reservations/', async (req, res) => {
-  console.log("GET /reservations recibido fuera del try")
 
   try {
     if (req.query.id) {
@@ -144,12 +141,10 @@ reservationsRouter.get('/reservations/', async (req, res) => {
 
 reservationsRouter.post('/reservations/', async (req, res) => {
   try{
-    console.log("POST /reservations recibido fuera del try")
     if (req.body.token && req.body.userName && req.body.restaurantName && req.body.day) {
       const verified = jsonwebtoken.verify(req.body.token as string, secretKey);
       if (verified) {
         const decodedToken = jwtDecode(req.body.token as string);
-        console.log(decodedToken);
         if (Number(decodedToken.exp) > (Date.now() / 1000)) {
           const user = await UserModel.findOne({userName: req.body.userName});
           const restaurant = await RestaurantModel.findOne({restaurantName: req.body.restaurantName});
@@ -185,7 +180,6 @@ reservationsRouter.post('/reservations/', async (req, res) => {
     }
   }
   catch{
-    console.log("POST /reservations recibido dentro del catch")
     return res.status(500).send();
   }
 }
@@ -193,12 +187,10 @@ reservationsRouter.post('/reservations/', async (req, res) => {
 
 reservationsRouter.delete('/reservations/', async (req, res) => {
   try{
-    console.log("DELETE /reservations recibido fuera del try")
     if (req.query.token && req.query.userName && req.query.reservationId) {
       const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
-        console.log(decodedToken);
         if (Number(decodedToken.exp) > (Date.now() / 1000)) {
           const reservation = await reservationModel.findById(req.query.reservationId);
           if (reservation !== null) {
@@ -227,7 +219,6 @@ reservationsRouter.delete('/reservations/', async (req, res) => {
 
   }  
   catch{
-    console.log("DELETE /reservations recibido dentro del catch")
     return res.status(500).send();
   }
 }

@@ -30,7 +30,6 @@ export const useAuthStore = defineStore({
                 // update pinia state
                 if (result.username) {
                     this.user = result;
-                    console.log("result", result);
 
         
                     // store user details and jwt in local storage to keep user logged in between page refreshes
@@ -39,7 +38,6 @@ export const useAuthStore = defineStore({
                     localStorage.setItem('pictures', JSON.stringify(result.pictures));
                     
 
-                    console.log("pictures size", result.pictures);
 
                     // redirect to previous url or default to home page
                     if (this.user.tipo === 'user') {
@@ -52,7 +50,6 @@ export const useAuthStore = defineStore({
                     return result;
                 }
             } catch (error) {
-                console.log(error);
 
                 return {code: 5, message: error as string};
             }
@@ -68,17 +65,13 @@ export const useAuthStore = defineStore({
             const user = JSON.parse(localStorage.getItem('user') ?? 'null');
             let exp = 0;
 
-            console.log(user);
             if (user) {
-                console.log(user.token);
                 const decoded = jwtDecode(user.token);
-                console.log(decoded);
                 if (decoded) {
                     exp = Number(decoded.exp);
                 } 
                 const now = Date.now() / 1000;
-                // console.log(now);
-                // console.log(exp);
+
                 if (now < exp) {
                     return true;
                 }

@@ -60,7 +60,6 @@ export function calcularPeriodosDisponibles(startingHour: string, finishingHour:
       availablePeriods.push(`${formatTime(currentPeriodTime)} - ${formatTime(periodEndTime)}`);
       currentPeriodTime = periodEndTime;
   }
-  console.log(availablePeriods);
   return availablePeriods;
   
 }

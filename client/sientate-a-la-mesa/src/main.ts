@@ -11,6 +11,24 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
+import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
+import { createI18n, useI18n } from 'vue-i18n'
+import { es } from 'vuetify/locale'
+
+// i18n
+
+const messages = {
+  es: {
+    $vuetify: es,
+  },
+}
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'es',
+  fallbackLocale: 'es',
+  messages,
+})
 
 
 
@@ -21,11 +39,15 @@ const pinia = createPinia()
 const vuetify = createVuetify({
   components,
   directives,
+  locale: {
+    adapter: createVueI18nAdapter({i18n, useI18n}),
+
+  },
   theme: {
     defaultTheme: 'light',
     //
   },
 })
 
-createApp(App).use(vuetify).use(router).use(pinia).mount('#app')
+createApp(App).use(vuetify).use(i18n).use(router).use(pinia).mount('#app')
 
