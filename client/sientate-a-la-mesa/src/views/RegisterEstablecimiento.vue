@@ -297,9 +297,9 @@
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
-  import { ref } from 'vue';
+  // import { ref } from 'vue';
 
-  const exceedsSizeLimit = ref(false);
+  // const exceedsSizeLimit = ref(false);
   //CORS
   
     export default {
@@ -408,12 +408,12 @@
 
             const fileSize = value.size;
             const maxFileSize = 10 * 1024 * 1024; // 10 MB
+            console.log('Tamaño del archivo', fileSize);
 
             if (fileSize > maxFileSize) {
-              exceedsSizeLimit.value = true;
               return false;
             }
-
+            
             return true;
           },
         ],
@@ -572,10 +572,7 @@
         this.passwordError = '';
         this.menuError = '';
 
-        if (exceedsSizeLimit.value === true) {
-          console.log('El tamaño del archivo excede los 10 MB, no se puede enviar');
-          return false;
-        }
+        
   
         const isEmailValid = this.emailRules.every(rule => {
           const isValid = rule(this.email) === true;
@@ -689,32 +686,30 @@
 
 
         // menú, tamaño no debe exceder 10mb
-        const isMenuValid = this.menuRules.every(rule => {
-          const menuFile = Array.isArray(this.menu) ? this.menu[0] : this.menu as File;
+        // exceedsSizeLimit.value = true;
+        // utilizar menuRules para comprobar si el menu es valido o no
+        const rule = this.menuRules[0];
 
-          if (!menuFile) {
-            // Menú vacío, no es válido
-            this.menuError = 'El menú es obligatorio.';
-            this.validMenu = false;
-            return false;
-          }
-
-          const isValidSize = rule(menuFile) === true;
-          const isValid = isValidSize && !exceedsSizeLimit.value;
+        if (!this.menu || this.menu.length === 0) {
+          this.menuError = 'El menú es obligatorio.';
+          this.validMenu = false;
+          console.log('Error, el menú está vacío.');
+        } else {
+          const isValid = rule(this.menu[0]) === true;
 
           if (!isValid) {
-            this.menuError = isValidSize ? rule(menuFile) as unknown as string : 'El tamaño del menú excede los 10 MB.';
+            this.menuError = rule(this.menu[0]) as unknown as string;
             this.validMenu = false;
+            console.log('Fallo, el menú no cumple con alguna regla.');
           }
+        }
 
-          return isValid;
-        });
 
   
         // Actualizar el estado "valid" si es necesario
         // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && isMenuValid;
-  
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu;
+
         return this.valid;
       },
     },
