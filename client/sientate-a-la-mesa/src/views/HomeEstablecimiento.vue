@@ -99,6 +99,8 @@ async function getRestaurant() {
         finishingHour.value = response.data.message.timeTable[0].finishingHour;
         hours.value = startingHour.value + " - " + finishingHour.value;
         menu.value = response.data.message.menu;
+
+        pictures.value = response.data.message.pictures;
         
 
         if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
@@ -106,6 +108,13 @@ async function getRestaurant() {
         } else {
           // Reducir tamaño de la imagen
           profilePhoto.value = authStore.getProfilePhoto() as string;
+        }
+
+        //pictures
+        if(pictures.value === null) {
+          console.log("no hay fotos");
+          pictures.value = [];
+          pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
         }
 
         // pictures
