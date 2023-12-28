@@ -111,6 +111,7 @@ async function getUser() {
   if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
       const response = await axios.get(`${baseUrl}users/?token=${userToken}&userName=${authStore.user.username}`)
+      console.log(response.data);
       if (response.data.code === 0) {
         username.value = response.data.message.userName;
         name.value = response.data.message.name;
@@ -122,7 +123,11 @@ async function getUser() {
         if (response.data.message.nextReservations.length > 0) {
           nextReservationsFlag.value = true
           for (let i in reservations) {
+            console.log("aqui");
+            console.log(reservations[i]);
+            console.log("aqui");
             const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
+            
             if (response.data.code === 0) {
               const date = new Date(response.data.message.day);
               //pasar la fecha a string
@@ -141,8 +146,11 @@ async function getUser() {
         } 
         if (response.data.message.historicReservations.length > 0) {
           historicReservationsFlag.value = true;
-          for (let i in response.data.message.historicReservations) {
-            const response = await axios.get(`${baseUrl}reservations/?id=${i}`);
+          let reservations = response.data.message.historicReservations;
+
+          for (let i in reservations) {
+
+            const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
             if (response.data.code === 0) {
               const newReservation: Reservation = {
                 restaurant: response.data.message.restaurant as string,
