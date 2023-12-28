@@ -109,13 +109,13 @@ async function getRestaurant() {
         }
 
         // pictures
-        if(authStore.getPictures() === null) {
-          pictures.value = [];
-          pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
-          pictures.value[1] = "https://previews.123rf.com/images/shushanto/shushanto2209/shushanto220900703/191842443-imagen-de-fondo-de-la-ilustraci%C3%B3n-del-arte-conceptual-de-la-destrucci%C3%B3n-de-los-planetas.jpg"
-        } else {
-          pictures.value = authStore.getPictures() as string[];
-        }
+        // if(authStore.getPictures() === null) {
+        //   pictures.value = [];
+        //   pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
+        //   pictures.value[1] = "https://previews.123rf.com/images/shushanto/shushanto2209/shushanto220900703/191842443-imagen-de-fondo-de-la-ilustraci%C3%B3n-del-arte-conceptual-de-la-destrucci%C3%B3n-de-los-planetas.jpg"
+        // } else {
+        //   pictures.value = authStore.getPictures() as string[];
+        // }
 
       } else {
         authStore.logout();
