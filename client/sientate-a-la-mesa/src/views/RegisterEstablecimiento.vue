@@ -122,7 +122,7 @@
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 :multiple="false"
-                :maxSize="1024*1024*4"
+                :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
 
@@ -272,11 +272,11 @@
       </v-alert>
 
       <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert">
-        El tamaño de la foto de perfil no puede exceder los 4 MB.
+        El tamaño de la foto de perfil no puede exceder los 2 MB.
       </v-alert>
 
       <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert">
-        El tamaño de las imágenes no puede exceder los 4 MB.
+        El tamaño de las imágenes no puede exceder los 5 MB.
         <br>
         El número máximo de imágenes es 5.
       </v-alert>
@@ -416,9 +416,9 @@
             if (!value) return true;
 
             const fileSize = value.size;
-            const maxFileSize = 4 * 1024 * 1024; // 4 MB
+            const maxFileSize = 3 * 1024 * 1024; // 4 MB
             console.log('Tamaño del archivo', fileSize);
-
+            console.log('Tamaño máximo', maxFileSize);
             if (fileSize > maxFileSize) {
               return false;
             }
@@ -427,7 +427,21 @@
           },
         ],
         profilePictureError: '',
-        pictures: [], // se usan las reglas de la foto de perfil, individualmente son las mismas reglas.
+        pictures: [],
+        picturesRules: [
+          (value: File) => {
+            if (!value) return true;
+
+            const fileSize = value.size;
+            const maxFileSize = 5 * 1024 * 1024; // 5 MB
+
+            if (fileSize > maxFileSize) {
+              return false;
+            }
+            
+            return true;
+          },
+        ],
         picturesError: '',
         menu: [], // es un pdf
         menuRules: [
@@ -436,7 +450,6 @@
 
             const fileSize = value.size;
             const maxFileSize = 10 * 1024 * 1024; // 10 MB
-            console.log('Tamaño del archivo', fileSize);
 
             if (fileSize > maxFileSize) {
               return false;
@@ -730,7 +743,7 @@
         }
         
 
-        // foto de perfil, tamaño no debe exceder 4mb, pero no es obligatoria
+        // foto de perfil, tamaño no debe exceder 3mb, pero no es obligatoria
         // utilizar profilePictureRules para comprobar si la foto de perfil es valida o no
         const rule2 = this.profilePictureRules[0];
         this.validProfilePicture = true;
@@ -741,8 +754,7 @@
           console.log('Fallo, la foto de perfil supera los 4mb');
         }
 
-        // imágenes, tamaño no debe exceder 4mb, pero no es obligatoria y no deben de ser más de 5 archivos
-        // utilizar profilePictureRules para comprobar si las imágenes son validas o no
+        // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
         this.validPictures = true;
         if (this.pictures.length > 5) {
           this.validPictures = false;
@@ -750,7 +762,7 @@
         }
         else {
           for (let i = 0; i < this.pictures.length; i++) {
-            const rule3 = this.profilePictureRules[0]; // las reglas son las mismas que para la foto de perfil
+            const rule3 = this.picturesRules[0]; // las reglas son las mismas que para la foto de perfil
             const isValid3 = rule3(this.pictures[i]) === true;
             if (!isValid3) {
               this.picturesError = rule3(this.pictures[i]) as unknown as string;
@@ -764,27 +776,7 @@
 
 
         // Actualizar el estado "valid" si es necesario
-        // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
         this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
-        console.log('isEmailValid', isEmailValid);
-        console.log('isPhoneValid', isPhoneValid);
-        console.log('isPasswordValid', isPasswordValid);
-        console.log('this.validUserName', this.validUserName);
-        console.log('this.validEmail', this.validEmail);
-        console.log('this.validPhone', this.validPhone);
-        console.log('this.validRestaurantName', this.validRestaurantName);
-        console.log('this.validAddress', this.validAddress);
-        console.log('this.validCategory', this.validCategory);
-        console.log('this.validPassword', this.validPassword);
-        console.log('this.validWeekDays', this.validWeekDays);
-        console.log('this.validStartingHour', this.validStartingHour);
-        console.log('this.validFinishingHour', this.validFinishingHour);
-        console.log('this.validTimePeriod', this.validTimePeriod);
-        console.log('this.validNumberOfTables', this.validNumberOfTables);
-        console.log('this.validMenu', this.validMenu);
-        console.log('this.validProfilePicture', this.validProfilePicture);
-        console.log('this.validPictures', this.validPictures);
-        console.log('this.valid', this.valid);
         return this.valid;
       },
     },
