@@ -17,7 +17,6 @@
             </v-card-text>
           </v-card>
         </v-container>
-      </v-container>
       <v-container>
         <v-row>
           <v-col v-for="(restaurant, index) in paginatedRestaurants" :key="index" cols="12" md="4">
@@ -47,6 +46,7 @@
             <v-pagination v-model="currentPage" :length="totalPages" @input="changePage" />
           </v-col>
         </v-row>
+      </v-container>
       </v-container>
     </v-main>
 
