@@ -99,6 +99,8 @@ async function getRestaurant() {
         finishingHour.value = response.data.message.timeTable[0].finishingHour;
         hours.value = startingHour.value + " - " + finishingHour.value;
         menu.value = response.data.message.menu;
+
+        pictures.value = response.data.message.pictures;
         
 
         if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
@@ -108,14 +110,20 @@ async function getRestaurant() {
           profilePhoto.value = authStore.getProfilePhoto() as string;
         }
 
-        // pictures
-        if(authStore.getPictures() === null) {
+        //pictures
+        if(pictures.value.length === 0) {
           pictures.value = [];
           pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
-          pictures.value[1] = "https://previews.123rf.com/images/shushanto/shushanto2209/shushanto220900703/191842443-imagen-de-fondo-de-la-ilustraci%C3%B3n-del-arte-conceptual-de-la-destrucci%C3%B3n-de-los-planetas.jpg"
-        } else {
-          pictures.value = authStore.getPictures() as string[];
         }
+
+        // pictures
+        // if(authStore.getPictures() === null) {
+        //   pictures.value = [];
+        //   pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
+        //   pictures.value[1] = "https://previews.123rf.com/images/shushanto/shushanto2209/shushanto220900703/191842443-imagen-de-fondo-de-la-ilustraci%C3%B3n-del-arte-conceptual-de-la-destrucci%C3%B3n-de-los-planetas.jpg"
+        // } else {
+        //   pictures.value = authStore.getPictures() as string[];
+        // }
 
       } else {
         authStore.logout();

@@ -35,7 +35,7 @@ export const useAuthStore = defineStore({
                     // store user details and jwt in local storage to keep user logged in between page refreshes
                     localStorage.setItem('user', JSON.stringify(result));
                     localStorage.setItem('profilePhoto', result.profilePhoto);
-                    localStorage.setItem('pictures', JSON.stringify(result.pictures));
+                    // localStorage.setItem('pictures', JSON.stringify(result.pictures));
                     
 
 
@@ -90,7 +90,7 @@ export const useAuthStore = defineStore({
             this.user = null;
             localStorage.removeItem('user');
             localStorage.removeItem('profilePhoto');
-            localStorage.removeItem('pictures');
+            // localStorage.removeItem('pictures');
             router.push('/login');
         },
         isExpired() {
@@ -118,10 +118,10 @@ export const useAuthStore = defineStore({
             const profilePhoto = localStorage.getItem('profilePhoto');
             return profilePhoto;
         },
-        getPictures(): string[] | null {
-            const pictures = localStorage.getItem('pictures');
-            return pictures ? JSON.parse(pictures) : null;
-        }
+        // getPictures(): string[] | null {
+        //     const pictures = localStorage.getItem('pictures');
+        //     return pictures ? JSON.parse(pictures) : null;
+        // }
           
         
     }

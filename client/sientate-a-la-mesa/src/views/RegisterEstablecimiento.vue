@@ -39,7 +39,6 @@
                 id="description"
                 v-model="description"
                 label="Descripción*"
-                required
                 hide-details
               ></v-text-field>
             </v-col>
@@ -119,11 +118,11 @@
             <v-col cols="12" md="4">
               <v-file-input
                 v-model="profilePicture"
-                label="Foto de perfil"
+                label="Foto de perfil (límite 2mb)"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 :multiple="false"
-                :maxSize="1024*1024*4"
+                :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
 
@@ -153,15 +152,15 @@
               <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
             </v-col>
 
-            <!-- es un pdf, tamaño máximo 10mb -->
+            <!-- es un pdf, tamaño máximo 4mb -->
             <v-col cols="12" md="4"> 
               <v-file-input
                 v-model="menu"
-                label="Menú"
+                label="Menú (límite 4mb)"
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
                 :multiple="false"
-                :maxSize="1024*1024*10"
+                :maxSize="1024*1024*4"
               ></v-file-input>
             </v-col>
 
@@ -180,15 +179,15 @@
               v-model="available.numberOfTables" type="number"></v-text-field>
             </v-col>
 
-            <!-- imágenes del establecimiento, tamaño máximo 4mb -->
+            <!-- imágenes del establecimiento, tamaño máximo 2mb -->
             <v-col cols="12" md="4">
               <v-file-input
                 v-model="pictures"
-                label="Imágenes de portada del establecimiento"
+                label="Imágenes de portada del establecimiento (limite 2mb)"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
                 multiple
-                :maxSize="1024*1024*4"
+                :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
 
@@ -220,6 +219,8 @@
 
       <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
         El nombre de usuario es obligatorio
+        <br>
+        El nombre de usuario ya existe.
       </v-alert>
 
       <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
@@ -267,9 +268,17 @@
       </v-alert>
 
       <v-alert v-if="!validMenu" type="error">
-        El menú es obligatorio.
+        El tamaño del archivo no debe exceder los 4 MB.
+      </v-alert>
+
+      <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert">
+        El tamaño de la foto de perfil no puede exceder los 2 MB.
+      </v-alert>
+
+      <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert">
+        El tamaño de las imágenes no puede exceder los 2 MB.
         <br>
-        El tamaño del archivo no debe exceder los 10 MB.
+        El número máximo de imágenes es 4.
       </v-alert>
 
       <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
@@ -318,6 +327,8 @@
         validTimePeriod: true,
         validNumberOfTables: true,
         validMenu: true,
+        validProfilePicture: true,
+        validPictures: true,
         userRegistered: false,
         restaurantname: '',
         showPassword: false,
@@ -400,15 +411,31 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
         profilePicture: [],
+        profilePictureRules: [
+          (value: File) => {
+            if (!value) return true;
+
+            const fileSize = value.size;
+            const maxFileSize = 2 * 1024 * 1024; // 2 MB
+            console.log('Tamaño del archivo', fileSize);
+            console.log('Tamaño máximo', maxFileSize);
+            if (fileSize > maxFileSize) {
+              return false;
+            }
+            
+            return true;
+          },
+        ],
+        profilePictureError: '',
         pictures: [],
+        picturesError: '',
         menu: [], // es un pdf
         menuRules: [
           (value: File) => {
             if (!value) return true;
 
             const fileSize = value.size;
-            const maxFileSize = 10 * 1024 * 1024; // 10 MB
-            console.log('Tamaño del archivo', fileSize);
+            const maxFileSize = 4 * 1024 * 1024; // 4 MB
 
             if (fileSize > maxFileSize) {
               return false;
@@ -431,13 +458,13 @@
   
         if (isValid) {
           // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-          console.error('Formulario válido. Enviar datos.');
+          console.log('Formulario válido. Enviar datos.');
           this.RegisterRestaurantApi();
         } else {
           // al usuario debe mostrarle en la web el problema 
           // y no enviar el formulario hasta que no lo corrija
           
-          console.error('Formulario inválido. Por favor, corrija los errores.');
+          console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
       controlShowPassword() {
@@ -466,6 +493,7 @@
           this.validEmail = true;
           this.validPhone = true;
 
+          console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -505,17 +533,20 @@
             "menu": pdfBase64,
             "availability": this.available,
           };
+          console.log('Datos a enviar', newRestaurantJson);
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
+          console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
           //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
           if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
+            console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
             const authStore = useAuthStore();
-            return authStore.login(this.username, this.password).catch(error => console.error(error));
+            return authStore.login(this.username, this.password).catch(error => console.log(error));
           
           }
         } catch (error) {
@@ -524,6 +555,8 @@
           const textContainer = this.$refs.textContainer as HTMLElement;
           const textElement = document.createElement('h3');
   
+          console.error('Error al realizar la solicitud:', response.status, response.statusText);
+          console.error('Código de error:', response.data.code);
           if (response.status === 400) {
             console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
@@ -567,6 +600,8 @@
         this.phoneError = '';
         this.passwordError = '';
         this.menuError = '';
+        this.validEmail = true;
+        this.validPhone = true;
 
         
   
@@ -686,24 +721,45 @@
         // utilizar menuRules para comprobar si el menu es valido o no
         const rule = this.menuRules[0];
         this.validMenu = true;
-        if (!this.menu || this.menu.length === 0) {
-          this.menuError = 'El menú es obligatorio.';
+        const isValid2 = rule(this.menu[0]) === true;
+        if (!isValid2) {
+          this.menuError = rule(this.menu[0]) as unknown as string;
           this.validMenu = false;
-          console.log('Error, el menú está vacío.');
-        } else {
-          const isValid = rule(this.menu[0]) === true;
+          console.log('Fallo, el menú supera los 4mb');
+        }
+        
 
-          if (!isValid) {
-            this.menuError = rule(this.menu[0]) as unknown as string;
-            this.validMenu = false;
-            console.log('Fallo, el menú supera los 10mb');
+        // foto de perfil, tamaño no debe exceder 3mb, pero no es obligatoria
+        // utilizar profilePictureRules para comprobar si la foto de perfil es valida o no
+        const rule2 = this.profilePictureRules[0];
+        this.validProfilePicture = true;
+        const isValid = rule2(this.profilePicture[0]) === true;
+        if (!isValid) {
+          this.profilePictureError = rule2(this.profilePicture[0]) as unknown as string;
+          this.validProfilePicture = false;
+          console.log('Fallo, la foto de perfil supera los 2mb');
+        }
+
+        // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
+        this.validPictures = true;
+        if (this.pictures.length > 4) {
+          this.validPictures = false;
+          console.log('Fallo, el número de imágenes está limitado a 4');
+        }
+        else {
+          for (let i = 0; i < this.pictures.length; i++) {
+            const rule3 = this.profilePictureRules[0]; // las reglas son las mismas que para la foto de perfil
+            const isValid3 = rule3(this.pictures[i]) === true;
+            if (!isValid3) {
+              this.picturesError = rule3(this.pictures[i]) as unknown as string;
+              this.validPictures = false; // si alguna imagen no es válida, el formulario ya no es válido
+              console.log('Fallo, alguna/s imagen/es superan los 2mb');
+            }
           }
         }
 
         // Actualizar el estado "valid" si es necesario
-        // this.valid = isEmailValid && isPhoneValid && isPasswordValid;
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu;
-        console.log('this.validMenu', this.validMenu);
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
         return this.valid;
       },
     },
