@@ -343,8 +343,8 @@ async function submitForm() {
 
   if (response.data.code === 0) {
     userRegistered.value = true;
-    useAuthStore().reLogin(username.value, modifiedPassword.value);
-    window.location.reload();
+    await useAuthStore().reLogin(username.value, modifiedPassword.value);
+    router.push('/my-profile');
   }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
