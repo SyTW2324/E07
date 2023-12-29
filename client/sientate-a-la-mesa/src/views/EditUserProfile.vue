@@ -343,8 +343,8 @@ async function submitForm() {
 
   if (response.data.code === 0) {
     userRegistered.value = true;
-    useAuthStore().logout();
-    useAuthStore().loginAfterEdit(username.value, modifiedPassword.value);
+    useAuthStore().reLogin(username.value, modifiedPassword.value);
+    window.location.reload();
   }
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
