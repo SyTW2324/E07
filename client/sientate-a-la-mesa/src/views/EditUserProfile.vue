@@ -147,7 +147,7 @@
         </v-alert>
   
         <v-alert v-if="userRegistered == true" type="success" closable class="my-custom-alert">
-          Usuario registrado correctamente.
+          Perfil modificado correctamente.
         </v-alert>
       </v-container>
   </v-main>
