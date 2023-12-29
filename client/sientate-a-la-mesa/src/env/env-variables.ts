@@ -4,4 +4,4 @@
 // http://localhost:8081/
 //https://long-ruby-sea-lion-wear.cyclic.app/
 
-export const baseUrl: string = "https://long-ruby-sea-lion-wear.cyclic.app/"
+export const baseUrl: string = "https://super-helmet-calf.cyclic.app"
