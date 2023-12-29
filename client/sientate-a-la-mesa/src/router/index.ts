@@ -84,7 +84,12 @@ const routes: RouteRecordRaw[] = [
     path: '/edit-user-profile',
     name: 'edit-user-profile',
     component: EditUserProfile
-  } 
+  }, 
+  {
+    path: '/*',
+    component: E404
+  },
+
 
 ];
 
