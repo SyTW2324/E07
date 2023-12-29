@@ -343,6 +343,7 @@ async function submitForm() {
 
   if (response.data.code === 0) {
     userRegistered.value = true;
+    useAuthStore().logout();
     useAuthStore().loginAfterEdit(username.value, modifiedPassword.value);
   }
   } catch (error) {
