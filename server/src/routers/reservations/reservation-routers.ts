@@ -46,13 +46,15 @@ reservationsRouter.get('/reservationsAvilable/', async (req, res) => {
         const startingHour = Timetable?.at(0)?.startingHour as string;
         const finishingHour = Timetable?.at(0)?.finishingHour as string;
         const timePeriod = availability?.at(0)?.timePeriod as number;
+        const tableAvailable = availability?.at(0)?.numberOfTables as number;
 
 
         const periodosDisponibles = calcularPeriodosDisponibles(startingHour , finishingHour, timePeriod);
         availableHours = periodosDisponibles;
 
- 
+        
         const reservations = await reservationModel.find({restaurantId: restaurant._id});
+
 
         //recorro las reservas y voy eliminando los periodos que ya esten ocupados en el mismo dia
 
@@ -60,24 +62,61 @@ reservationsRouter.get('/reservationsAvilable/', async (req, res) => {
 
           const reservation = reservations[i];
           const reservationDay = reservation.day as Date
-          //si el dia de la reserva es el mismo que el que me han pasado por query
+
+
+
+
+          //si el dia de la reserva es el mismo que el que me han pasado por query 
 
           if (reservationDay.getDate() === day.getDate() && reservationDay.getMonth() === day.getMonth() && reservationDay.getFullYear() === day.getFullYear()) {
-            const reservationDayString = reservationDay.toLocaleDateString();
-            //Saco la hora y los minutos de la reserva
+            
+            //Buscar cuantas reservas hay para esa hora
             const reservationHour = reservationDay.getHours();
             const reservationMinutes = reservationDay.getMinutes();
             // los junto en este formato 00:00
             const reservationHourString = reservationHour + ":" + reservationMinutes;
+            let numberOfReservations = 0;
+            for (let i = 0; i < reservations.length; i++) {
+              const reservation = reservations[i];
+              const reservationDay = reservation.day as Date
+              const reservationHour = reservationDay.getHours();
+              const reservationMinutes = reservationDay.getMinutes();
+              // los junto en este formato 00:00
+              const reservationHourString = reservationHour + ":" + reservationMinutes;
 
-            //recorro el array de periodos disponibles y voy eliminando los que coincidan con la reserva
-            for (let i = 0; i < availableHours.length; i++) {
-              const availableHour = availableHours[i];
-
-              if (availableHour.includes(reservationHourString)) {
-                availableHours.splice(i, 1);
+              if (reservationHourString === reservationHourString && reservationDay.getDate() === day.getDate() && reservationDay.getMonth() === day.getMonth() && reservationDay.getFullYear() === day.getFullYear()) {
+                numberOfReservations++;
               }
             }
+            console.log("numero de reservas para esa hora: " + numberOfReservations);
+            console.log("mesas disponibles: " + tableAvailable);
+            console.log("hora de la reserva: " + reservationHourString );
+
+            //si hay mas reservas que mesas disponibles, elimino el periodo de disponibilidad
+
+            if (numberOfReservations >= tableAvailable) {
+              for (let i = 0; i < availableHours.length; i++) {
+                const availableHour = availableHours[i];
+                if (availableHour.includes(reservationHourString)) {
+                  availableHours.splice(i, 1);
+                }
+              }
+            }
+
+            //Saco la hora y los minutos de la reserva
+            // const reservationHour = reservationDay.getHours();
+            // const reservationMinutes = reservationDay.getMinutes();
+            // // los junto en este formato 00:00
+            // const reservationHourString = reservationHour + ":" + reservationMinutes;
+
+            //recorro el array de periodos disponibles y voy eliminando los que coincidan con la reserva
+            // for (let i = 0; i < availableHours.length; i++) {
+            //   const availableHour = availableHours[i];
+
+            //   if (availableHour.includes(reservationHourString)) {
+            //     availableHours.splice(i, 1);
+            //   }
+            // }
           }
 
 
