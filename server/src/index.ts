@@ -5,7 +5,6 @@
  */
 
 import { app } from './app.js';
-import cors from 'cors';
 
 import {port} from './env-variables.js';
 import { ip_express_despliegue } from './env-variables.js';
