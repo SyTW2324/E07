@@ -61,9 +61,11 @@ export const useAuthStore = defineStore({
 
                 // update pinia state
                 if (result.username) {
-                    this.user = result;
+                    this.user = null;
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('profilePhoto');
 
-        
+                    this.user = result;
                     // store user details and jwt in local storage to keep user logged in between page refreshes
                     localStorage.setItem('user', JSON.stringify(result));
                     localStorage.setItem('profilePhoto', result.profilePhoto);
