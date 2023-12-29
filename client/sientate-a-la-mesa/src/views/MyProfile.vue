@@ -37,7 +37,7 @@
   
         <v-col>
           <v-container>
-            <v-card max-width="344" elevation="16" color="teal" density="compact">
+            <v-card max-width="30%" elevation="16" color="teal" density="compact">
               <v-title>Mis próximas reservas</v-title>
               <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
               <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12" md="4">
@@ -56,7 +56,7 @@
   
         <v-col>
           <v-container>
-            <v-card max-width="50%" elevation="40%" color="teal" density="compact">
+            <v-card max-width="30%" elevation="16" color="teal" density="compact">
               <v-title>Mis reservas anteriores</v-title>
               <v-card-item v-if="historicReservationsFlag == false">No tienes reservas anteriores</v-card-item>
               <v-card-item v-else v-for="(reservation, index) in paginatedHistoricReservations" :key="index" cols="12" md="4">
