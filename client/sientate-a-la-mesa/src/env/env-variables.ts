@@ -4,4 +4,4 @@
 // http://localhost:8081/
 // https://super-helmet-calf.cyclic.app
 
-export const baseUrl: string = "https://super-helmet-calf.cyclic.app"
+export const baseUrl: string = "http://localhost:8081/"
