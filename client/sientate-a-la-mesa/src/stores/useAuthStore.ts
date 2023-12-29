@@ -35,7 +35,7 @@ export const useAuthStore = defineStore({
                     // store user details and jwt in local storage to keep user logged in between page refreshes
                     localStorage.setItem('user', JSON.stringify(result));
                     localStorage.setItem('profilePhoto', result.profilePhoto);
-                    localStorage.setItem('pictures', JSON.stringify(result.pictures));
+                    // localStorage.setItem('pictures', JSON.stringify(result.pictures));
                     
 
 
@@ -54,11 +54,43 @@ export const useAuthStore = defineStore({
                 return {code: 5, message: error as string};
             }
         },
+        async loginAfterEdit(username: string, passwordInput: string): Promise<{code: number, message: string}> {
+            try {
+
+                const result = await fetchWrapper.post(`${baseUrl}login/authenticate`, { userName: username, password: passwordInput });
+
+                // update pinia state
+                if (result.username) {
+                    this.user = result;
+
+        
+                    // store user details and jwt in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('user', JSON.stringify(result));
+                    localStorage.setItem('profilePhoto', result.profilePhoto);
+                    localStorage.setItem('pictures', JSON.stringify(result.pictures));
+                    
+
+
+                    // redirect to previous url or default to home page
+                    if (this.user.tipo === 'user') {
+                        router.push('/my-profile'); // cambio para que lleve a la home-base
+                    } else if (this.user.tipo === 'restaurant') {
+                        router.push('/my-profile-restaurant');
+                    }
+                    return {code: 0, message: "Usuario logeado"};
+                } else {
+                    return result;
+                }
+            } catch (error) {
+
+                return {code: 5, message: error as string};
+            }
+        },
         logout() {
             this.user = null;
             localStorage.removeItem('user');
             localStorage.removeItem('profilePhoto');
-            localStorage.removeItem('pictures');
+            // localStorage.removeItem('pictures');
             router.push('/login');
         },
         isExpired() {
@@ -86,10 +118,10 @@ export const useAuthStore = defineStore({
             const profilePhoto = localStorage.getItem('profilePhoto');
             return profilePhoto;
         },
-        getPictures(): string[] | null {
-            const pictures = localStorage.getItem('pictures');
-            return pictures ? JSON.parse(pictures) : null;
-        }
+        // getPictures(): string[] | null {
+        //     const pictures = localStorage.getItem('pictures');
+        //     return pictures ? JSON.parse(pictures) : null;
+        // }
           
         
     }

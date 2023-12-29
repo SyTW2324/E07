@@ -56,7 +56,7 @@ export const loginRouter = express.Router();
               accessToken: userToken,
               tipo: "restaurant",
               profilePhoto: " ",
-              pictures: restaurant.pictures
+              // pictures: restaurant.pictures
             }
             
 

@@ -115,3 +115,29 @@ export async function validateUserSchema(user: userDocumentInterface): Promise<{
 
     return { code: 0, errors: '' };
 }
+
+export async function validateUserSchemaEdit(user: userDocumentInterface, email: boolean, phoneNumber: boolean): Promise<{ code: number, errors: string }> {
+    if (email == true) {
+        const existingUser = await UserModel.findOne({ email: user.email });
+        const existingRestaurant = await RestaurantModel.findOne({ email: user.email });
+
+        if (existingUser || existingRestaurant) {
+            if (existingUser?.email === user.email || existingRestaurant?.email === user.email) {
+                return { code: 3, errors: 'Ya existe ese correo electrónico' };
+            }
+        }
+    } 
+    
+    if (phoneNumber == true) {
+        const existingUser = await UserModel.findOne({ phoneNumber: user.phoneNumber });
+        const existingRestaurant = await RestaurantModel.findOne({ phoneNumber: user.phoneNumber });
+
+        if (existingUser || existingRestaurant) {
+            if (existingUser?.phoneNumber === user.phoneNumber || existingRestaurant?.phoneNumber === user.phoneNumber) {
+                return { code: 4, errors: 'Ya existe número de teléfono' };
+            }
+        }
+    }
+
+    return { code: 0, errors: '' };
+}

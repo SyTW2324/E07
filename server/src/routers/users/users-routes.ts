@@ -5,7 +5,7 @@
  */
 import express from 'express';
 
-import { validateUserSchema } from '../../models/users/users-model.js';
+import { validateUserSchema, validateUserSchemaEdit } from '../../models/users/users-model.js';
 import { UserModel } from '../../models/users/users-model.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
@@ -126,5 +126,70 @@ usersRouter.delete('/users', async (req, res) => {
   }
 });
 
-
+usersRouter.put('/users', async (req, res) => {
+  try{
+    if (req.query.token && req.query.userName) {
+      const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
+      if (verified) {
+        const decodedToken = jwtDecode(req.query.token as string);
+        if (Number(decodedToken.exp) > (Date.now() / 1000)) {
+          const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
+          if (upDateHistoricReservations  === false) {
+            return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
+          }
+          const atributesModifiedEnable = ['password', 'email', 'phoneNumber', 'address', 'profilePhoto'];
+          const modifiedAtributes = Object.keys(req.body);
+          const isValidOperation = modifiedAtributes.every((atribute) => atributesModifiedEnable.includes(atribute));
+          if (!isValidOperation) {
+            return res.status(400).send({code: 1, message: "Atributos no modificables"});
+          }
+          const user = await UserModel.findOne({userName: req.query.userName});
+          if(user !== null){
+            if (req.body.password) {
+              user.password = req.body.password;
+            }
+            if (req.body.email) {
+              user.email = req.body.email;
+            }
+            if (req.body.phoneNumber) {
+              user.phoneNumber = req.body.phoneNumber;
+            }
+            if (req.body.profilePhoto) {
+              user.profilePhoto = req.body.profilePhoto;
+            }
+            if (req.body.address) {
+              user.address = req.body.address;
+            }
+            console.log(user);
+            const email = req.body.email ? true : false;
+            const phoneNumber = req.body.phoneNumber ? true : false;
+            const userSchemaValidation = await validateUserSchemaEdit(user, email, phoneNumber);
+            console.log(userSchemaValidation);
+            if (userSchemaValidation.code !== 0) {
+              return res.status(400).send(userSchemaValidation);
+            }
+            await UserModel.findOneAndUpdate({userName: req.query.userName}, user, {
+              new: true,
+              runValidators: true,
+            });
+            return res.status(200).send({code: 0, message: "Usuario modificado correctamente"});
+          }
+          else{
+            return res.status(404).send({code: 2, message: "Usuario no encontrado"});
+          }
+  
+        } else {
+          return res.status(400).send({code: 6, message: "Token expirado"});
+        }
+      } else {
+        return res.status(400).send({code: 7, message: "Token inválido"});
+      }
+    } else {
+      return res.status(400).send({code: 8, message: "Falta el token en la query"});
+    }
+  }  
+  catch{
+    return res.status(500).send();
+  }
+});
 

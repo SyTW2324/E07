@@ -22,7 +22,7 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
 
   try {
 
-    if(req.body.userName && req.body.passwd && req.body.email && req.body.restaurantName && req.body.restaurantAddress && req.body.description && req.body.timeTable && req.body.category && req.body.phoneNumber  && req.body.availability) {
+    if(req.body.userName && req.body.passwd && req.body.email && req.body.restaurantName && req.body.restaurantAddress && req.body.timeTable && req.body.category && req.body.phoneNumber  && req.body.availability) {
       const restaurant = new  RestaurantModel({
         userName: req.body.userName,
         passwd: req.body.passwd,
@@ -40,22 +40,45 @@ restaurantsRouter.post('/restaurants', async (req, res) => {
         nextReservations: [],
         historicReservations: []
       })
+      console.log('parte 1')
       if (req.body.profilePicture) {
+        console.log('parte 2')
         restaurant.profilePicture = req.body.profilePicture;
+        console.log('parte 3')
       }
       if (req.body.pictures) {
+        console.log('parte 4')
         restaurant.pictures = req.body.pictures;
+        console.log('parte 5')
       }
       if (req.body.menu) {
+        console.log('parte 6')
         restaurant.menu = req.body.menu;
+        console.log('parte 7')
       }
+      console.log('parte 8')
       const restaurantSchemaValidation = await validateRestaurantSchema(restaurant);
+      console.log('parte 9')
       if (restaurantSchemaValidation.code !== 0) {
+        console.log('parte 10')
         return res.status(400).send(restaurantSchemaValidation);
       }
+      console.log('parte 11')
       const newrestaurant = new RestaurantModel(restaurant);
-      const restaurantMessage = await newrestaurant.save();
-      return res.status(201).send(restaurantMessage);
+      console.log('parte 12')
+      try {
+        const restaurantMessage = await newrestaurant.save();
+        console.log('parte 13');
+        return res.status(201).send(restaurantMessage);
+      } catch (error) {
+        console.error('Error al guardar el restaurante:', error.message);
+        return res.status(500).send({
+          error: error.message,
+          stack: error.stack
+        });
+      }
+      // console.log('parte 13')
+      // return res.status(201).send(restaurantMessage);
 
     }
 
@@ -92,7 +115,9 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
               restaurantAddress: restaurant.restaurantAddress,
               timeTable: restaurant.timeTable,
               category: restaurant.category,
-              menu: restaurant.menu
+              menu: restaurant.menu,
+              description: restaurant.description,
+              pictures: restaurant.pictures,
             }
             return res.status(200).send({code: 0, message: restaurantSend});
           }

@@ -23,8 +23,24 @@
           </router-link>
         </v-app-bar-title>
 
-        <v-container style="width: 8em;">
+        <v-container style="width: 8em;" v-if="userLogged.user != null">
           <v-btn
+          v-if="userLogged.user.tipo == 'restaurant'"
+          class="text-capitalize"
+          block
+          color="#ffbd59"
+          size=""
+          
+          type="submit"
+
+        
+          @click="$router.push('/home-restaurants')"
+          variant="elevated"
+          >
+          <p style="color: teal; font-weight:lighter; " > Inicio</p>
+          </v-btn>
+          <v-btn
+          v-if="userLogged.user.tipo == 'user'"
           class="text-capitalize"
           block
           color="#ffbd59"
@@ -53,6 +69,7 @@
           <v-list>
           <v-list-item>
             <v-btn
+              v-if = "userLogged.user.tipo == 'user'"
  
               block
               color="wihite"
@@ -60,13 +77,24 @@
               type="submit"
       
               variant="elevated"
+              @click=" router.push('/my-profile')"
               >
-              <router-link to="/my-profile" style="text-decoration: none;" v-if="userLogged.user.tipo == 'user'">
               <p style="color: teal;">  Mi perfil</p>
-              </router-link>
-              <router-link to="/my-profile-restaurants" style="text-decoration: none;" v-else>
+              
+              </v-btn>
+              <v-btn
+              v-if="userLogged.user.tipo == 'restaurant'"
+              block
+              color="wihite"
+              size="large"
+              type="submit"
+      
+              variant="elevated"
+              @click=" router.push('/my-profile-restaurants')"
+              >
+            
               <p style="color: teal;">  Mi establecimiento</p>
-              </router-link>
+              
               </v-btn>
           </v-list-item>
         <v-list-item @click="userLogged.logout()">
@@ -155,6 +183,7 @@
 
 import icoWeb from '../img/icono-restaurante.png'
 import usuario from '../img/usuario.png'
+import router from '../router';
 import { useAuthStore } from '../stores/useAuthStore';
 
 const userLogged = useAuthStore();
