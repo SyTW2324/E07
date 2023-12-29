@@ -2,6 +2,6 @@
 // 10.6.128.143
 
 // http://localhost:8081/
-// https://long-lamb-kerchief.cyclic.app
+// https://e07.onrender.com
 
-export const baseUrl: string = "https://kind-ruby-worm-fez.cyclic.app"
+export const baseUrl: string = "https://e07.onrender.com"
