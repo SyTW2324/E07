@@ -259,8 +259,7 @@ async function cancelReservation(reservationId: string) {
       const userToken = authStore.getToken();
       const response = await axios.delete(`${baseUrl}reservations/?token=${userToken}&userName=${authStore.user.username}&reservationId=${reservationId}`)
       if (response.data.code === 0) {
-        // Recargar la página
-        router.push("/my-profile");
+        window.location.reload();
         
       }
     } else {
