@@ -196,6 +196,15 @@ function allowedDtes() {
 
 }
 
+function obtenerDiaActual() {
+  const date = new Date();
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${month}/${day}/${year}`;
+}
+
 function onClick() {
         ReservaExitosa.value = false
       }
@@ -250,7 +259,7 @@ function onClick() {
       <v-container class="d-flex align-center justify-center" > 
         <v-container v-show="calendar"  >
                 <v-row>
-                  <v-date-picker v-model="selectedDate" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" show-adjacent-months>Reserva ya!</v-date-picker>
+                  <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
                 </v-row>
                 <v-row justify="center" class="mt-3">
                   <v-btn @click="selectionDay()">Selección</v-btn>
