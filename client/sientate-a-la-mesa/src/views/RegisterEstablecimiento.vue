@@ -206,84 +206,85 @@
       </v-container>
 
       <!-- Alertas -->
-      <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
-      <v-alert v-if="!valid" type="warning" closable class="my-custom-alert">
-        Por favor, corrija los errores en el formulario.
-        <br>
-        - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
-        <br>
-        - Correo: El correo debe ser válido.
-        <br>
-        - Teléfono: El teléfono debe tener 9 dígitos.
-      </v-alert>
+      
+      <v-container class="d-flex align-center justify-center" style="min-height: 10px">
+      <v-container class="my-custom-container" style="width: 100%; height: 100%">
+        <v-alert v-if="!valid" type="warning" closable class="my-custom-alert2">
+          Por favor, corrija los errores en el formulario.
+          <br>
+          - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+          <br>
+          - Correo: El correo debe ser válido.
+          <br>
+          - Teléfono: El teléfono debe tener 9 dígitos.
+        </v-alert>
 
-      <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
-        El nombre de usuario es obligatorio
-        <br>
-        El nombre de usuario ya existe.
-      </v-alert>
+        <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert2">
+          El nombre de usuario ya existe.
+        </v-alert>
+        
+        <v-alert v-if="!validUserName2" type="error" closable class="my-custom-alert2">
+          El nombre de usuario es obligatorio
+        </v-alert>
 
-      <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
-        El correo ya existe.
-      </v-alert>
+        <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert2">
+          El correo ya existe.
+        </v-alert>
 
-      <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
-        El teléfono ya existe.
-      </v-alert>
+        <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
+          El teléfono ya existe.
+        </v-alert>
 
-      <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert">
-        El nombre del establecimiento es obligatorio.
-      </v-alert>
+        <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert2">
+          El nombre del establecimiento es obligatorio.
+        </v-alert>
 
-      <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert">
-        La dirección del establecimiento es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert2">
+          La dirección del establecimiento es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert">
-        La categoría es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert2">
+          La categoría es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert">
-        La contraseña es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert2">
+          La contraseña es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert">
-        Debe seleccionar al menos un día de la semana.
-      </v-alert>
+        <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert2">
+          Debe seleccionar al menos un día de la semana.
+        </v-alert>
 
-      <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert">
-        La hora de inicio es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert2">
+          La hora de inicio es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert">
-        La hora de finalización es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert2">
+          La hora de finalización es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert">
-        El tiempo de franja de reserva es obligatorio.
-      </v-alert>
+        <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert2">
+          El tiempo de franja de reserva es obligatorio.
+        </v-alert>
 
-      <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert">
-        El número de mesas por franja horaria es obligatorio.
-      </v-alert>
+        <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert2">
+          El número de mesas por franja horaria es obligatorio.
+        </v-alert>
 
-      <v-alert v-if="!validMenu" type="error">
-        El tamaño del archivo no debe exceder los 4 MB.
-      </v-alert>
+        <v-alert v-if="!validMenu" type="error">
+          El tamaño del archivo no debe exceder los 4 MB.
+        </v-alert>
 
-      <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert">
-        El tamaño de la foto de perfil no puede exceder los 2 MB.
-      </v-alert>
+        <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert2">
+          El tamaño de la foto de perfil no puede exceder los 2 MB.
+        </v-alert>
 
-      <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert">
-        El tamaño de las imágenes no puede exceder los 2 MB.
-        <br>
-        El número máximo de imágenes es 4.
-      </v-alert>
-
-      <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
-        Usuario registrado correctamente.
-      </v-alert>
+        <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert2">
+          El tamaño de las imágenes no puede exceder los 2 MB.
+          <br>
+          El número de imágenes debe ser de entre 1 y 10.
+        </v-alert>
+      </v-container>
     </v-container>
 
 
@@ -315,6 +316,7 @@
       data: () => ({
         valid: true,
         validUserName: true,
+        validUserName2: true,
         validEmail: true,
         validPhone: true,
         validRestaurantName: true,
@@ -652,11 +654,11 @@
 
         // nombre de usuario, comprobar que no esté vacío
         if (this.username === '') {
-          this.validUserName = false;
+          this.validUserName2 = false;
           console.log('El nombre de usuario es obligatorio');
         }
         else {
-          this.validUserName = true;
+          this.validUserName2 = true;
         }
 
         // contraseña, comprobar que no esté vacío
@@ -759,7 +761,7 @@
         }
 
         // Actualizar el estado "valid" si es necesario
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
+        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validUserName2 && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
         return this.valid;
       },
     },
