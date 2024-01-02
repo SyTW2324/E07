@@ -11,6 +11,8 @@ import { RestaurantModel } from '../../models/restaurants/restaurants-models.js'
 import jsonwebtoken from 'jsonwebtoken';
 import { jwtDecode } from 'jwt-decode';
 import { secretKey } from '../../env-variables.js';
+import { addHistoricReservations } from '../../models/restaurants/restaurants.js';
+
 import multer from 'multer';
 import path from 'path';
  
@@ -89,6 +91,10 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
         if (Number(decodedToken.exp) > (Date.now() / 1000)) {
+          const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
+          if (upDateHistoricReservations  === false) {
+            return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
+          }
           const restaurant = await RestaurantModel.findOne({userName: req.query.userName});
           if(restaurant){
             // renderizar la página de perfil de usuario y guardarla en una carpeta

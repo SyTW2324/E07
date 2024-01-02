@@ -148,7 +148,6 @@ async function getRestaurant() {
                 date: fechaString as string ,
                 reservationId: reservations[i] as string
               }
-              console.log(newReservation);
               nextReservations.value.push(newReservation);
             } else {
               console.log("Error al obtener las reservas");
