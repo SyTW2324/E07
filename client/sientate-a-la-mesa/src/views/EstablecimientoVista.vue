@@ -154,7 +154,7 @@ async function selectionDay() {
   const day = selectedDateValue ? (selectedDateValue.getMonth() + 1) + '/' + selectedDateValue.getDate() + '/' + selectedDateValue.getFullYear() : '';
 
   calendar.value = false;
-  const availableHoursGet = await axios.get(`${baseUrl}reservationsAvilable/?RestaurantName=${restaurantName.value}&day=${day}`);
+  const availableHoursGet = await axios.get(`${baseUrl}reservationsAvailable/?RestaurantName=${restaurantName.value}&day=${day}`);
   if (availableHoursGet.data.code === 0) {
     availableHours.value = availableHoursGet.data.message;
   }  

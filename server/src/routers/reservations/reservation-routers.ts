@@ -25,7 +25,7 @@ export const reservationsRouter = express.Router();
 
 // Tengo que pasarle un dia, para ese dia calcular los periodos disponibles y devolverlos, 
 //pero hay que comprobar que no haya ninguna reserva para ese dia y esa hora 
-reservationsRouter.get('/reservationsAvilable/', async (req, res) => {
+reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
 
 
   try {
