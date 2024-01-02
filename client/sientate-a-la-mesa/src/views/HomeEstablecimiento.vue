@@ -28,7 +28,25 @@
                 <p>{{ hours }}</p>
               </v-card-text>
             </v-card>
+            <v-container>
+              <v-card max-width="80%" elevation="16" color="teal" density="compact">
+                <v-title>Mis próximas reservas</v-title>
+                <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
+                <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
+                  <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }} </p>
+                </v-card-item>
+              </v-card>
+              <v-container v-if="nextReservationsFlag == true">
+                <v-row>
+                  <v-col cols="12">
+                    <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
+                  </v-col>
+                </v-row>
+              </v-container>
+    
+            </v-container>
           </v-col>
+
           <v-col cols="12" md="6">
             <v-card color="teal">
               <v-card-title>
@@ -40,8 +58,7 @@
               </v-card-text>
             </v-card>
           </v-col>
-          <v-col cols="12" md="6">
-          </v-col>
+
           
           
         </v-row>
@@ -62,6 +79,13 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 import { ref } from 'vue';
 import VuePdfApp from "vue3-pdf-app";
+import { computed } from 'vue';
+
+interface Reservation {
+  client: string;
+  date: string;
+  reservationId: string;
+}
 
 let userName = ref("");
 let restaurantName = ref("");
@@ -76,7 +100,8 @@ let finishingHour = ref("");
 let profilePhoto = ref("");
 let pictures = ref<string[]>([]);
 let hours = ref("");
-
+let nextReservationsFlag = ref(false);
+let nextReservations = ref<Reservation[]>([]);
 let menu = ref("");
 
 async function getRestaurant() {
@@ -101,6 +126,36 @@ async function getRestaurant() {
         menu.value = response.data.message.menu;
 
         pictures.value = response.data.message.pictures;
+        let reservations = response.data.message.nextReservations;
+
+        if (response.data.message.nextReservations.length > 0) {
+          nextReservationsFlag.value = true
+          for (let i in reservations) {
+            
+            const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
+            
+            if (response.data.code === 0) {
+              const fecha = new Date(response.data.message.day);
+
+              // Formatear las horas y minutos con ceros iniciales
+              const horaFormateada = fecha.getHours().toString().padStart(2, '0');
+              const minutoFormateado = fecha.getMinutes().toString().padStart(2, '0');
+
+              const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;
+
+              const newReservation: Reservation = {
+                client: response.data.message.client as string,
+                date: fechaString as string ,
+                reservationId: reservations[i] as string
+              }
+              console.log(newReservation);
+              nextReservations.value.push(newReservation);
+            } else {
+              console.log("Error al obtener las reservas");
+              // allInfoIsLoaded.value = 2;
+            }
+          }
+        } 
         
 
         if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
@@ -136,6 +191,28 @@ async function getRestaurant() {
     authStore.logout();
   }
 
+}
+
+const itemsPerPage = 3;
+
+// Paginación de las próximas reservas
+const currentPageNextReservations = ref(1);
+
+const paginatedNextReservations = computed(() => {
+  const startIndex = (currentPageNextReservations.value - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  return nextReservations.value?.slice(startIndex, endIndex);
+})
+
+const totalPagesNextReservations = computed(() => {
+  if (nextReservationsFlag.value === true) {
+    return Math.ceil(nextReservations.value.length / itemsPerPage);
+  }
+  return 0;
+});
+
+const changePage = (page: number) => {
+  currentPageNextReservations.value = page
 }
 
 getRestaurant();
