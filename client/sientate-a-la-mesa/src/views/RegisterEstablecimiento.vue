@@ -133,7 +133,7 @@
             <v-row class="d-flex">
               <!-- Días de la semana -->
               <v-col cols="12">
-                <label>Días de la semana:</label>
+                <label>Días de la semana*:</label>
                 <v-row>
                   <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
                     <v-checkbox 
@@ -151,7 +151,7 @@
 
             <!-- Hora de inicio -->
             <v-col cols="4">
-              <label>Hora de inicio:</label>
+              <label>Hora de inicio*:</label>
               <v-text-field 
               id="horaInicio" 
               v-model="timetable.startingHour" 
@@ -162,7 +162,7 @@
 
             <!-- Hora de finalización -->
             <v-col cols="4">
-              <label>Hora de finalización:</label>
+              <label>Hora de finalización*:</label>
               <v-text-field 
               id="horaFin" 
               v-model="timetable.finishingHour" 
@@ -186,7 +186,7 @@
 
             <!-- Número de minutos -->
             <v-col cols="12" md="4">
-              <label>Tiempo de franja de reserva (minutos):</label>
+              <label>Tiempo de franja de reserva (minutos)*:</label>
               <v-text-field 
               id="franjaTiempo" 
               v-model="available.timePeriod" 
@@ -198,7 +198,7 @@
 
             <!-- Número de personas -->
             <v-col cols="12" md="4">
-              <label>Número de mesas por franja horaria:</label>
+              <label>Número de mesas por franja horaria*:</label>
               <v-text-field 
               id="numberOfTables"
               v-model="available.numberOfTables" 
