@@ -43,7 +43,9 @@
                 <v-title>Mis próximas reservas</v-title>
                 <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
                 <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
-                  <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }} </p>
+                  <p><strong>Cliente: </strong>{{ reservation.clientName }}</p>
+                  <p><strong>Teléfono: </strong>{{ reservation.clientPhone }}</p>
+                  <p><strong>Fecha: </strong>{{ reservation.date }} </p>
                 </v-card-item>
               </v-card>
               <v-container v-if="nextReservationsFlag == true">
@@ -59,7 +61,9 @@
                 <v-title>Histórico de reservas</v-title>
                 <v-card-item v-if="historicReservationsFlag == false">No tienes reservas anteriores</v-card-item>
                 <v-card-item v-else v-for="(reservation, index) in paginatedHistoricReservations" :key="index" cols="12">
-                  <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }}</p>
+                  <p><strong>Cliente: </strong>{{ reservation.clientName }}</p>
+                  <p><strong>Teléfono: </strong>{{ reservation.clientPhone }}</p>
+                  <p><strong>Fecha: </strong>{{ reservation.date }} </p>
                 </v-card-item>
               </v-card>
               <v-container v-if="historicReservationsFlag == true">
@@ -92,10 +96,11 @@
   import { computed } from 'vue';
 
   interface Reservation {
-    client: string;
-    date: string;
-    reservationId: string;
-  }
+  clientName: string;
+  clientPhone: string;
+  date: string;
+  reservationId: string;
+}
 
   
   let userName = ref("");
@@ -156,7 +161,8 @@
                 const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;
 
                 const newReservation: Reservation = {
-                  client: response.data.message.client as string,
+                  clientName: response.data.message.clientName as string,
+                  clientPhone: response.data.message.clientPhone as string,
                   date: fechaString as string ,
                   reservationId: reservations[i] as string
                 }
@@ -185,7 +191,8 @@
                 const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;
 
                 const newReservation: Reservation = {
-                  client: response.data.message.client as string,
+                  clientName: response.data.message.clientName as string,
+                  clientPhone: response.data.message.clientPhone as string,
                   date: fechaString as string ,
                   reservationId: reservations[i] as string
                 }

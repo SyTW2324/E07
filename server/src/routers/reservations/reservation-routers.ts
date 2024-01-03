@@ -157,7 +157,9 @@ reservationsRouter.get('/reservations/', async (req, res) => {
           const reservationMessage = {
             restaurant: restaurant.restaurantName,
             client: user.userName,
-            day: reservation.day
+            day: reservation.day,
+            clientName: user.name,
+            clientPhone: user.phoneNumber,
           }
           return res.status(200).send({code: 0, message: reservationMessage});
         }
