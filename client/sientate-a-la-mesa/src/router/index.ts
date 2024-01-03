@@ -13,6 +13,7 @@ import MyProfileRestaurants from '../views/MiEstablecimiento.vue'
 import Establecimiento from '../views/EstablecimientoVista.vue'
 import E404 from '../views/404.vue'
 import EditUserProfile from '../views/EditUserProfile.vue'
+import EditRestaurantProfile from '../views/EditRestaurantProfile.vue'
 
 import { useAuthStore } from '../stores/useAuthStore';
 
@@ -85,6 +86,11 @@ const routes: RouteRecordRaw[] = [
     name: 'edit-user-profile',
     component: EditUserProfile
   }, 
+  {
+    path: '/edit-restaurant-profile',
+    name: 'edit-restaurant-profile',
+    component: EditRestaurantProfile
+  },
   {
     path: '/*',
     component: E404
