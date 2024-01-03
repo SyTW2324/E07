@@ -236,14 +236,25 @@
       
       <v-container class="d-flex align-center justify-center" style="min-height: 10px">
       <v-container class="my-custom-container" style="width: 100%; height: 100%">
-        <v-alert v-if="!valid" type="warning" closable class="my-custom-alert2">
-          Por favor, corrija los errores en el formulario.
+        
+        <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert2">
+          El correo ya existe.
+        </v-alert>
+
+        <v-alert v-if="!validEmail2" type="error" closable class="my-custom-alert2">
+          El correo es obligatorio
           <br>
-          - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+          El correo deber ser válido
+        </v-alert>
+
+        <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
+          El teléfono ya existe.
+        </v-alert>
+
+        <v-alert v-if="!validPhone2" type="error" closable class="my-custom-alert2">
+          El teléfono es obligatorio
           <br>
-          - Correo: El correo debe ser válido.
-          <br>
-          - Teléfono: El teléfono debe tener 9 dígitos.
+          El teléfono debe tener 9 dígitos
         </v-alert>
 
         <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert2">
@@ -252,14 +263,6 @@
         
         <v-alert v-if="!validUserName2" type="error" closable class="my-custom-alert2">
           El nombre de usuario es obligatorio
-        </v-alert>
-
-        <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert2">
-          El correo ya existe.
-        </v-alert>
-
-        <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
-          El teléfono ya existe.
         </v-alert>
 
         <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert2">
@@ -276,6 +279,8 @@
 
         <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert2">
           La contraseña es obligatoria.
+          <br>
+          La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
         </v-alert>
 
         <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert2">
@@ -345,7 +350,9 @@
         validUserName: true,
         validUserName2: true,
         validEmail: true,
+        validEmail2: true,
         validPhone: true,
+        validPhone2: true,
         validRestaurantName: true,
         validAddress: true,
         validCategory: true,
@@ -400,8 +407,6 @@
             return 'La categoría es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a categoryRules
-
-
         email: '',
         emailError: '',
         emailRules: [
@@ -676,20 +681,20 @@
         this.validPhone = true;
 
         
-  
-        const isEmailValid = this.emailRules.every(rule => {
-          const isValid = rule(this.email) === true;
-          if (!isValid) this.emailError = rule(this.email) as string;
-          return isValid;
-        });
-  
-        const isPhoneValid = this.phoneRules.every(rule => {
+        this.validPhone2 = this.phoneRules.every(rule => {
           const isValid = rule(this.phone) === true;
           if (!isValid) this.phoneError = rule(this.phone) as string;
           return isValid;
         });
+        console.log('this.validPhone2:', this.validPhone2);
+
+        this.validEmail2 = this.emailRules.every(rule => {
+          const isValid = rule(this.email) === true;
+          return isValid;
+        });
+        console.log('this.validEmail2:', this.validEmail2);
   
-        const isPasswordValid = this.passwordRules.every(rule => {
+        this.validPassword = this.passwordRules.every(rule => {
           const isValid = rule(this.password) === true;
           if (!isValid) this.passwordError = rule(this.password) as string;
           return isValid;
@@ -715,16 +720,6 @@
           return isValid;
         });
 
-
-        //! PENDIENTE
-        // contraseña, comprobar que no esté vacío
-        if (this.password === '') {
-          this.validPassword = false;
-          //console.log('La contraseña es obligatoria');
-        }
-        else {
-          this.validPassword = true;
-        }
 
         this.validWeekDays = this.timetableRules.every(rule => {
           const isValid = rule(this.timetable.selectedDays.join(',')) === true;
@@ -799,7 +794,7 @@
         }
 
         // Actualizar el estado "valid" si es necesario
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validUserName2 && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
+        this.valid = this.validEmail2 && this.validPhone2 && this.validUserName && this.validUserName2 && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
         return this.valid;
       },
     },
