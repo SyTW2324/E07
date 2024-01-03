@@ -139,32 +139,62 @@
           let reservations = response.data.message.nextReservations;
 
           if (response.data.message.nextReservations.length > 0) {
-          nextReservationsFlag.value = true
-          for (let i in reservations) {
-            
-            const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
-            
-            if (response.data.code === 0) {
-              const fecha = new Date(response.data.message.day);
+            nextReservationsFlag.value = true
+            for (let i in reservations) {
+              
+              const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
+              
+              if (response.data.code === 0) {
+                const fecha = new Date(response.data.message.day);
 
-              // Formatear las horas y minutos con ceros iniciales
-              const horaFormateada = fecha.getHours().toString().padStart(2, '0');
-              const minutoFormateado = fecha.getMinutes().toString().padStart(2, '0');
+                // Formatear las horas y minutos con ceros iniciales
+                const horaFormateada = fecha.getHours().toString().padStart(2, '0');
+                const minutoFormateado = fecha.getMinutes().toString().padStart(2, '0');
 
-              const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;
+                const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;
 
-              const newReservation: Reservation = {
-                client: response.data.message.client as string,
-                date: fechaString as string ,
-                reservationId: reservations[i] as string
+                const newReservation: Reservation = {
+                  client: response.data.message.client as string,
+                  date: fechaString as string ,
+                  reservationId: reservations[i] as string
+                }
+                nextReservations.value.push(newReservation);
+              } else {
+                console.log("Error al obtener las reservas");
+                // allInfoIsLoaded.value = 2;
               }
-              nextReservations.value.push(newReservation);
-            } else {
-              console.log("Error al obtener las reservas");
-              // allInfoIsLoaded.value = 2;
             }
           }
-        }
+
+          if (response.data.message.historicReservations.length > 0) {
+            historicReservationsFlag.value = true
+            console.log("dentro de historicReservations");
+            console.log(response.data.message.historicReservations);
+            reservations = response.data.message.historicReservations;
+            for (let i in reservations) {
+              const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
+              if (response.data.code === 0) {
+                const fecha = new Date(response.data.message.day);
+
+                // Formatear las horas y minutos con ceros iniciales
+                const horaFormateada = fecha.getHours().toString().padStart(2, '0');
+                const minutoFormateado = fecha.getMinutes().toString().padStart(2, '0');
+
+                const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;
+
+                const newReservation: Reservation = {
+                  client: response.data.message.client as string,
+                  date: fechaString as string ,
+                  reservationId: reservations[i] as string
+                }
+                historicReservations.value.push(newReservation);
+              } else {
+                console.log("Error al obtener las reservas");
+                // allInfoIsLoaded.value = 2;
+              }
+            }
+
+          }
 
 
           if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
