@@ -110,6 +110,7 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
               description: restaurant.description,
               pictures: restaurant.pictures,
               nextReservations: restaurant.nextReservations,
+              historicReservations: restaurant.historicReservations,
             }
             return res.status(200).send({code: 0, message: restaurantSend});
           }
