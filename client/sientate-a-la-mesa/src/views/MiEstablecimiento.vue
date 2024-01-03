@@ -19,15 +19,15 @@
               </v-avatar>
             </v-col>
             <v-col>
-              <p>Nombre del restaurante: {{ restaurantName }}</p>
-              <p>Nombre de usuario: {{ userName }}</p>
-              <p>Email: {{ email }}</p>
-              <p>Teléfono: {{ phoneNumber }}</p>
-              <p>Dirección: {{ restaurantAddress }}</p>
-              <p>Horario: {{ selectedDays }} | {{ hours }}</p>   
-              <p>Categoría: {{ category }}</p>
-              <br />
-              <v-btn color="teal">Editar</v-btn>
+              <p><strong>Nombre del restaurante: </strong>{{ restaurantName }}</p>
+              <p><strong>Nombre de usuario: </strong>{{ userName }}</p>
+              <p><strong>Email: </strong>{{ email }}</p>
+              <p><strong>Teléfono: </strong>{{ phoneNumber }}</p>
+              <p><strong>Dirección: </strong>{{ restaurantAddress }}</p>
+              <p><strong>Horario: </strong>{{ selectedDays }} | {{ hours }}</p>   
+              <p><strong>Categoría: </strong>{{ category }}</p>
+              <br/>
+              <v-btn color="teal">Editar datos</v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -35,21 +35,40 @@
       <br>
       <div>
         <v-container>
-          <v-card max-width="80%" elevation="16" color="teal" density="compact">
-            <v-title>Mis próximas reservas</v-title>
-            <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
-            <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
-              <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }} </p>
-            </v-card-item>
-          </v-card>
-          <v-container v-if="nextReservationsFlag == true">
-            <v-row>
-              <v-col cols="12">
-                <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
-              </v-col>
-            </v-row>
-          </v-container>
-
+          <v-row>
+            <v-col col="50">
+              <v-card max-width="75%" elevation="16" color="teal" density="compact">
+                <v-title>Mis próximas reservas</v-title>
+                <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
+                <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
+                  <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }} </p>
+                </v-card-item>
+              </v-card>
+              <v-container v-if="nextReservationsFlag == true">
+                <v-row>
+                  <v-col cols="12">
+                    <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+            <v-col col="50">
+              <v-card max-width="75%" elevation="16" color="teal" density="compact">
+                <v-title>Histórico de reservas reservas</v-title>
+                <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
+                <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
+                  <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }} </p>
+                </v-card-item>
+              </v-card>
+              <v-container v-if="nextReservationsFlag == true">
+                <v-row>
+                  <v-col cols="12">
+                    <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
         </v-container>
       </div>
     </v-main>
