@@ -54,16 +54,16 @@
             </v-col>
             <v-col col="50">
               <v-card max-width="75%" elevation="16" color="teal" density="compact">
-                <v-title>Histórico de reservas reservas</v-title>
-                <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
-                <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
-                  <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }} </p>
+                <v-title>Histórico de reservas</v-title>
+                <v-card-item v-if="historicReservationsFlag == false">No tienes reservas anteriores</v-card-item>
+                <v-card-item v-else v-for="(reservation, index) in paginatedHistoricReservations" :key="index" cols="12">
+                  <p>Cliente: {{ reservation.client }} || Fecha: {{ reservation.date }}</p>
                 </v-card-item>
               </v-card>
-              <v-container v-if="nextReservationsFlag == true">
+              <v-container v-if="historicReservationsFlag == true">
                 <v-row>
                   <v-col cols="12">
-                    <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
+                    <v-pagination v-model="currentPageHistoricReservations" :length="totalPagesHistoricReservations" @input="changePageHistoricReservations" />
                   </v-col>
                 </v-row>
               </v-container>
@@ -109,7 +109,9 @@
   let profilePhoto = ref("");
   let hours = ref("");
   let nextReservationsFlag = ref(false);
+  let historicReservationsFlag = ref(false);
   let nextReservations = ref<Reservation[]>([]);
+  let historicReservations = ref<Reservation[]>([]);
 
   
   
@@ -204,6 +206,27 @@
 
   const changePage = (page: number) => {
     currentPageNextReservations.value = page
+  }
+
+
+  // Paginación de las reservas anteriores
+  const currentPageHistoricReservations = ref(1);
+
+  const paginatedHistoricReservations = computed(() => {
+    const startIndex = (currentPageHistoricReservations.value - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    return historicReservations.value?.slice(startIndex, endIndex);
+  })
+
+  const totalPagesHistoricReservations = computed(() => {
+    if (historicReservationsFlag.value === true) {
+      return Math.ceil(historicReservations.value.length / itemsPerPage);
+    }
+    return 0;
+  });
+
+  const changePageHistoricReservations = (page: number) => {
+    currentPageHistoricReservations.value = page
   }
   
   getRestaurant();
