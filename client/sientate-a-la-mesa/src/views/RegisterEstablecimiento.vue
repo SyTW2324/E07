@@ -28,6 +28,7 @@
               <v-text-field
                 id="address"
                 v-model="address"
+                :rules="addressRules"
                 label="Dirección del establecimiento*"
                 required
                 hide-details
@@ -50,6 +51,7 @@
                 v-model="category"
                 :items="categories"
                 label="Categoría*"
+                :rules="categoryRules"
                 required
                 hide-details
 
@@ -84,6 +86,7 @@
                 id="username"
                 label="Nombre de usuario*"
                 v-model="username"
+                :rules="usernameRules"
                 hide-details
                 required
               ></v-text-field>
@@ -133,7 +136,13 @@
                 <label>Días de la semana:</label>
                 <v-row>
                   <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
-                    <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
+                    <v-checkbox 
+                    v-model="timetable.selectedDays" 
+                    :label="day" 
+                    :value="day"
+                    :rules="timetableRules"
+                    >
+                  </v-checkbox>
                   </v-col>
                 </v-row>
               </v-col>
@@ -143,13 +152,23 @@
             <!-- Hora de inicio -->
             <v-col cols="4">
               <label>Hora de inicio:</label>
-              <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
+              <v-text-field 
+              id="horaInicio" 
+              v-model="timetable.startingHour" 
+              type="time"
+              :rules="startHourRules"
+              ></v-text-field>
             </v-col>
 
             <!-- Hora de finalización -->
             <v-col cols="4">
               <label>Hora de finalización:</label>
-              <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
+              <v-text-field 
+              id="horaFin" 
+              v-model="timetable.finishingHour" 
+              type="time"
+              :rules="finishHourRules"
+              ></v-text-field>
             </v-col>
 
             <!-- es un pdf, tamaño máximo 4mb -->
@@ -168,7 +187,13 @@
             <!-- Número de minutos -->
             <v-col cols="12" md="4">
               <label>Tiempo de franja de reserva (minutos):</label>
-              <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
+              <v-text-field 
+              id="franjaTiempo" 
+              v-model="available.timePeriod" 
+              type="number"
+              :rules="timePeriodRules"
+              >
+            </v-text-field>
             </v-col>
 
             <!-- Número de personas -->
@@ -176,7 +201,11 @@
               <label>Número de mesas por franja horaria:</label>
               <v-text-field 
               id="numberOfTables"
-              v-model="available.numberOfTables" type="number"></v-text-field>
+              v-model="available.numberOfTables" 
+              type="number"
+              :rules="numberOfTablesRules"
+              >
+              </v-text-field>
             </v-col>
 
             <!-- imágenes del establecimiento, tamaño máximo 2mb -->
@@ -190,8 +219,6 @@
                 :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
-
-            
   
           </v-row>
   
@@ -342,6 +369,13 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a restaurantnameRules
         address: '',
+        addressRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'La dirección del establecimiento es obligatoria.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a addressRules
         description: '',
         timetable: {
           selectedDays: [],
@@ -397,6 +431,13 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a phoneRules
         username: '',
+        usernameRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'El nombre de usuario es obligatorio.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a usernameRules
         // Patrón de la contraseña [ /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, 'Password must contain at least one lowercase letter, one uppercase letter and one number' ],
         password: '',
         passwordError: '',
@@ -445,6 +486,38 @@
           },
         ],
         menuError: '',
+        timePeriodRules: [
+          (value: number) => {
+            if (value) {
+              if (value > 0) return true;
+              else return 'El tiempo de franja de reserva debe ser mayor que 0.';
+            }
+            return 'El tiempo de franja de reserva es obligatorio.';
+          },
+        ] as ((value: number) => true | string)[], // Asigna un tipo a timePeriodRules
+        numberOfTablesRules: [
+          (value: number) => {
+            if (value) {
+              if (value > 0) return true;
+              else return 'El número de mesas por franja horaria debe ser mayor que 0.';
+            }
+            return 'El número de mesas por franja horaria es obligatorio.';
+          },
+        ] as ((value: number) => true | string)[], // Asigna un tipo a numberOfTablesRules
+        startHourRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'La hora de inicio es obligatoria.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a startHourRules
+        finishHourRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'La hora de finalización es obligatoria.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a finishHourRules
         available: {
           timePeriod: null,
           numberOfTables: null,
@@ -622,42 +695,28 @@
           return isValid;
         });
 
-        // nombre de restaurante, comprobar que no esté vacío
-        if (this.restaurantname === '') {
-          this.validRestaurantName = false;
-          //console.log('El nombre del restaurante es obligatorio');
-        }
-        else {
-          this.validRestaurantName = true;
-        }
+        this.validRestaurantName = this.restaurantnameRules.every(rule => {
+          const isValid = rule(this.restaurantname) === true;
+          return isValid;
+        });
 
-        // dirección del restaurante, comprobar que no esté vacío
-        if (this.address === '') {
-          this.validAddress = false;
-          //console.log('La dirección del restaurante es obligatoria');
-        }
-        else {
-          this.validAddress = true;
-        }
+        this.validAddress = this.addressRules.every(rule => {
+          const isValid = rule(this.address) === true;
+          return isValid;
+        });
 
-        // categoría del restaurante, comprobar que no esté vacío
-        if (this.category === '') {
-          this.validCategory = false;
-          //console.log('La categoría del restaurante es obligatoria');
-        }
-        else {
-          this.validCategory = true;
-        }
+        this.validCategory = this.categoryRules.every(rule => {
+          const isValid = rule(this.category) === true;
+          return isValid;
+        });
+        
+        this.validUserName2 = this.usernameRules.every(rule => {
+          const isValid = rule(this.username) === true;
+          return isValid;
+        });
 
-        // nombre de usuario, comprobar que no esté vacío
-        if (this.username === '') {
-          this.validUserName2 = false;
-          //console.log('El nombre de usuario es obligatorio');
-        }
-        else {
-          this.validUserName2 = true;
-        }
 
+        //! PENDIENTE
         // contraseña, comprobar que no esté vacío
         if (this.password === '') {
           this.validPassword = false;
@@ -667,52 +726,34 @@
           this.validPassword = true;
         }
 
-        // días de la semana, comprobar que al menos haya uno seleccionado
-        if (this.timetable.selectedDays.length === 0) {
-          this.validWeekDays = false;
-          //console.log('Debe seleccionar al menos un día de la semana');
-        }
-        else {
-          this.validWeekDays = true;
-        }
+        this.validWeekDays = this.timetableRules.every(rule => {
+          const isValid = rule(this.timetable.selectedDays.join(',')) === true;
+          return isValid;
+        });
 
         // hora de inicio, comprobar que no esté vacío
-        if (this.timetable.startingHour === null || this.timetable.startingHour === '') {
-          this.validStartingHour = false;
-          //console.log('La hora de inicio es obligatoria');
-        }
-        else {
-          //console.log('La hora de inicio es', this.timetable.startingHour);
-          this.validStartingHour = true;
-        }
+        this.validStartingHour = this.startHourRules.every(rule => {
+          const isValid = rule(this.timetable.startingHour !== null ? this.timetable.startingHour : '') === true;
+          return isValid;
+        });
 
         // hora de finalización, comprobar que no esté vacío
-        if (this.timetable.finishingHour === null || this.timetable.finishingHour === '') {
-          this.validFinishingHour = false;
-          //console.log('La hora de finalización es obligatoria');
-        }
-        else {
-          //console.log('La hora de finalización es', this.timetable.finishingHour);  
-          this.validFinishingHour = true;
-        }
+        this.validFinishingHour = this.finishHourRules.every(rule => {
+          const isValid = rule(this.timetable.finishingHour !== null ? this.timetable.finishingHour : '') === true;
+          return isValid;
+        });
 
         // tiempo de franja de reserva, comprobar que no esté vacío y que sea mayor que 0
-        if (this.available.timePeriod === null || this.available.timePeriod <= 0) {
-          this.validTimePeriod = false;
-          //console.log('El tiempo de franja de reserva es obligatorio');
-        }
-        else {
-          this.validTimePeriod = true;
-        }
+        this.validTimePeriod = this.timePeriodRules.every(rule => {
+          const isValid = rule(this.available.timePeriod !== null ? this.available.timePeriod : 0) === true;
+          return isValid;
+        });
 
         // número de mesas por franja horaria, comprobar que no esté vacío y que sea mayor que 0
-        if (this.available.numberOfTables === null || this.available.numberOfTables <= 0) {
-          this.validNumberOfTables = false;
-          //console.log('El número de mesas por franja horaria es obligatorio');
-        }
-        else {
-          this.validNumberOfTables = true;
-        }
+        this.validNumberOfTables = this.numberOfTablesRules.every(rule => {
+          const isValid = rule(this.available.numberOfTables !== null ? this.available.numberOfTables : 0) === true;
+          return isValid;
+        });
 
 
         // menú, tamaño no debe exceder 10mb
