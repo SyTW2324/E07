@@ -419,8 +419,6 @@
 
             const fileSize = value.size;
             const maxFileSize = 2 * 1024 * 1024; // 2 MB
-            console.log('Tamaño del archivo', fileSize);
-            console.log('Tamaño máximo', maxFileSize);
             if (fileSize > maxFileSize) {
               return false;
             }
@@ -460,13 +458,13 @@
   
         if (isValid) {
           // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-          console.log('Formulario válido. Enviar datos.');
+          //console.log('Formulario válido. Enviar datos.');
           this.RegisterRestaurantApi();
         } else {
           // al usuario debe mostrarle en la web el problema 
           // y no enviar el formulario hasta que no lo corrija
           
-          console.log('Formulario inválido. Por favor, corrija los errores.');
+          //console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
       controlShowPassword() {
@@ -495,7 +493,7 @@
           this.validEmail = true;
           this.validPhone = true;
 
-          console.log('Enviando datos a la API'); 
+          //console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -535,17 +533,16 @@
             "menu": pdfBase64,
             "availability": this.available,
           };
-          console.log('Datos a enviar', newRestaurantJson);
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
-          console.log('Datos obtenidos de la API', response.data);
+          //console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
           //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
           if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
-            console.log('Restaurante registrado correctamente');
+            //console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
             const authStore = useAuthStore();
             return authStore.login(this.username, this.password).catch(error => console.log(error));
@@ -557,32 +554,32 @@
           const textContainer = this.$refs.textContainer as HTMLElement;
           const textElement = document.createElement('h3');
   
-          console.error('Error al realizar la solicitud:', response.status, response.statusText);
-          console.error('Código de error:', response.data.code);
+          //console.error('Error al realizar la solicitud:', response.status, response.statusText);
+          //console.error('Código de error:', response.data.code);
           if (response.status === 400) {
             console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
-              console.error('Faltan campos obligatorios');
+              //console.error('Faltan campos obligatorios');
               textElement.innerText = 'Faltan campos obligatorios';
             } 
             else if (response.data.code === 2) {
-              console.error('El nombre de usuario ya existe');
+              //console.error('El nombre de usuario ya existe');
               this.validUserName = false;
             } 
             else if (response.data.code === 3) {
-              console.error('El correo ya existe');
+              //console.error('El correo ya existe');
               this.validEmail = false;
             } 
             else if (response.data.code === 4) {
               this.validPhone = false;
             } 
             else {
-            console.error('Error desconocido:', response.status);
+            //console.error('Error desconocido:', response.status);
             textElement.innerText = 'Error desconocido';
             }
           } 
           else {
-            console.error('Error al realizar la solicitud:', error.message);
+            //console.error('Error al realizar la solicitud:', error.message);
           }
   
           // Añade el elemento de texto al contenedor
@@ -628,7 +625,7 @@
         // nombre de restaurante, comprobar que no esté vacío
         if (this.restaurantname === '') {
           this.validRestaurantName = false;
-          console.log('El nombre del restaurante es obligatorio');
+          //console.log('El nombre del restaurante es obligatorio');
         }
         else {
           this.validRestaurantName = true;
@@ -637,7 +634,7 @@
         // dirección del restaurante, comprobar que no esté vacío
         if (this.address === '') {
           this.validAddress = false;
-          console.log('La dirección del restaurante es obligatoria');
+          //console.log('La dirección del restaurante es obligatoria');
         }
         else {
           this.validAddress = true;
@@ -646,7 +643,7 @@
         // categoría del restaurante, comprobar que no esté vacío
         if (this.category === '') {
           this.validCategory = false;
-          console.log('La categoría del restaurante es obligatoria');
+          //console.log('La categoría del restaurante es obligatoria');
         }
         else {
           this.validCategory = true;
@@ -655,7 +652,7 @@
         // nombre de usuario, comprobar que no esté vacío
         if (this.username === '') {
           this.validUserName2 = false;
-          console.log('El nombre de usuario es obligatorio');
+          //console.log('El nombre de usuario es obligatorio');
         }
         else {
           this.validUserName2 = true;
@@ -664,7 +661,7 @@
         // contraseña, comprobar que no esté vacío
         if (this.password === '') {
           this.validPassword = false;
-          console.log('La contraseña es obligatoria');
+          //console.log('La contraseña es obligatoria');
         }
         else {
           this.validPassword = true;
@@ -673,7 +670,7 @@
         // días de la semana, comprobar que al menos haya uno seleccionado
         if (this.timetable.selectedDays.length === 0) {
           this.validWeekDays = false;
-          console.log('Debe seleccionar al menos un día de la semana');
+          //console.log('Debe seleccionar al menos un día de la semana');
         }
         else {
           this.validWeekDays = true;
@@ -682,27 +679,27 @@
         // hora de inicio, comprobar que no esté vacío
         if (this.timetable.startingHour === null || this.timetable.startingHour === '') {
           this.validStartingHour = false;
-          console.log('La hora de inicio es obligatoria');
+          //console.log('La hora de inicio es obligatoria');
         }
         else {
-          console.log('La hora de inicio es', this.timetable.startingHour);
+          //console.log('La hora de inicio es', this.timetable.startingHour);
           this.validStartingHour = true;
         }
 
         // hora de finalización, comprobar que no esté vacío
         if (this.timetable.finishingHour === null || this.timetable.finishingHour === '') {
           this.validFinishingHour = false;
-          console.log('La hora de finalización es obligatoria');
+          //console.log('La hora de finalización es obligatoria');
         }
         else {
-          console.log('La hora de finalización es', this.timetable.finishingHour);  
+          //console.log('La hora de finalización es', this.timetable.finishingHour);  
           this.validFinishingHour = true;
         }
 
         // tiempo de franja de reserva, comprobar que no esté vacío y que sea mayor que 0
         if (this.available.timePeriod === null || this.available.timePeriod <= 0) {
           this.validTimePeriod = false;
-          console.log('El tiempo de franja de reserva es obligatorio');
+          //console.log('El tiempo de franja de reserva es obligatorio');
         }
         else {
           this.validTimePeriod = true;
@@ -711,7 +708,7 @@
         // número de mesas por franja horaria, comprobar que no esté vacío y que sea mayor que 0
         if (this.available.numberOfTables === null || this.available.numberOfTables <= 0) {
           this.validNumberOfTables = false;
-          console.log('El número de mesas por franja horaria es obligatorio');
+          //console.log('El número de mesas por franja horaria es obligatorio');
         }
         else {
           this.validNumberOfTables = true;
@@ -727,7 +724,7 @@
         if (!isValid2) {
           this.menuError = rule(this.menu[0]) as unknown as string;
           this.validMenu = false;
-          console.log('Fallo, el menú supera los 4mb');
+          //console.log('Fallo, el menú supera los 4mb');
         }
         
 
@@ -739,14 +736,14 @@
         if (!isValid) {
           this.profilePictureError = rule2(this.profilePicture[0]) as unknown as string;
           this.validProfilePicture = false;
-          console.log('Fallo, la foto de perfil supera los 2mb');
+          //console.log('Fallo, la foto de perfil supera los 2mb');
         }
 
         // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
         this.validPictures = true;
         if (this.pictures.length > 4) {
           this.validPictures = false;
-          console.log('Fallo, el número de imágenes está limitado a 4');
+          //console.log('Fallo, el número de imágenes está limitado a 4');
         }
         else {
           for (let i = 0; i < this.pictures.length; i++) {
@@ -755,7 +752,7 @@
             if (!isValid3) {
               this.picturesError = rule3(this.pictures[i]) as unknown as string;
               this.validPictures = false; // si alguna imagen no es válida, el formulario ya no es válido
-              console.log('Fallo, alguna/s imagen/es superan los 2mb');
+              //console.log('Fallo, alguna/s imagen/es superan los 2mb');
             }
           }
         }
