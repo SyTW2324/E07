@@ -2,6 +2,21 @@
   max-width: 50rem; /* Puedes ajustar este valor según tus preferencias */
 }
 
+.my-custom-alert2 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 10px;
+
+}
+
+@media (max-width: 768px) {
+  .my-custom-alert2 {
+    width: 100%;
+  }
+}
+
 .my-custom-card-home {
   width:50%;
   height: 50%;

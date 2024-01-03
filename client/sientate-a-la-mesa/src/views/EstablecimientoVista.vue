@@ -10,6 +10,11 @@ import { useAuthStore } from '../stores/useAuthStore';
 import { onBeforeMount } from 'vue';
 import VuePdfApp from "vue3-pdf-app";
 
+interface Timetable {
+  selectedDays: string[]; // Array de días seleccionados (por ejemplo, ['Lunes', 'Miércoles'])
+  startingHour: string | null; // Hora de inicio en formato de cadena (por ejemplo, '10:00')
+  finishingHour: string | null; // Hora de finalización en formato de cadena (por ejemplo, '14:00')
+}
 
 let loading = ref(false);
 const selection = ref<string | null>(null);
@@ -27,6 +32,8 @@ let email = ref<string>('');
 let phoneNumber = ref<string>('');
 let restaurantAddress = ref<string>('');
 let category = ref<string>('');
+
+let selectedDay = ref<string[]>([]);
 
 let ReservaExitosa = ref(false);
 
@@ -57,6 +64,13 @@ async function fetchRestaurantData() {
     phoneNumber.value = restaurant.data.phoneNumber;
     restaurantAddress.value = restaurant.data.restaurantAddress;
     category.value = restaurant.data.category;
+    const Timetable = restaurant.data.timeTable as unknown as [Timetable];
+    // selectedDays
+    selectedDay.value = Timetable?.[0]?.selectedDays as string[];
+
+
+    
+    selectedDate.value = restaurant.data.time
     // pictures
 
     
@@ -140,10 +154,55 @@ async function selectionDay() {
   const day = selectedDateValue ? (selectedDateValue.getMonth() + 1) + '/' + selectedDateValue.getDate() + '/' + selectedDateValue.getFullYear() : '';
 
   calendar.value = false;
-  const availableHoursGet = await axios.get(`${baseUrl}reservationsAvilable/?RestaurantName=${restaurantName.value}&day=${day}`);
+  const availableHoursGet = await axios.get(`${baseUrl}reservationsAvailable/?RestaurantName=${restaurantName.value}&day=${day}`);
   if (availableHoursGet.data.code === 0) {
     availableHours.value = availableHoursGet.data.message;
   }  
+}
+
+function allowedDtes() {
+
+  // Filtrar solo los lunes, miércoles y viernes
+  //Guarda los dias que estan disponibles en el array allowedDays
+ const allowedDays: number[] = [];
+
+  if (selectedDay.value.includes('Lunes')) {
+    allowedDays.push(1);
+  }
+  if (selectedDay.value.includes('Martes')) {
+    allowedDays.push(2);
+  }
+  if (selectedDay.value.includes('Miércoles')) {
+    allowedDays.push(3);
+  }
+  if (selectedDay.value.includes('Jueves')) {
+    allowedDays.push(4);
+  }
+  if (selectedDay.value.includes('Viernes')) {
+    allowedDays.push(5);
+  }
+  if (selectedDay.value.includes('Sábado')) {
+    allowedDays.push(6);
+  }
+  if (selectedDay.value.includes('Domingo')) {
+    allowedDays.push(0);
+  }
+  
+
+  return (date: { getDay: () => any; }) => {
+    const dayOfWeek = date.getDay(); // 0 para domingo, 1 para lunes, ..., 6 para sábado
+    return allowedDays.includes(dayOfWeek);
+  };
+
+}
+
+function obtenerDiaActual() {
+  const date = new Date();
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  return `${month}/${day}/${year}`;
 }
 
 function onClick() {
@@ -200,7 +259,7 @@ function onClick() {
       <v-container class="d-flex align-center justify-center" > 
         <v-container v-show="calendar"  >
                 <v-row>
-                  <v-date-picker v-model="selectedDate" title="Seleciona el día deseado" show-adjacent-months>Reserva ya!</v-date-picker>
+                  <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
                 </v-row>
                 <v-row justify="center" class="mt-3">
                   <v-btn @click="selectionDay()">Selección</v-btn>

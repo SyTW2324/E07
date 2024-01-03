@@ -28,6 +28,7 @@
               <v-text-field
                 id="address"
                 v-model="address"
+                :rules="addressRules"
                 label="Dirección del establecimiento*"
                 required
                 hide-details
@@ -50,6 +51,7 @@
                 v-model="category"
                 :items="categories"
                 label="Categoría*"
+                :rules="categoryRules"
                 required
                 hide-details
 
@@ -84,6 +86,7 @@
                 id="username"
                 label="Nombre de usuario*"
                 v-model="username"
+                :rules="usernameRules"
                 hide-details
                 required
               ></v-text-field>
@@ -133,7 +136,13 @@
                 <label>Días de la semana:</label>
                 <v-row>
                   <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
-                    <v-checkbox v-model="timetable.selectedDays" :label="day" :value="day"></v-checkbox>
+                    <v-checkbox 
+                    v-model="timetable.selectedDays" 
+                    :label="day" 
+                    :value="day"
+                    :rules="timetableRules"
+                    >
+                  </v-checkbox>
                   </v-col>
                 </v-row>
               </v-col>
@@ -143,13 +152,23 @@
             <!-- Hora de inicio -->
             <v-col cols="4">
               <label>Hora de inicio:</label>
-              <v-text-field id="horaInicio" v-model="timetable.startingHour" type="time"></v-text-field>
+              <v-text-field 
+              id="horaInicio" 
+              v-model="timetable.startingHour" 
+              type="time"
+              :rules="startHourRules"
+              ></v-text-field>
             </v-col>
 
             <!-- Hora de finalización -->
             <v-col cols="4">
               <label>Hora de finalización:</label>
-              <v-text-field id="horaFin" v-model="timetable.finishingHour" type="time"></v-text-field>
+              <v-text-field 
+              id="horaFin" 
+              v-model="timetable.finishingHour" 
+              type="time"
+              :rules="finishHourRules"
+              ></v-text-field>
             </v-col>
 
             <!-- es un pdf, tamaño máximo 4mb -->
@@ -168,7 +187,13 @@
             <!-- Número de minutos -->
             <v-col cols="12" md="4">
               <label>Tiempo de franja de reserva (minutos):</label>
-              <v-text-field id="franjaTiempo" v-model="available.timePeriod" type="number"></v-text-field>
+              <v-text-field 
+              id="franjaTiempo" 
+              v-model="available.timePeriod" 
+              type="number"
+              :rules="timePeriodRules"
+              >
+            </v-text-field>
             </v-col>
 
             <!-- Número de personas -->
@@ -176,7 +201,11 @@
               <label>Número de mesas por franja horaria:</label>
               <v-text-field 
               id="numberOfTables"
-              v-model="available.numberOfTables" type="number"></v-text-field>
+              v-model="available.numberOfTables" 
+              type="number"
+              :rules="numberOfTablesRules"
+              >
+              </v-text-field>
             </v-col>
 
             <!-- imágenes del establecimiento, tamaño máximo 2mb -->
@@ -190,8 +219,6 @@
                 :maxSize="1024*1024*2"
               ></v-file-input>
             </v-col>
-
-            
   
           </v-row>
   
@@ -206,84 +233,90 @@
       </v-container>
 
       <!-- Alertas -->
-      <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
-      <v-alert v-if="!valid" type="warning" closable class="my-custom-alert">
-        Por favor, corrija los errores en el formulario.
-        <br>
-        - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
-        <br>
-        - Correo: El correo debe ser válido.
-        <br>
-        - Teléfono: El teléfono debe tener 9 dígitos.
-      </v-alert>
+      
+      <v-container class="d-flex align-center justify-center" style="min-height: 10px">
+      <v-container class="my-custom-container" style="width: 100%; height: 100%">
+        
+        <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert2">
+          El correo ya existe.
+        </v-alert>
 
-      <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
-        El nombre de usuario es obligatorio
-        <br>
-        El nombre de usuario ya existe.
-      </v-alert>
+        <v-alert v-if="!validEmail2" type="error" closable class="my-custom-alert2">
+          El correo es obligatorio
+          <br>
+          El correo deber ser válido
+        </v-alert>
 
-      <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
-        El correo ya existe.
-      </v-alert>
+        <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
+          El teléfono ya existe.
+        </v-alert>
 
-      <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
-        El teléfono ya existe.
-      </v-alert>
+        <v-alert v-if="!validPhone2" type="error" closable class="my-custom-alert2">
+          El teléfono es obligatorio
+          <br>
+          El teléfono debe tener 9 dígitos
+        </v-alert>
 
-      <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert">
-        El nombre del establecimiento es obligatorio.
-      </v-alert>
+        <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert2">
+          El nombre de usuario ya existe.
+        </v-alert>
+        
+        <v-alert v-if="!validUserName2" type="error" closable class="my-custom-alert2">
+          El nombre de usuario es obligatorio
+        </v-alert>
 
-      <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert">
-        La dirección del establecimiento es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert2">
+          El nombre del establecimiento es obligatorio.
+        </v-alert>
 
-      <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert">
-        La categoría es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert2">
+          La dirección del establecimiento es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert">
-        La contraseña es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert2">
+          La categoría es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert">
-        Debe seleccionar al menos un día de la semana.
-      </v-alert>
+        <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert2">
+          La contraseña es obligatoria.
+          <br>
+          La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+        </v-alert>
 
-      <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert">
-        La hora de inicio es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert2">
+          Debe seleccionar al menos un día de la semana.
+        </v-alert>
 
-      <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert">
-        La hora de finalización es obligatoria.
-      </v-alert>
+        <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert2">
+          La hora de inicio es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert">
-        El tiempo de franja de reserva es obligatorio.
-      </v-alert>
+        <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert2">
+          La hora de finalización es obligatoria.
+        </v-alert>
 
-      <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert">
-        El número de mesas por franja horaria es obligatorio.
-      </v-alert>
+        <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert2">
+          El tiempo de franja de reserva es obligatorio.
+        </v-alert>
 
-      <v-alert v-if="!validMenu" type="error">
-        El tamaño del archivo no debe exceder los 4 MB.
-      </v-alert>
+        <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert2">
+          El número de mesas por franja horaria es obligatorio.
+        </v-alert>
 
-      <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert">
-        El tamaño de la foto de perfil no puede exceder los 2 MB.
-      </v-alert>
+        <v-alert v-if="!validMenu" type="error">
+          El tamaño del archivo no debe exceder los 4 MB.
+        </v-alert>
 
-      <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert">
-        El tamaño de las imágenes no puede exceder los 2 MB.
-        <br>
-        El número máximo de imágenes es 4.
-      </v-alert>
+        <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert2">
+          El tamaño de la foto de perfil no puede exceder los 2 MB.
+        </v-alert>
 
-      <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
-        Usuario registrado correctamente.
-      </v-alert>
+        <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert2">
+          El tamaño de las imágenes no puede exceder los 2 MB.
+          <br>
+          El número de imágenes debe ser de entre 1 y 10.
+        </v-alert>
+      </v-container>
     </v-container>
 
 
@@ -315,8 +348,11 @@
       data: () => ({
         valid: true,
         validUserName: true,
+        validUserName2: true,
         validEmail: true,
+        validEmail2: true,
         validPhone: true,
+        validPhone2: true,
         validRestaurantName: true,
         validAddress: true,
         validCategory: true,
@@ -340,6 +376,13 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a restaurantnameRules
         address: '',
+        addressRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'La dirección del establecimiento es obligatoria.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a addressRules
         description: '',
         timetable: {
           selectedDays: [],
@@ -364,8 +407,6 @@
             return 'La categoría es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a categoryRules
-
-
         email: '',
         emailError: '',
         emailRules: [
@@ -395,6 +436,13 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a phoneRules
         username: '',
+        usernameRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'El nombre de usuario es obligatorio.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a usernameRules
         // Patrón de la contraseña [ /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, 'Password must contain at least one lowercase letter, one uppercase letter and one number' ],
         password: '',
         passwordError: '',
@@ -417,8 +465,6 @@
 
             const fileSize = value.size;
             const maxFileSize = 2 * 1024 * 1024; // 2 MB
-            console.log('Tamaño del archivo', fileSize);
-            console.log('Tamaño máximo', maxFileSize);
             if (fileSize > maxFileSize) {
               return false;
             }
@@ -445,6 +491,38 @@
           },
         ],
         menuError: '',
+        timePeriodRules: [
+          (value: number) => {
+            if (value) {
+              if (value > 0) return true;
+              else return 'El tiempo de franja de reserva debe ser mayor que 0.';
+            }
+            return 'El tiempo de franja de reserva es obligatorio.';
+          },
+        ] as ((value: number) => true | string)[], // Asigna un tipo a timePeriodRules
+        numberOfTablesRules: [
+          (value: number) => {
+            if (value) {
+              if (value > 0) return true;
+              else return 'El número de mesas por franja horaria debe ser mayor que 0.';
+            }
+            return 'El número de mesas por franja horaria es obligatorio.';
+          },
+        ] as ((value: number) => true | string)[], // Asigna un tipo a numberOfTablesRules
+        startHourRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'La hora de inicio es obligatoria.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a startHourRules
+        finishHourRules: [
+          (value: string) => {
+            if (value) return true;
+  
+            return 'La hora de finalización es obligatoria.';
+          },
+        ] as ((value: string) => true | string)[], // Asigna un tipo a finishHourRules
         available: {
           timePeriod: null,
           numberOfTables: null,
@@ -458,13 +536,13 @@
   
         if (isValid) {
           // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-          console.log('Formulario válido. Enviar datos.');
+          //console.log('Formulario válido. Enviar datos.');
           this.RegisterRestaurantApi();
         } else {
           // al usuario debe mostrarle en la web el problema 
           // y no enviar el formulario hasta que no lo corrija
           
-          console.log('Formulario inválido. Por favor, corrija los errores.');
+          //console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
       controlShowPassword() {
@@ -493,7 +571,7 @@
           this.validEmail = true;
           this.validPhone = true;
 
-          console.log('Enviando datos a la API'); 
+          //console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
       
           // Crea un elemento de imagen
@@ -533,17 +611,16 @@
             "menu": pdfBase64,
             "availability": this.available,
           };
-          console.log('Datos a enviar', newRestaurantJson);
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
          //const response = await axios.get('http://localhost:3000/users/');
-          console.log('Datos obtenidos de la API', response.data);
+          //console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
           //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
           if (response.status === 201 && responsePdfUpload.status === 201) {
             //this.$router.push('/login');
-            console.log('Restaurante registrado correctamente');
+            //console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
             const authStore = useAuthStore();
             return authStore.login(this.username, this.password).catch(error => console.log(error));
@@ -555,32 +632,32 @@
           const textContainer = this.$refs.textContainer as HTMLElement;
           const textElement = document.createElement('h3');
   
-          console.error('Error al realizar la solicitud:', response.status, response.statusText);
-          console.error('Código de error:', response.data.code);
+          //console.error('Error al realizar la solicitud:', response.status, response.statusText);
+          //console.error('Código de error:', response.data.code);
           if (response.status === 400) {
             console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
-              console.error('Faltan campos obligatorios');
+              //console.error('Faltan campos obligatorios');
               textElement.innerText = 'Faltan campos obligatorios';
             } 
             else if (response.data.code === 2) {
-              console.error('El nombre de usuario ya existe');
+              //console.error('El nombre de usuario ya existe');
               this.validUserName = false;
             } 
             else if (response.data.code === 3) {
-              console.error('El correo ya existe');
+              //console.error('El correo ya existe');
               this.validEmail = false;
             } 
             else if (response.data.code === 4) {
               this.validPhone = false;
             } 
             else {
-            console.error('Error desconocido:', response.status);
+            //console.error('Error desconocido:', response.status);
             textElement.innerText = 'Error desconocido';
             }
           } 
           else {
-            console.error('Error al realizar la solicitud:', error.message);
+            //console.error('Error al realizar la solicitud:', error.message);
           }
   
           // Añade el elemento de texto al contenedor
@@ -604,116 +681,74 @@
         this.validPhone = true;
 
         
-  
-        const isEmailValid = this.emailRules.every(rule => {
-          const isValid = rule(this.email) === true;
-          if (!isValid) this.emailError = rule(this.email) as string;
-          return isValid;
-        });
-  
-        const isPhoneValid = this.phoneRules.every(rule => {
+        this.validPhone2 = this.phoneRules.every(rule => {
           const isValid = rule(this.phone) === true;
           if (!isValid) this.phoneError = rule(this.phone) as string;
           return isValid;
         });
+        console.log('this.validPhone2:', this.validPhone2);
+
+        this.validEmail2 = this.emailRules.every(rule => {
+          const isValid = rule(this.email) === true;
+          return isValid;
+        });
+        console.log('this.validEmail2:', this.validEmail2);
   
-        const isPasswordValid = this.passwordRules.every(rule => {
+        this.validPassword = this.passwordRules.every(rule => {
           const isValid = rule(this.password) === true;
           if (!isValid) this.passwordError = rule(this.password) as string;
           return isValid;
         });
 
-        // nombre de restaurante, comprobar que no esté vacío
-        if (this.restaurantname === '') {
-          this.validRestaurantName = false;
-          console.log('El nombre del restaurante es obligatorio');
-        }
-        else {
-          this.validRestaurantName = true;
-        }
+        this.validRestaurantName = this.restaurantnameRules.every(rule => {
+          const isValid = rule(this.restaurantname) === true;
+          return isValid;
+        });
 
-        // dirección del restaurante, comprobar que no esté vacío
-        if (this.address === '') {
-          this.validAddress = false;
-          console.log('La dirección del restaurante es obligatoria');
-        }
-        else {
-          this.validAddress = true;
-        }
+        this.validAddress = this.addressRules.every(rule => {
+          const isValid = rule(this.address) === true;
+          return isValid;
+        });
 
-        // categoría del restaurante, comprobar que no esté vacío
-        if (this.category === '') {
-          this.validCategory = false;
-          console.log('La categoría del restaurante es obligatoria');
-        }
-        else {
-          this.validCategory = true;
-        }
+        this.validCategory = this.categoryRules.every(rule => {
+          const isValid = rule(this.category) === true;
+          return isValid;
+        });
+        
+        this.validUserName2 = this.usernameRules.every(rule => {
+          const isValid = rule(this.username) === true;
+          return isValid;
+        });
 
-        // nombre de usuario, comprobar que no esté vacío
-        if (this.username === '') {
-          this.validUserName = false;
-          console.log('El nombre de usuario es obligatorio');
-        }
-        else {
-          this.validUserName = true;
-        }
 
-        // contraseña, comprobar que no esté vacío
-        if (this.password === '') {
-          this.validPassword = false;
-          console.log('La contraseña es obligatoria');
-        }
-        else {
-          this.validPassword = true;
-        }
-
-        // días de la semana, comprobar que al menos haya uno seleccionado
-        if (this.timetable.selectedDays.length === 0) {
-          this.validWeekDays = false;
-          console.log('Debe seleccionar al menos un día de la semana');
-        }
-        else {
-          this.validWeekDays = true;
-        }
+        this.validWeekDays = this.timetableRules.every(rule => {
+          const isValid = rule(this.timetable.selectedDays.join(',')) === true;
+          return isValid;
+        });
 
         // hora de inicio, comprobar que no esté vacío
-        if (this.timetable.startingHour === null || this.timetable.startingHour === '') {
-          this.validStartingHour = false;
-          console.log('La hora de inicio es obligatoria');
-        }
-        else {
-          console.log('La hora de inicio es', this.timetable.startingHour);
-          this.validStartingHour = true;
-        }
+        this.validStartingHour = this.startHourRules.every(rule => {
+          const isValid = rule(this.timetable.startingHour !== null ? this.timetable.startingHour : '') === true;
+          return isValid;
+        });
 
         // hora de finalización, comprobar que no esté vacío
-        if (this.timetable.finishingHour === null || this.timetable.finishingHour === '') {
-          this.validFinishingHour = false;
-          console.log('La hora de finalización es obligatoria');
-        }
-        else {
-          console.log('La hora de finalización es', this.timetable.finishingHour);  
-          this.validFinishingHour = true;
-        }
+        this.validFinishingHour = this.finishHourRules.every(rule => {
+          const isValid = rule(this.timetable.finishingHour !== null ? this.timetable.finishingHour : '') === true;
+          return isValid;
+        });
 
         // tiempo de franja de reserva, comprobar que no esté vacío y que sea mayor que 0
-        if (this.available.timePeriod === null || this.available.timePeriod <= 0) {
-          this.validTimePeriod = false;
-          console.log('El tiempo de franja de reserva es obligatorio');
-        }
-        else {
-          this.validTimePeriod = true;
-        }
+        this.validTimePeriod = this.timePeriodRules.every(rule => {
+          const isValid = rule(this.available.timePeriod !== null ? this.available.timePeriod : 0) === true;
+          return isValid;
+        });
 
         // número de mesas por franja horaria, comprobar que no esté vacío y que sea mayor que 0
-        if (this.available.numberOfTables === null || this.available.numberOfTables <= 0) {
-          this.validNumberOfTables = false;
-          console.log('El número de mesas por franja horaria es obligatorio');
-        }
-        else {
-          this.validNumberOfTables = true;
-        }
+        this.validNumberOfTables = this.numberOfTablesRules.every(rule => {
+          const isValid = rule(this.available.numberOfTables !== null ? this.available.numberOfTables : 0) === true;
+          return isValid;
+        });
 
 
         // menú, tamaño no debe exceder 10mb
@@ -725,7 +760,7 @@
         if (!isValid2) {
           this.menuError = rule(this.menu[0]) as unknown as string;
           this.validMenu = false;
-          console.log('Fallo, el menú supera los 4mb');
+          //console.log('Fallo, el menú supera los 4mb');
         }
         
 
@@ -737,14 +772,14 @@
         if (!isValid) {
           this.profilePictureError = rule2(this.profilePicture[0]) as unknown as string;
           this.validProfilePicture = false;
-          console.log('Fallo, la foto de perfil supera los 2mb');
+          //console.log('Fallo, la foto de perfil supera los 2mb');
         }
 
         // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
         this.validPictures = true;
         if (this.pictures.length > 4) {
           this.validPictures = false;
-          console.log('Fallo, el número de imágenes está limitado a 4');
+          //console.log('Fallo, el número de imágenes está limitado a 4');
         }
         else {
           for (let i = 0; i < this.pictures.length; i++) {
@@ -753,13 +788,13 @@
             if (!isValid3) {
               this.picturesError = rule3(this.pictures[i]) as unknown as string;
               this.validPictures = false; // si alguna imagen no es válida, el formulario ya no es válido
-              console.log('Fallo, alguna/s imagen/es superan los 2mb');
+              //console.log('Fallo, alguna/s imagen/es superan los 2mb');
             }
           }
         }
 
         // Actualizar el estado "valid" si es necesario
-        this.valid = isEmailValid && isPhoneValid && isPasswordValid && this.validUserName && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
+        this.valid = this.validEmail2 && this.validPhone2 && this.validUserName && this.validUserName2 && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
         return this.valid;
       },
     },

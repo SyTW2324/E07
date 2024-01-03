@@ -187,15 +187,17 @@ async function getUser() {
             const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
             
             if (response.data.code === 0) {
-              const date = new Date(response.data.message.day);
-              //pasar la fecha a string
-              const dateString = date.getDate().toLocaleString() + "/" + (date.getMonth() + 1).toLocaleString() + "/" + date.getFullYear().toLocaleString() + " " + date.getHours().toLocaleString() + ":" + date.getMinutes().toLocaleString();
-              
-              
+              const fecha = new Date(response.data.message.day);
+
+              // Formatear las horas y minutos con ceros iniciales
+              const horaFormateada = fecha.getHours().toString().padStart(2, '0');
+              const minutoFormateado = fecha.getMinutes().toString().padStart(2, '0');
+
+              const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;             
 
               const newReservation: Reservation = {
                 restaurant: response.data.message.restaurant as string,
-                date: dateString as string ,
+                date: fechaString as string ,
                 reservationId: reservations[i] as string
               }
               nextReservations.value.push(newReservation);
@@ -213,15 +215,17 @@ async function getUser() {
           for (let i in reservations) {
             const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
             if (response.data.code === 0) {
-              const date = new Date(response.data.message.day);
-              //pasar la fecha a string
-              const dateString = date.getDate().toLocaleString() + "/" + (date.getMonth() + 1).toLocaleString() + "/" + date.getFullYear().toLocaleString() + " " + date.getHours().toLocaleString() + ":" + date.getMinutes().toLocaleString();
-              
-              
+              const fecha = new Date(response.data.message.day);
+
+              // Formatear las horas y minutos con ceros iniciales
+              const horaFormateada = fecha.getHours().toString().padStart(2, '0');
+              const minutoFormateado = fecha.getMinutes().toString().padStart(2, '0');
+
+              const fechaString = fecha.getDate().toLocaleString() + "/" + (fecha.getMonth() + 1).toLocaleString() + "/" + fecha.getFullYear().toLocaleString() + " " + horaFormateada + ":" + minutoFormateado;
 
               const newReservation: Reservation = {
                 restaurant: response.data.message.restaurant as string,
-                date: dateString as string ,
+                date: fechaString as string ,
                 reservationId: reservations[i] as string
               }
               historicReservations.value.push(newReservation);
