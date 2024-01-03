@@ -27,7 +27,9 @@
               <p><strong>Horario: </strong>{{ selectedDays }} | {{ hours }}</p>   
               <p><strong>Categoría: </strong>{{ category }}</p>
               <br/>
-              <v-btn color="teal">Editar datos</v-btn>
+              <router-link to="/edit-restaurant-profile">
+                <v-btn color="teal">Editar datos</v-btn>
+              </router-link>
             </v-col>
           </v-row>
         </v-container>
