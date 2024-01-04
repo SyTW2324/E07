@@ -36,7 +36,7 @@
                 <p><strong>Telefono: </strong>{{ phoneNumber }}</p>
                 <br>
                 <router-link to="/edit-user-profile">
-                  <v-btn color="teal">Editar datos</v-btn>
+                  <v-btn color="teal">Editar perfil</v-btn>
                 </router-link>
               </v-col>
             </v-row>
@@ -53,7 +53,7 @@
                   <v-title>Mis próximas reservas</v-title>
                   <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
                   <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
-                    <p><strong>Cliente: </strong>{{ reservation.restaurant }}</p>
+                    <p><strong>Restaurante: </strong>{{ reservation.restaurant }}</p>
                     <p><strong>Fecha: </strong>{{ reservation.date }} </p>
                     <p><v-btn @click="cancelReservation(reservation.reservationId)" color="white">Cancelar</v-btn></p>
                   </v-card-item>
@@ -72,7 +72,7 @@
                     <v-title>Mis reservas anteriores</v-title>
                     <v-card-item v-if="historicReservationsFlag == false">No tienes reservas anteriores</v-card-item>
                     <v-card-item v-else v-for="(reservation, index) in paginatedHistoricReservations" :key="index" cols="12">
-                      <p><strong>Cliente: </strong>{{ reservation.restaurant }}</p>
+                      <p><strong>Restaurante: </strong>{{ reservation.restaurant }}</p>
                       <p><strong>Fecha: </strong>{{ reservation.date }} </p>
                     </v-card-item>
                   </v-card>
