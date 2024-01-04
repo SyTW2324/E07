@@ -119,7 +119,14 @@
 
         </v-container>
       </v-form>
-
+      <v-container v-if="processingRegister == true" class="d-flex align-center justify-center" style="padding-top: 1em; padding-bottom: 1em;">
+        <v-progress-circular
+          indeterminate
+          size="50" 
+          color="teal"
+          >
+        </v-progress-circular> 
+      </v-container>
 
     </v-container>
     <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
@@ -169,13 +176,9 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 
-//CORS
-  // let validUserNameVar: boolean = true;
-  // let validEmailVar: boolean = true;
-  // let validPhoneVar: boolean = true;
-
   export default {
     data: () => ({
+      processingRegister: false,
       valid: true,
       validUserName: true,
       validEmail: true,
@@ -301,7 +304,12 @@ import { baseUrl } from '../env/env-variables';
           address: this.address,
           profilePhoto: photoBase64,
         };
+        this.processingRegister = true;
+
         const response = await axios.post(`${baseUrl}users/`, newUserJson);
+
+        this.processingRegister = false;
+
        //const response = await axios.get('http://localhost:3000/users/');
         //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
 

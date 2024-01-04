@@ -3,8 +3,9 @@
 
 <v-app>
   <Barnav></Barnav>
-  <v-main>
-    <v-container v-if="allInfoIsLoaded == 0" class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;">
+  
+  <v-main v-if="allInfoIsLoaded == 0" >
+    <v-container class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;">
       <v-progress-circular
         indeterminate
         size="150" 
@@ -12,8 +13,11 @@
         >
       </v-progress-circular> 
     </v-container>
+  </v-main>
 
-      <v-container v-if="allInfoIsLoaded == 1">
+  <v-main v-if="allInfoIsLoaded == 1">
+
+      <v-container>
         <div>
           <v-container class="d-flex align-center justify-center" >
             <h1>Mi Perfil</h1>

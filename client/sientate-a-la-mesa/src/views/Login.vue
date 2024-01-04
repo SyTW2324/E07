@@ -30,8 +30,9 @@ import { useAuthStore } from '../stores/useAuthStore';
             return;
           }
           const authStore = useAuthStore();
-          const result = await authStore.login(this.username, this.password);
           this.petitionSent = true;
+          const result = await authStore.login(this.username, this.password);
+          this.petitionSent = false;
           if (result.code) {
             if (result.code === 4 || result.code === 1) {
               this.loggedIn = false;

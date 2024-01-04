@@ -3,7 +3,17 @@
 
   <v-app>
     <Barnav></Barnav>
-    <v-main>
+    <v-main v-if="pageIsLoaded == false">
+      <v-container class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;">
+        <v-progress-circular
+          indeterminate
+          size="150" 
+          color="teal"
+          >
+        </v-progress-circular> 
+      </v-container>
+    </v-main> 
+    <v-main v-if="pageIsLoaded == true">
       <div>
         <v-container class="d-flex align-center justify-center" >
           <h1>Mi establecimiento</h1>
@@ -102,6 +112,7 @@
   reservationId: string;
 }
 
+  let pageIsLoaded = ref(false);
   
   let userName = ref("");
   let restaurantName = ref("");
@@ -123,6 +134,7 @@
   
   
   async function getRestaurant() {
+    pageIsLoaded.value = false;
     const authStore = useAuthStore();
     if (authStore.user) {
     if (authStore.isExpired() === true) {
@@ -212,6 +224,7 @@
             // Reducir tamaño de la imagen
             profilePhoto.value = authStore.getProfilePhoto() as string;
           }
+          pageIsLoaded.value = true;
         } else {
           authStore.logout();
         }
