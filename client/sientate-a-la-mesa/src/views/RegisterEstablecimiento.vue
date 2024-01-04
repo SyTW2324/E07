@@ -39,7 +39,7 @@
               <v-text-field
                 id="description"
                 v-model="description"
-                label="Descripción*"
+                label="Descripción"
                 hide-details
               ></v-text-field>
             </v-col>

@@ -39,7 +39,7 @@
               <v-text-field
                 id="description"
                 v-model="description"
-                label="Descripción*"
+                label="Descripción"
                 hide-details
               ></v-text-field>
             </v-col>
@@ -223,7 +223,7 @@
   
           </v-row>
   
-          <v-btn id="enviarRegistroEstablecimiento" type="submit" color="primary">Enviar</v-btn>
+          <v-btn id="enviarRegistroEstablecimiento" type="submit" color="primary">Guardar</v-btn>
   
           </v-container>
         </v-form>
@@ -381,51 +381,60 @@
   async function getRestaurant() {
     pageIsLoaded.value = false;
     const authStore = useAuthStore();
+    // console.log('dentro getrestaurant()')
     if (authStore.user) {
-    if (authStore.isExpired() === true) {
-        const userToken = authStore.getToken();
-        const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-        if (response.data.code === 0) {
-          username.value = response.data.message.userName;
-          restaurantname.value = response.data.message.restaurantName;
-          email.value = response.data.message.email;
-          phone.value = response.data.message.phoneNumber;
-          address.value = response.data.message.restaurantAddress;
-          // timeTable.value = response.data.message.timeTable;
-          selectedDays.value = response.data.message.timeTable[0].selectedDays;
-          startingHour.value = response.data.message.timeTable[0].startingHour;
-          finishingHour.value = response.data.message.timeTable[0].finishingHour;
-          timePeriod.value = response.data.message.availability.timePeriod;
-          numberOfTables.value = response.data.message.availability.numberOfTables;
-          description.value = response.data.message.description;
+      if (authStore.isExpired() === true) {
+          const userToken = authStore.getToken();
+          const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
+          console.log('Datos obtenidos de la API', response.data);
+          if (response.data.code === 0) {
+            username.value = response.data.message.userName;
+            restaurantname.value = response.data.message.restaurantName;
+            email.value = response.data.message.email;
+            phone.value = response.data.message.phoneNumber;
+            address.value = response.data.message.restaurantAddress;
+            // timeTable.value = response.data.message.timeTable;
+            selectedDays.value = response.data.message.timeTable[0].selectedDays;
+            startingHour.value = response.data.message.timeTable[0].startingHour;
+            finishingHour.value = response.data.message.timeTable[0].finishingHour;
+            timePeriod.value = response.data.message.timePeriod;
+            numberOfTables.value = response.data.message.numberOfTables;
+            description.value = response.data.message.description;
 
-          category.value = response.data.message.category;
+            category.value = response.data.message.category;
 
-          selectedDays.value = response.data.message.timeTable[0].selectedDays;
-          startingHour.value = response.data.message.timeTable[0].startingHour;
-          finishingHour.value = response.data.message.timeTable[0].finishingHour;
-          hours.value = startingHour.value + " - " + finishingHour.value;
-          menu.value = response.data.message.menu;
+            selectedDays.value = response.data.message.timeTable[0].selectedDays;
+            startingHour.value = response.data.message.timeTable[0].startingHour;
+            finishingHour.value = response.data.message.timeTable[0].finishingHour;
+            hours.value = startingHour.value + " - " + finishingHour.value;
+            menu.value = response.data.message.menu;
 
-          profilePicture.values = response.data.message.profilePicture;
-          pictures.values = response.data.message.pictures;
+            profilePicture.values = response.data.message.profilePicture;
+            pictures.values = response.data.message.pictures;
 
-          pageIsLoaded.value = true;
-        } 
-        else {
-          authStore.logout();
-        }
+            console.log('direccion:', address.value);
+            console.log('descripcion:', description.value);
+            console.log('timePeriod:', timePeriod.value);
+            console.log('numberOfTables:', numberOfTables.value);
 
-    } else {
-      authStore.logout();
-    }
+            pageIsLoaded.value = true;
+          } 
+          else {
+            authStore.logout();
+          }
+
+      } else {
+        authStore.logout();
+      }
     } else {
       authStore.logout();
     }
 
   }
 
+  console.log("antes de getRestaurant()")
   getRestaurant();
+  console.log("despues de getRestaurant()")
 
 
 
