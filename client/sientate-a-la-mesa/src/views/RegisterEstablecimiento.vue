@@ -226,6 +226,14 @@
   
           </v-container>
         </v-form>
+        <v-container v-if="processingRegister == true" class="d-flex align-center justify-center" style="padding-top: 1em; padding-bottom: 1em;">
+          <v-progress-circular
+            indeterminate
+            size="50" 
+            color="teal"
+            >
+          </v-progress-circular> 
+        </v-container>
 
       </v-container>
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
@@ -346,6 +354,7 @@
   
     export default {
       data: () => ({
+        processingRegister: false,
         valid: true,
         validUserName: true,
         validUserName2: true,
@@ -570,6 +579,7 @@
           this.validUserName = true;
           this.validEmail = true;
           this.validPhone = true;
+          this.processingRegister = false;
 
           //console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
@@ -611,7 +621,9 @@
             "menu": pdfBase64,
             "availability": this.available,
           };
+          this.processingRegister = true;
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
+          this.processingRegister = false;
          //const response = await axios.get('http://localhost:3000/users/');
           //console.log('Datos obtenidos de la API', response.data);
           //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
@@ -627,6 +639,7 @@
           
           }
         } catch (error) {
+          this.processingRegister = false;
           if (axios.isAxiosError(error) && error.response) {
           const response = error.response;
           const textContainer = this.$refs.textContainer as HTMLElement;
