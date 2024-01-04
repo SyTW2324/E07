@@ -284,6 +284,7 @@ import { baseUrl } from '../env/env-variables';
         this.validEmail = true;
         this.validPhone = true;
         this.valid = true;
+        this.processingRegister = false;
       
 
 
@@ -324,6 +325,7 @@ import { baseUrl } from '../env/env-variables';
           
         }
       } catch (error) {
+        this.processingRegister = false;
         if (axios.isAxiosError(error) && error.response) {
         const response = error.response;
 
