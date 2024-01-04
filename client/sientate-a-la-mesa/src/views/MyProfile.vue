@@ -54,7 +54,7 @@
             <!-- <v-col cols="12" sm="6" md="4" lg="3"> -->
               <v-col col="50">
                 <v-card max-width="75%" elevation="16" color="teal" density="compact">
-                  <v-title>Mis próximas reservas</v-title>
+                  <h2>Mis próximas reservas</h2>
                   <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
                   <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
                     <p><strong>Restaurante: </strong>{{ reservation.restaurant }}</p>
