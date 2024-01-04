@@ -32,15 +32,15 @@
                 <h3>{{ category }}</h3>
               </v-card-subtitle>
               <v-card-text>
-                <p>{{ restaurantAddress }}</p>
-                <p>{{ phoneNumber }}</p>
-                <p>{{ email }}</p>
-                <p>{{ hours }}</p>
+                <p><strong>Direccion: </strong>{{ restaurantAddress }}</p>
+                <p><strong>Nº de teléfono: </strong>{{ phoneNumber }}</p>
+                <p><strong>Correo Electrónico: </strong>{{ email }}</p>
+                <p><strong>Horario: </strong>{{ hours }}</p>
               </v-card-text>
             </v-card>
             <v-container>
               <v-card max-width="100%" elevation="16" color="teal" density="compact">
-                <v-title>Mis próximas reservas</v-title>
+                <h2>Mis próximas reservas</h2>
                 <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
                 <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
                   <p><strong>Cliente: </strong>{{ reservation.clientName }}</p>
