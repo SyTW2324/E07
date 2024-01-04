@@ -4,3 +4,5 @@ node_modules
 client/sientate-a-la-mesa/nohup.out
 .nyc_output
 coverage
+# Local Netlify folder
+.netlify
