@@ -40,7 +40,7 @@
             </v-card>
             <v-container>
               <v-card max-width="100%" elevation="16" color="teal" density="compact">
-                <h2>Mis próximas reservas</h2>
+                <h2>Mis próximas reservas:</h2>
                 <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
                 <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
                   <p><strong>Cliente: </strong>{{ reservation.clientName }}</p>
