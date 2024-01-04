@@ -12,7 +12,6 @@ import { restaurantsRouter } from './routers/restaurants/restaurants-routes.js';
 import { reservationsRouter } from './routers/reservations/reservation-routers.js';
 import './database/mongoose.js';
 import bodyParser from 'body-parser';
-import serverless from 'serverless-http';
 
 
 
@@ -38,4 +37,3 @@ app.use(usersRouter);
 app.use(loginRouter);
 app.use(restaurantsRouter);
 app.use(reservationsRouter);
-serverless(app);
