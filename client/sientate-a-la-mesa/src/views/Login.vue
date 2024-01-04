@@ -24,12 +24,12 @@ import { useAuthStore } from '../stores/useAuthStore';
       },
       async loginOne(): Promise<void> {
         try {
-          this.petitionSent = true;
           this.requiredField = false;
           if (this.username === '' || this.password === '') {
             this.requiredField = true;
             return;
           }
+          this.petitionSent = true;
           const authStore = useAuthStore();
           const result = await authStore.login(this.username, this.password);
           this.petitionSent = false;
@@ -86,7 +86,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           <v-text-field v-if="showPassword == false"
           id="password"
           v-model="password"
-          label="Contraseña*"
+          label="Contraseña"
           type="password"
           hide-details
           required
