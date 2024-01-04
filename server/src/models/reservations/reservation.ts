@@ -57,7 +57,10 @@ export function calcularPeriodosDisponibles(startingHour: string, finishingHour:
 
   for (let i = 0; i < numberOfPeriods; i++) {
       const periodEndTime = new Date(currentPeriodTime.getTime() + timePeriod * 60 * 1000);
+      //quitarle un minuto para que no se solapen los periodos
+      periodEndTime.setMinutes(periodEndTime.getMinutes() - 1);
       availablePeriods.push(`${formatTime(currentPeriodTime)} - ${formatTime(periodEndTime)}`);
+      periodEndTime.setMinutes(periodEndTime.getMinutes() + 1);
       currentPeriodTime = periodEndTime;
   }
   return availablePeriods;

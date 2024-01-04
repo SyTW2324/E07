@@ -79,12 +79,12 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
             for (let i = 0; i < reservations.length; i++) {
               const reservation = reservations[i];
               const reservationDay = reservation.day as Date
-              const reservationHour = reservationDay.getHours();
-              const reservationMinutes = reservationDay.getMinutes();
+              const reservationHour1 = reservationDay.getHours();
+              const reservationMinutes1 = reservationDay.getMinutes();
               // los junto en este formato 00:00
-              const reservationHourString = reservationHour + ":" + reservationMinutes;
+              const reservationHourString1 = reservationHour1 + ":" + reservationMinutes1;
 
-              if (reservationHourString === reservationHourString && reservationDay.getDate() === day.getDate() && reservationDay.getMonth() === day.getMonth() && reservationDay.getFullYear() === day.getFullYear()) {
+              if (reservationHourString === reservationHourString1 && reservationDay.getDate() === day.getDate() && reservationDay.getMonth() === day.getMonth() && reservationDay.getFullYear() === day.getFullYear()) {
                 numberOfReservations++;
               }
             }
