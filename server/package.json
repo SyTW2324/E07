@@ -7,6 +7,7 @@
   "scripts": {
     "build-deploy": "npm install && npm run build",
     "build": "tsc",
+    "build-netlify": "tsc && netlify deploy --prod",
     "start": "node dist/index.js deploy",
     "dev": "tsc-watch --onSuccess \"node dist/index.js dev \"",
     "startTest": "node dist/index.js test",
@@ -48,6 +49,9 @@
     "jwt-decode": "^4.0.0",
     "mongodb": "^6.2.0",
     "mongoose": "^8.0.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "netlify-cli": "^17.11.0",
+    "netlify-lambda": "^2.0.16",
+    "serverless-http": "^3.2.0"
   }
 }
