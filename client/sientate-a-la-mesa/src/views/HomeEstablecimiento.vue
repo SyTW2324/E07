@@ -1,7 +1,17 @@
 <template>
   <v-app>
     <Barnav></Barnav>
-    <v-main>
+    <v-main v-if="pageIsLoaded == false">
+      <v-container class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;">
+        <v-progress-circular
+          indeterminate
+          size="150" 
+          color="teal"
+          >
+        </v-progress-circular> 
+      </v-container>
+    </v-main> 
+    <v-main v-if="pageIsLoaded == true">
       <v-container>
         <!-- carrousel pictures -->
         <v-row>
@@ -90,6 +100,8 @@ interface Reservation {
   reservationId: string;
 }
 
+let pageIsLoaded = ref(false);
+
 let userName = ref("");
 let restaurantName = ref("");
 let email = ref("");
@@ -108,6 +120,7 @@ let nextReservations = ref<Reservation[]>([]);
 let menu = ref("");
 
 async function getRestaurant() {
+  pageIsLoaded.value = false;
   const authStore = useAuthStore();
   if (authStore.user) {
   if (authStore.isExpired() === true) {
@@ -173,7 +186,7 @@ async function getRestaurant() {
           pictures.value = [];
           pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
         }
-
+        pageIsLoaded.value = true;
       } else {
         authStore.logout();
       }
