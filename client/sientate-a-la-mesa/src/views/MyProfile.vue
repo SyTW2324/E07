@@ -5,66 +5,75 @@
   <Barnav></Barnav>
   <v-main>
     <v-container v-if="allInfoIsLoaded == 0" class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;">
-          <v-progress-circular
-          indeterminate
-          size="150" 
-          color="teal"></v-progress-circular> 
+      <v-progress-circular
+        indeterminate
+        size="150" 
+        color="teal"
+        >
+      </v-progress-circular> 
     </v-container>
 
       <v-container v-if="allInfoIsLoaded == 1">
-        <v-row justify="center" align="center">
-          <v-col class="text-center">
-            <h1>Mi perfil</h1>
-          </v-col>
-        </v-row>
-    
-        <v-row justify="center" align="center">
-          <v-col cols="12" sm="6" md="4" lg="3">
-            <v-container>
-              <v-avatar size="30%" color="grey">
-                <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
-              </v-avatar>
-    
-              <p>Nombre: {{ name }}</p>
-              <p>Apellidos: {{ surname }}</p>
-              <p>Dirección: {{ address }}</p>
-              <p>Correo: {{ email }}</p>
-              <p>Nombre de usuario: {{ username }}</p>
-              <p>Telefono: {{ phoneNumber }}</p>
-    
-              <router-link to="/edit-user-profile">
-                <v-btn color="teal">Editar</v-btn>
-              </router-link>
-            </v-container>
-          </v-col>
-            <v-row >
-              <v-col cols="12" sm="6" md="4" lg="3">
-                <v-container>
-                  <v-card max-width="100%" elevation="16" color="teal" density="compact">
-                    <v-title>Mis próximas reservas</v-title>
-                    <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
-                    <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
-                      <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{ reservation.date }} <v-btn @click="cancelReservation(reservation.reservationId)" color="white">Cancelar</v-btn></p>
-                    </v-card-item>
-                  </v-card>
-                  <v-container v-if="nextReservationsFlag == true">
-                    <v-row>
-                      <v-col cols="12">
-                        <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
-                      </v-col>
-                    </v-row>
-                  </v-container>
-        
+        <div>
+          <v-container class="d-flex align-center justify-center" >
+            <h1>Mi Perfil</h1>
+          </v-container>
+        </div>
+        <div>
+          <v-container class="d-flex align-center justify-center">
+            <v-row>
+              <v-col class="d-flex align-center justify-center">
+                <v-avatar size="200" color="grey" >
+                  <img :src="profilePhoto" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: 0 auto;" />
+                </v-avatar>
+              </v-col>
+              <v-col>
+                <p><strong>Nombre: </strong>{{ name }}</p>
+                <p><strong>Apellidos: </strong>{{ surname }}</p>
+                <p><strong>Dirección: </strong>{{ address }}</p>
+                <p><strong>Correo: </strong>{{ email }}</p>
+                <p><strong>Nombre de usuario: </strong>{{ username }}</p>
+                <p><strong>Telefono: </strong>{{ phoneNumber }}</p>
+                <br>
+                <router-link to="/edit-user-profile">
+                  <v-btn color="teal">Editar datos</v-btn>
+                </router-link>
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+      </v-container>
+      <br>
+      <div>
+        <v-container>
+          <v-row >
+            <!-- <v-col cols="12" sm="6" md="4" lg="3"> -->
+              <v-col col="50">
+                <v-card max-width="75%" elevation="16" color="teal" density="compact">
+                  <v-title>Mis próximas reservas</v-title>
+                  <v-card-item v-if="nextReservationsFlag == false">No tienes reservas</v-card-item>
+                  <v-card-item v-else v-for="(reservation, index) in paginatedNextReservations" :key="index" cols="12">
+                    <p><strong>Cliente: </strong>{{ reservation.restaurant }}</p>
+                    <p><strong>Fecha: </strong>{{ reservation.date }} </p>
+                    <p><v-btn @click="cancelReservation(reservation.reservationId)" color="white">Cancelar</v-btn></p>
+                  </v-card-item>
+                </v-card>
+                <v-container v-if="nextReservationsFlag == true">
+                  <v-row>
+                    <v-col cols="12">
+                      <v-pagination v-model="currentPageNextReservations" :length="totalPagesNextReservations" @input="changePage" />
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-col>
-        
-              <v-col cols="12" sm="6" md="4" lg="3">
-                <v-container>
-                  <v-card max-width="100%" elevation="16" color="teal" density="compact">
+      
+              <v-col cols="40">
+                  <v-card max-width="75%" elevation="16" color="teal" density="compact">
                     <v-title>Mis reservas anteriores</v-title>
                     <v-card-item v-if="historicReservationsFlag == false">No tienes reservas anteriores</v-card-item>
                     <v-card-item v-else v-for="(reservation, index) in paginatedHistoricReservations" :key="index" cols="12">
-                      <p>Restaurante: {{ reservation.restaurant }} || Fecha: {{ reservation.date }}</p>
+                      <p><strong>Cliente: </strong>{{ reservation.restaurant }}</p>
+                      <p><strong>Fecha: </strong>{{ reservation.date }} </p>
                     </v-card-item>
                   </v-card>
                   <v-container v-if="historicReservationsFlag == true">
@@ -74,12 +83,10 @@
                       </v-col>
                     </v-row>
                   </v-container>
-        
-                </v-container>
               </v-col>
-            </v-row>
-        </v-row>
-      </v-container>
+          </v-row>
+        </v-container>
+      </div>
   </v-main>
   
 
