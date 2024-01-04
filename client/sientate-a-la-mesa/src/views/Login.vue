@@ -16,6 +16,7 @@ import { useAuthStore } from '../stores/useAuthStore';
       loggedIn: true,
       serverError: false,
       requiredField: false,
+      petitionSent: false,
     }),
     methods: {
       controlShowPassword(): void {
@@ -30,12 +31,13 @@ import { useAuthStore } from '../stores/useAuthStore';
           }
           const authStore = useAuthStore();
           const result = await authStore.login(this.username, this.password);
+          this.petitionSent = true;
           if (result.code) {
             if (result.code === 4 || result.code === 1) {
               this.loggedIn = false;
             } else if (result.code === 5){
               this.serverError = true;
-            }
+            }         
           }
         }catch(error) {
           console.error('Error al iniciar sesión', error);
@@ -79,17 +81,6 @@ import { useAuthStore } from '../stores/useAuthStore';
 
           ></v-text-field>
         </v-col>
-<!-- 
-        <v-text-field
-          v-model="password"
-          name="password"
-          clearable
-          label="Contraseña"
-          placeholder="Introduce tu contraseña"
-          type="password"
-          id="password"
-        </v-text-field>
-        > -->
         <v-col class="d-flex align-center justify-space-between" >
           <v-text-field v-if="showPassword == false"
           id="password"
@@ -125,9 +116,23 @@ import { useAuthStore } from '../stores/useAuthStore';
           type="submit"
           id="loginButton"
           variant="elevated"
-          
+          v-if="petitionSent == false"
         >
           <p style="color: teal;">  Iniciar sesión</p>
+        </v-btn>
+          <v-btn
+  
+          block
+          color="wihite"
+          size="large"
+          id="loginButtonLoading"
+          variant="elevated"
+          v-if="petitionSent == true"
+        >
+            <v-progress-circular
+            indeterminate
+            color="teal"
+          ></v-progress-circular>
         </v-btn>
       </v-form>
         
