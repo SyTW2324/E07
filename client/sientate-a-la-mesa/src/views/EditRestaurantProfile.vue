@@ -222,7 +222,7 @@
   
           </v-row>
   
-          <v-btn id="enviarRegistroEstablecimiento" type="submit" color="primary">Enviar</v-btn>
+          <v-btn id="enviarEditarEstablecimiento" type="submit" color="primary">Guardar</v-btn>
   
           </v-container>
         </v-form>
@@ -339,7 +339,84 @@
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
-  // import { ref } from 'vue';
+  import { ref } from 'vue';
+
+  // datos del restaurante logueado
+  let nombreRestaurante = ref("")
+  let direccionRestaurante = ref("")
+  let descripcionRestaurante = ref("")
+  let horarioRestaurante = ref("") // cuidado con la forma de manejar el horario
+  let diasAperturaRestaurante = ref("")
+  let horaInicio = ref("")
+  let horaFin = ref("")
+  let categoriaRestaurante = ref("")
+  let telefonoRestaurante = ref("")
+  let nombreUsuarioRestaurante = ref("")
+  let emailRestaurante = ref("")
+  // let contraseñaRestaurante = ref("")
+  // let fotoPerfilRestaurante = ref("")
+  // let fotosRestaurante = ref("")
+  let menuRestaurante = ref("")
+  let franjaTiempoRestaurante = ref("")
+  let numeroMesasRestaurante = ref("")
+
+  async function getRestaurant() {
+    const authStore = useAuthStore();
+    if (authStore.user) {
+    if (authStore.isExpired() === true) {
+        const userToken = authStore.getToken();
+        const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
+        if (response.data.code === 0) {
+          nombreUsuarioRestaurante.value = response.data.message.userName;
+          nombreRestaurante.value = response.data.message.restaurantName;
+          emailRestaurante.value = response.data.message.email;
+          telefonoRestaurante.value = response.data.message.phoneNumber;
+          direccionRestaurante.value = response.data.message.restaurantAddress;
+          horarioRestaurante.value = response.data.message.timeTable;
+          categoriaRestaurante.value = response.data.message.category;
+          descripcionRestaurante.value = response.data.message.description;
+          franjaTiempoRestaurante.value = response.data.message.availability.timePeriod;
+          numeroMesasRestaurante.value = response.data.message.availability.numberOfTables;
+          
+
+          diasAperturaRestaurante.value = response.data.message.timeTable[0].selectedDays;
+          horaInicio.value = response.data.message.timeTable[0].startingHour;
+          horaFin.value = response.data.message.timeTable[0].finishingHour;
+          // hours.value = horaInicio.value + " - " + horaFin.value;
+          menuRestaurante.value = response.data.message.menu;
+
+          // fotosRestaurante.value = response.data.message.pictures;
+          
+          //! DE MOMENTO LAS FOTOS LAS DEJO VACÍAS
+
+          // if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
+          //   fotoPerfilRestaurante.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+          // } else {
+          //   // Reducir tamaño de la imagen
+          //   fotoPerfilRestaurante.value = authStore.getProfilePhoto() as string;
+          // }
+
+          // //pictures
+          // if(fotosRestaurante.value.length === 0) {
+          //   fotosRestaurante.value = "";
+          //   fotosRestaurante.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
+          // }
+
+        } else {
+          authStore.logout();
+        }
+
+    } else {
+      authStore.logout();
+    }
+    } else {
+      authStore.logout();
+    }
+
+  }
+
+  getRestaurant();
+
 
   // const exceedsSizeLimit = ref(false);
   //CORS

@@ -111,6 +111,9 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
               pictures: restaurant.pictures,
               nextReservations: restaurant.nextReservations,
               historicReservations: restaurant.historicReservations,
+              numberOfTables: restaurant.availability[0].numberOfTables,
+              timePeriod: restaurant.availability[0].timePeriod,
+              // password: restaurant.passwd
             }
             return res.status(200).send({code: 0, message: restaurantSend});
           }
