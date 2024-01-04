@@ -24,13 +24,13 @@ import { useAuthStore } from '../stores/useAuthStore';
       },
       async loginOne(): Promise<void> {
         try {
+          this.petitionSent = true;
           this.requiredField = false;
           if (this.username === '' || this.password === '') {
             this.requiredField = true;
             return;
           }
           const authStore = useAuthStore();
-          this.petitionSent = true;
           const result = await authStore.login(this.username, this.password);
           this.petitionSent = false;
           if (result.code) {
