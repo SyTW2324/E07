@@ -24,6 +24,15 @@
             
           </v-card>
         </v-container>
+
+        <v-container>
+
+          <v-row>
+            <v-text-field type="text" v-model="input" placeholder="Busca tu restaurante favorito..." >  <v-icon >mdi-magnify</v-icon> </v-text-field>
+          </v-row>
+
+        </v-container>
+
         <v-container>
           <h2 style="margin-bottom: 3% ;">Nuestra seleción:</h2>
         <v-row>
@@ -56,6 +65,11 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-row v-if="input&&!filteredList().length">
+          <v-col cols="12">
+            <h4>Resultados no encontrados!</h4>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col cols="12">
             <v-pagination v-model="currentPage" :length="totalPages" @input="changePage" />
@@ -80,6 +94,10 @@ import { onMounted } from 'vue'
 import { baseUrl } from '../env/env-variables';
 import imgPresentacion from '../img/restaurante.png';
 
+let input = ref('');
+
+//const fruits = ["apple", "banana", "orange"];
+
 
 const restaurants = ref < [string, string, string, string, string[]] []>();
 const itemsPerPage = 3;
@@ -92,12 +110,17 @@ const allInfoIsLoaded = ref(0); // 0 = no, 1 = si, 2 = error
 const paginatedRestaurants = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
+  if (input.value) {
+    return filteredList().slice(startIndex, endIndex);
+  }
   return restaurants.value?.slice(startIndex, endIndex);
 })
 
 const totalPages = computed(() => {
-  if (restaurants.value) {
-    return Math.ceil(restaurants.value.length / itemsPerPage);
+  if (input.value) {
+    return Math.ceil(filteredList().length / itemsPerPage);
+  } else if (input.value.length == 0 && restaurants.value) {
+    return Math.ceil(restaurants.value?.length / itemsPerPage);
   }
   return 0;
 });
@@ -133,5 +156,17 @@ onMounted(async () => {
   }
 });
 
+function filteredList() {
+  // return fruits.filter((fruit) =>
+  //   fruit.toLowerCase().includes(input.value.toLowerCase())
+  // );
+  if (!restaurants.value) {
+    return [];
+  }
+
+  return restaurants.value?.filter((restaurant) =>
+  restaurant[0].toLowerCase().includes(input.value.toLowerCase())
+  );
+}
 
 </script>
