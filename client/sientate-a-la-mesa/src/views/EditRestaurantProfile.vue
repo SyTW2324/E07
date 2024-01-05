@@ -4,7 +4,7 @@
     <Barnav></Barnav>
     <v-main>
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
-        <h1>Editar datos del establecimiento</h1>
+        <h1>Editar perfil de mi restaurante</h1>
       </v-container>
   
       <v-container>
@@ -39,7 +39,7 @@
               <v-text-field
                 id="description"
                 v-model="description"
-                label="Descripción*"
+                label="Descripción"
                 hide-details
               ></v-text-field>
             </v-col>
@@ -89,6 +89,7 @@
                 :rules="usernameRules"
                 hide-details
                 required
+                readonly
               ></v-text-field>
             </v-col>
   
@@ -137,7 +138,7 @@
                 <v-row>
                   <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
                     <v-checkbox 
-                    v-model="timetable.selectedDays" 
+                    v-model="selectedDays" 
                     :label="day" 
                     :value="day"
                     :rules="timetableRules"
@@ -154,7 +155,7 @@
               <label>Hora de inicio*:</label>
               <v-text-field 
               id="horaInicio" 
-              v-model="timetable.startingHour" 
+              v-model="startingHour" 
               type="time"
               :rules="startHourRules"
               ></v-text-field>
@@ -165,7 +166,7 @@
               <label>Hora de finalización*:</label>
               <v-text-field 
               id="horaFin" 
-              v-model="timetable.finishingHour" 
+              v-model="finishingHour" 
               type="time"
               :rules="finishHourRules"
               ></v-text-field>
@@ -189,7 +190,7 @@
               <label>Tiempo de franja de reserva (minutos)*:</label>
               <v-text-field 
               id="franjaTiempo" 
-              v-model="available.timePeriod" 
+              v-model="timePeriod" 
               type="number"
               :rules="timePeriodRules"
               >
@@ -201,7 +202,7 @@
               <label>Número de mesas por franja horaria*:</label>
               <v-text-field 
               id="numberOfTables"
-              v-model="available.numberOfTables" 
+              v-model="numberOfTables" 
               type="number"
               :rules="numberOfTablesRules"
               >
@@ -222,10 +223,18 @@
   
           </v-row>
   
-          <v-btn id="enviarEditarEstablecimiento" type="submit" color="primary">Guardar</v-btn>
+          <v-btn id="enviarRegistroEstablecimiento" type="submit" color="primary">Guardar</v-btn>
   
           </v-container>
         </v-form>
+        <v-container v-if="processingRegister == true" class="d-flex align-center justify-center" style="padding-top: 1em; padding-bottom: 1em;">
+          <v-progress-circular
+            indeterminate
+            size="50" 
+            color="teal"
+            >
+          </v-progress-circular> 
+        </v-container>
 
       </v-container>
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
@@ -233,97 +242,92 @@
       </v-container>
 
       <!-- Alertas -->
-      
       <v-container class="d-flex align-center justify-center" style="min-height: 10px">
-      <v-container class="my-custom-container" style="width: 100%; height: 100%">
-        
-        <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert2">
-          El correo ya existe.
-        </v-alert>
+        <v-container class="my-custom-container" style="width: 100%; height: 100%">
+          
+          <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert2">
+            El correo ya existe.
+          </v-alert>
 
-        <v-alert v-if="!validEmail2" type="error" closable class="my-custom-alert2">
-          El correo es obligatorio
-          <br>
-          El correo deber ser válido
-        </v-alert>
+          <v-alert v-if="!validEmail2" type="error" closable class="my-custom-alert2">
+            El correo es obligatorio
+            <br>
+            El correo deber ser válido
+          </v-alert>
 
-        <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
-          El teléfono ya existe.
-        </v-alert>
+          <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
+            El teléfono ya existe.
+          </v-alert>
 
-        <v-alert v-if="!validPhone2" type="error" closable class="my-custom-alert2">
-          El teléfono es obligatorio
-          <br>
-          El teléfono debe tener 9 dígitos
-        </v-alert>
+          <v-alert v-if="!validPhone2" type="error" closable class="my-custom-alert2">
+            El teléfono es obligatorio
+            <br>
+            El teléfono debe tener 9 dígitos
+          </v-alert>
 
-        <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert2">
-          El nombre de usuario ya existe.
-        </v-alert>
-        
-        <v-alert v-if="!validUserName2" type="error" closable class="my-custom-alert2">
-          El nombre de usuario es obligatorio
-        </v-alert>
+          <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert2">
+            El nombre de usuario ya existe.
+          </v-alert>
+          
+          <v-alert v-if="!validUserName2" type="error" closable class="my-custom-alert2">
+            El nombre de usuario es obligatorio
+          </v-alert>
 
-        <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert2">
-          El nombre del establecimiento es obligatorio.
-        </v-alert>
+          <v-alert v-if="!validRestaurantName" type="error" closable class="my-custom-alert2">
+            El nombre del establecimiento es obligatorio.
+          </v-alert>
 
-        <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert2">
-          La dirección del establecimiento es obligatoria.
-        </v-alert>
+          <v-alert v-if="!validAddress" type="error" closable class="my-custom-alert2">
+            La dirección del establecimiento es obligatoria.
+          </v-alert>
 
-        <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert2">
-          La categoría es obligatoria.
-        </v-alert>
+          <v-alert v-if="!validCategory" type="error" closable class="my-custom-alert2">
+            La categoría es obligatoria.
+          </v-alert>
 
-        <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert2">
-          La contraseña es obligatoria.
-          <br>
-          La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
-        </v-alert>
+          <v-alert v-if="!validPassword" type="error" closable class="my-custom-alert2">
+            La contraseña es obligatoria.
+            <br>
+            La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
+          </v-alert>
 
-        <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert2">
-          Debe seleccionar al menos un día de la semana.
-        </v-alert>
+          <v-alert v-if="!validWeekDays" type="error" closable class="my-custom-alert2">
+            Debe seleccionar al menos un día de la semana.
+          </v-alert>
 
-        <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert2">
-          La hora de inicio es obligatoria.
-        </v-alert>
+          <v-alert v-if="!validStartingHour" type="error" closable class="my-custom-alert2">
+            La hora de inicio es obligatoria.
+          </v-alert>
 
-        <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert2">
-          La hora de finalización es obligatoria.
-        </v-alert>
+          <v-alert v-if="!validFinishingHour" type="error" closable class="my-custom-alert2">
+            La hora de finalización es obligatoria.
+          </v-alert>
 
-        <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert2">
-          El tiempo de franja de reserva es obligatorio.
-        </v-alert>
+          <v-alert v-if="!validTimePeriod" type="error" closable class="my-custom-alert2">
+            El tiempo de franja de reserva es obligatorio.
+          </v-alert>
 
-        <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert2">
-          El número de mesas por franja horaria es obligatorio.
-        </v-alert>
+          <v-alert v-if="!validNumberOfTables" type="error" closable class="my-custom-alert2">
+            El número de mesas por franja horaria es obligatorio.
+          </v-alert>
 
-        <v-alert v-if="!validMenu" type="error">
-          El tamaño del archivo no debe exceder los 4 MB.
-        </v-alert>
+          <v-alert v-if="!validMenu" type="error">
+            El tamaño del archivo no debe exceder los 4 MB.
+          </v-alert>
 
-        <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert2">
-          El tamaño de la foto de perfil no puede exceder los 2 MB.
-        </v-alert>
+          <v-alert v-if="!validProfilePicture" type="error" closable class="my-custom-alert2">
+            El tamaño de la foto de perfil no puede exceder los 2 MB.
+          </v-alert>
 
-        <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert2">
-          El tamaño de las imágenes no puede exceder los 2 MB.
-          <br>
-          El número de imágenes debe ser de entre 1 y 10.
-        </v-alert>
+          <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert2">
+            El tamaño de las imágenes no puede exceder los 2 MB.
+            <br>
+            El número de imágenes debe ser de entre 1 y 10.
+          </v-alert>
+        </v-container>
       </v-container>
-    </v-container>
-
-
     </v-main>
-  
     <Footer></Footer>
-    
   </v-app>
   
   </template>
@@ -341,88 +345,103 @@
   import { useAuthStore } from '../stores/useAuthStore';
   import { ref } from 'vue';
 
-  // datos del restaurante logueado
-  let nombreRestaurante = ref("")
-  let direccionRestaurante = ref("")
-  let descripcionRestaurante = ref("")
-  let horarioRestaurante = ref("") // cuidado con la forma de manejar el horario
-  let diasAperturaRestaurante = ref("")
-  let horaInicio = ref("")
-  let horaFin = ref("")
-  let categoriaRestaurante = ref("")
-  let telefonoRestaurante = ref("")
-  let nombreUsuarioRestaurante = ref("")
-  let emailRestaurante = ref("")
-  // let contraseñaRestaurante = ref("")
-  // let fotoPerfilRestaurante = ref("")
-  // let fotosRestaurante = ref("")
-  let menuRestaurante = ref("")
-  let franjaTiempoRestaurante = ref("")
-  let numeroMesasRestaurante = ref("")
+  let username = ref('');
+  let password = ref('');
+  let restaurantname = ref('');
+  let email = ref('');
+  let phone = ref('');
+  let description = ref('');
+  let address = ref('');
+  // let timeTable = ref([]);
+  let category = ref('');
+  let selectedDays = ref([]);
+  let startingHour = ref('');
+  let finishingHour = ref('');
+  let hours = ref('');
+  let menu = ref([]);
+  let pictures: File[] = [];
+  let timePeriod = ref('');
+  let numberOfTables = ref('');
+
+  let profilePicture: File[] = [];
+  let pageIsLoaded = ref(false);
+
+  interface timeTable {
+    selectedDays: string[];
+    startingHour: string;
+    finishingHour: string;
+  }
+
+  interface available {
+    timePeriod: number;
+    numberOfTables: number;
+  }
+
 
   async function getRestaurant() {
+    pageIsLoaded.value = false;
     const authStore = useAuthStore();
+    // console.log('dentro getrestaurant()')
     if (authStore.user) {
-    if (authStore.isExpired() === true) {
-        const userToken = authStore.getToken();
-        const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-        if (response.data.code === 0) {
-          nombreUsuarioRestaurante.value = response.data.message.userName;
-          nombreRestaurante.value = response.data.message.restaurantName;
-          emailRestaurante.value = response.data.message.email;
-          telefonoRestaurante.value = response.data.message.phoneNumber;
-          direccionRestaurante.value = response.data.message.restaurantAddress;
-          horarioRestaurante.value = response.data.message.timeTable;
-          categoriaRestaurante.value = response.data.message.category;
-          descripcionRestaurante.value = response.data.message.description;
-          franjaTiempoRestaurante.value = response.data.message.availability.timePeriod;
-          numeroMesasRestaurante.value = response.data.message.availability.numberOfTables;
-          
+      if (authStore.isExpired() === true) {
+          const userToken = authStore.getToken();
+          const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
+          console.log('Datos obtenidos de la API', response.data);
+          if (response.data.code === 0) {
+            username.value = response.data.message.userName;
+            restaurantname.value = response.data.message.restaurantName;
+            email.value = response.data.message.email;
+            phone.value = response.data.message.phoneNumber;
+            address.value = response.data.message.restaurantAddress;
+            // timeTable.value = response.data.message.timeTable;
+            selectedDays.value = response.data.message.timeTable[0].selectedDays;
+            startingHour.value = response.data.message.timeTable[0].startingHour;
+            finishingHour.value = response.data.message.timeTable[0].finishingHour;
+            timePeriod.value = response.data.message.timePeriod;
+            numberOfTables.value = response.data.message.numberOfTables;
+            description.value = response.data.message.description;
 
-          diasAperturaRestaurante.value = response.data.message.timeTable[0].selectedDays;
-          horaInicio.value = response.data.message.timeTable[0].startingHour;
-          horaFin.value = response.data.message.timeTable[0].finishingHour;
-          // hours.value = horaInicio.value + " - " + horaFin.value;
-          menuRestaurante.value = response.data.message.menu;
+            category.value = response.data.message.category;
 
-          // fotosRestaurante.value = response.data.message.pictures;
-          
-          //! DE MOMENTO LAS FOTOS LAS DEJO VACÍAS
+            selectedDays.value = response.data.message.timeTable[0].selectedDays;
+            startingHour.value = response.data.message.timeTable[0].startingHour;
+            finishingHour.value = response.data.message.timeTable[0].finishingHour;
+            hours.value = startingHour.value + " - " + finishingHour.value;
+            menu.value = response.data.message.menu;
 
-          // if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
-          //   fotoPerfilRestaurante.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-          // } else {
-          //   // Reducir tamaño de la imagen
-          //   fotoPerfilRestaurante.value = authStore.getProfilePhoto() as string;
-          // }
+            profilePicture.values = response.data.message.profilePicture;
+            pictures.values = response.data.message.pictures;
 
-          // //pictures
-          // if(fotosRestaurante.value.length === 0) {
-          //   fotosRestaurante.value = "";
-          //   fotosRestaurante.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
-          // }
+            console.log('direccion:', address.value);
+            console.log('descripcion:', description.value);
+            console.log('timePeriod:', timePeriod.value);
+            console.log('numberOfTables:', numberOfTables.value);
 
-        } else {
-          authStore.logout();
-        }
+            pageIsLoaded.value = true;
+          } 
+          else {
+            authStore.logout();
+          }
 
-    } else {
-      authStore.logout();
-    }
+      } else {
+        authStore.logout();
+      }
     } else {
       authStore.logout();
     }
 
   }
-
+  console.log('antes de getRestaurant()')
   getRestaurant();
+  console.log('despues de getRestaurant()')
 
 
-  // const exceedsSizeLimit = ref(false);
-  //CORS
-  
+
+
+
     export default {
       data: () => ({
+        processingRegister: false,
         valid: true,
         validUserName: true,
         validUserName2: true,
@@ -443,7 +462,7 @@
         validProfilePicture: true,
         validPictures: true,
         userRegistered: false,
-        restaurantname: '',
+        // restaurantname: '',
         showPassword: false,
         restaurantnameRules: [
           (value: string) => {
@@ -452,7 +471,7 @@
             return 'El nombre del establecimiento es obligatorio.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a restaurantnameRules
-        address: '',
+        // address: '',
         addressRules: [
           (value: string) => {
             if (value) return true;
@@ -460,12 +479,12 @@
             return 'La dirección del establecimiento es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a addressRules
-        description: '',
-        timetable: {
-          selectedDays: [],
-          startingHour: null,
-          finishingHour: null,
-        },
+        // description: '',
+        // timetable: {
+        //   selectedDays: [],
+        //   startingHour: null,
+        //   finishingHour: null,
+        // },
         daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
     
         timetableRules: [
@@ -475,7 +494,7 @@
             return 'El horario es obligatorio.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a timetableRules
-        category: '',
+        // category: '',
         categories: ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'],
         categoryRules: [
           (value: string) => {
@@ -484,7 +503,7 @@
             return 'La categoría es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a categoryRules
-        email: '',
+        // email: '',
         emailError: '',
         emailRules: [
           (value: string) => {
@@ -498,7 +517,7 @@
             return 'El correo debe ser válido.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a emailRules
-        phone: '',
+        // phone: '',
         phoneError: '',
         phoneRules: [
           (value: string) => {
@@ -512,7 +531,7 @@
             return 'El teléfono debe tener 9 dígitos.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a phoneRules
-        username: '',
+        // username: '',
         usernameRules: [
           (value: string) => {
             if (value) return true;
@@ -521,7 +540,7 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a usernameRules
         // Patrón de la contraseña [ /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, 'Password must contain at least one lowercase letter, one uppercase letter and one number' ],
-        password: '',
+        // password: '',
         passwordError: '',
         passwordRules: [
           (value: string) => {
@@ -535,7 +554,7 @@
             return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
-        profilePicture: [],
+        // profilePicture: [],
         profilePictureRules: [
           (value: File) => {
             if (!value) return true;
@@ -550,9 +569,9 @@
           },
         ],
         profilePictureError: '',
-        pictures: [],
+        // pictures: [],
         picturesError: '',
-        menu: [], // es un pdf
+        // menu: [], // es un pdf
         menuRules: [
           (value: File) => {
             if (!value) return true;
@@ -600,10 +619,10 @@
             return 'La hora de finalización es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a finishHourRules
-        available: {
-          timePeriod: null,
-          numberOfTables: null,
-        },
+        // available: {
+        //   timePeriod: null,
+        //   numberOfTables: null,
+        // },
 
       }),
       methods: {
@@ -647,6 +666,7 @@
           this.validUserName = true;
           this.validEmail = true;
           this.validPhone = true;
+          this.processingRegister = false;
 
           //console.log('Enviando datos a la API'); 
           // const textContainer = this.$refs.textContainer as HTMLElement;
@@ -657,42 +677,55 @@
 
           let photoBase64_profile: string = ' ';
           let photoBase64_pictures: string[] = [];
-          if (this.pictures.length > 0) {
-            for (let i = 0; i < this.pictures.length; i++) {
-              photoBase64_pictures[i] = await this.convertFileToBase64(this.pictures[i]) as string;
+          if (pictures.length > 0) {
+            for (let i = 0; i < pictures.length; i++) {
+              photoBase64_pictures[i] = await this.convertFileToBase64(pictures[i]) as string;
             }
           }
-          if (this.profilePicture.length == 1) {
-            photoBase64_profile = await this.convertFileToBase64(this.profilePicture[0]) as string;
+          if (profilePicture.length == 1) {
+            if (profilePicture.length > 0) {
+              photoBase64_profile = await this.convertFileToBase64(profilePicture[0]) as string;
+            }
           }
           
           let pdfBase64: string = ' ';
-          if (this.menu.length == 1) {
-            pdfBase64 = await this.convertFileToBase64(this.menu[0]) as string;
+            if (menu.value.length == 1) {
+            pdfBase64 = await this.convertFileToBase64(menu.value[0] as File) as string;
           }
 
           // comprimir el pdf
+          let timetable1: timeTable = {
+            selectedDays: selectedDays.value,
+            startingHour: startingHour.value,
+            finishingHour: finishingHour.value,
+          };
+
+          let available1: available = {
+            timePeriod: Number(timePeriod.value),
+            numberOfTables: Number(numberOfTables.value),
+          };
+                    
 
           const newRestaurantJson = {
-            "userName": this.username,
-            "passwd": this.password,
-            "email": this.email,
-            "restaurantName": this.restaurantname,
-            "restaurantAddress": this.address,
-            "description": this.description,
-            "timeTable": this.timetable,
-            "category": this.category,
-            "phoneNumber": this.phone,
+            "userName": username,
+            "passwd": password,
+            "email": email,
+            "restaurantName": restaurantname,
+            "restaurantAddress": address,
+            "description": description,
+            "timeTable": timetable1,
+            "category": category,
+            "phoneNumber": phone,
             "profilePicture": photoBase64_profile,
             "pictures": photoBase64_pictures,
             "menu": pdfBase64,
-            "availability": this.available,
+            "availability": available1,
           };
-          const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
-         //const response = await axios.get('http://localhost:3000/users/');
-          //console.log('Datos obtenidos de la API', response.data);
-          //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
-          //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
+          
+          this.processingRegister = true;
+          // const response = await axios.put(`${baseUrl}users/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedUser);
+          const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, newRestaurantJson);
+          this.processingRegister = false;
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
           if (response.status === 201 && responsePdfUpload.status === 201) {
@@ -700,10 +733,11 @@
             //console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
             const authStore = useAuthStore();
-            return authStore.login(this.username, this.password).catch(error => console.log(error));
+            return authStore.login(username.value, password.value).catch(error => console.log(error));
           
           }
         } catch (error) {
+          this.processingRegister = false;
           if (axios.isAxiosError(error) && error.response) {
           const response = error.response;
           const textContainer = this.$refs.textContainer as HTMLElement;
@@ -759,71 +793,71 @@
 
         
         this.validPhone2 = this.phoneRules.every(rule => {
-          const isValid = rule(this.phone) === true;
-          if (!isValid) this.phoneError = rule(this.phone) as string;
+          const isValid = rule(phone.value) === true;
+          if (!isValid) this.phoneError = rule(phone.value) as string;
           return isValid;
         });
         console.log('this.validPhone2:', this.validPhone2);
 
         this.validEmail2 = this.emailRules.every(rule => {
-          const isValid = rule(this.email) === true;
+          const isValid = rule(email.value) === true;
           return isValid;
         });
         console.log('this.validEmail2:', this.validEmail2);
   
         this.validPassword = this.passwordRules.every(rule => {
-          const isValid = rule(this.password) === true;
-          if (!isValid) this.passwordError = rule(this.password) as string;
+          const isValid = rule(password.value) === true;
+          if (!isValid) this.passwordError = rule(password.value) as string;
           return isValid;
         });
 
         this.validRestaurantName = this.restaurantnameRules.every(rule => {
-          const isValid = rule(this.restaurantname) === true;
+          const isValid = rule(restaurantname.value) === true;
           return isValid;
         });
 
         this.validAddress = this.addressRules.every(rule => {
-          const isValid = rule(this.address) === true;
+          const isValid = rule(address.value) === true;
           return isValid;
         });
 
         this.validCategory = this.categoryRules.every(rule => {
-          const isValid = rule(this.category) === true;
+          const isValid = rule(category.value) === true;
           return isValid;
         });
         
         this.validUserName2 = this.usernameRules.every(rule => {
-          const isValid = rule(this.username) === true;
+          const isValid = rule(username.value) === true;
           return isValid;
         });
 
 
         this.validWeekDays = this.timetableRules.every(rule => {
-          const isValid = rule(this.timetable.selectedDays.join(',')) === true;
+          const isValid = rule(selectedDays.value.join(',')) === true;
           return isValid;
         });
 
         // hora de inicio, comprobar que no esté vacío
         this.validStartingHour = this.startHourRules.every(rule => {
-          const isValid = rule(this.timetable.startingHour !== null ? this.timetable.startingHour : '') === true;
+          const isValid = rule(startingHour.value !== null ? startingHour.value : '') === true;
           return isValid;
         });
 
-        // hora de finalización, comprobar que no esté vacío
+        // hora de finalización, comprobar que no esté vacíoue
         this.validFinishingHour = this.finishHourRules.every(rule => {
-          const isValid = rule(this.timetable.finishingHour !== null ? this.timetable.finishingHour : '') === true;
+          const isValid = rule(finishingHour.value !== null ? finishingHour.value : '') === true;
           return isValid;
         });
 
         // tiempo de franja de reserva, comprobar que no esté vacío y que sea mayor que 0
         this.validTimePeriod = this.timePeriodRules.every(rule => {
-          const isValid = rule(this.available.timePeriod !== null ? this.available.timePeriod : 0) === true;
+          const isValid = rule(timePeriod.value !== null ? Number(timePeriod.value) : 0) === true;
           return isValid;
         });
 
         // número de mesas por franja horaria, comprobar que no esté vacío y que sea mayor que 0
         this.validNumberOfTables = this.numberOfTablesRules.every(rule => {
-          const isValid = rule(this.available.numberOfTables !== null ? this.available.numberOfTables : 0) === true;
+          const isValid = rule(Number(numberOfTables.value !== null ? numberOfTables.value : 0)) === true;
           return isValid;
         });
 
@@ -833,9 +867,9 @@
         // utilizar menuRules para comprobar si el menu es valido o no
         const rule = this.menuRules[0];
         this.validMenu = true;
-        const isValid2 = rule(this.menu[0]) === true;
+        const isValid2 = menu.value.length > 0 && rule(menu.value[0]) === true;
         if (!isValid2) {
-          this.menuError = rule(this.menu[0]) as unknown as string;
+          this.menuError = rule(menu.value[0]) as unknown as string;
           this.validMenu = false;
           //console.log('Fallo, el menú supera los 4mb');
         }
@@ -845,25 +879,29 @@
         // utilizar profilePictureRules para comprobar si la foto de perfil es valida o no
         const rule2 = this.profilePictureRules[0];
         this.validProfilePicture = true;
-        const isValid = rule2(this.profilePicture[0]) === true;
+        const file = new File([profilePicture[0]], "filename");
+        const isValid = rule2(file) === true;
         if (!isValid) {
-          this.profilePictureError = rule2(this.profilePicture[0]) as unknown as string;
+          const file = new File([profilePicture[0]], "filename");
+          this.profilePictureError = rule2(file) as unknown as string;
           this.validProfilePicture = false;
           //console.log('Fallo, la foto de perfil supera los 2mb');
         }
 
         // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
         this.validPictures = true;
-        if (this.pictures.length > 4) {
+        if (pictures.length > 4) {
           this.validPictures = false;
           //console.log('Fallo, el número de imágenes está limitado a 4');
         }
         else {
-          for (let i = 0; i < this.pictures.length; i++) {
+          for (let i = 0; i < pictures.length; i++) {
             const rule3 = this.profilePictureRules[0]; // las reglas son las mismas que para la foto de perfil
-            const isValid3 = rule3(this.pictures[i]) === true;
+            const file = new File([pictures[i]], "filename");
+            const isValid3 = rule3(file) === true;
             if (!isValid3) {
-              this.picturesError = rule3(this.pictures[i]) as unknown as string;
+              const file = new File([pictures[i]], "filename");
+              this.picturesError = rule3(file) as unknown as string;
               this.validPictures = false; // si alguna imagen no es válida, el formulario ya no es válido
               //console.log('Fallo, alguna/s imagen/es superan los 2mb');
             }
@@ -876,4 +914,6 @@
       },
     },
     };
+
+  
   </script>

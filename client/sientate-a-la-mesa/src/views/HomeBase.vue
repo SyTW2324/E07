@@ -10,15 +10,53 @@
       </v-container>
       <v-container v-else-if="allInfoIsLoaded == 1">
         <v-container>
-          <v-card class="mx-auto my-16 " color="teal">
+          <v-card  color="teal">
             
             <v-card-text class="">
-             <h1 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 180%; margin-left: 5%; margin-top: 3%;" >Descubre y reserva el mejor sitio donde comer para ti</h1>
+             <h1 
+              style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
+              font-size: 180%; 
+              margin-left: 5%;" 
+              >Descubre y reserva el mejor sitio donde comer
+            </h1>
             </v-card-text>
-            <v-container style="height: 70%; width: 70%;"><v-img :src="imgPresentacion" > </v-img> </v-container>
+            <v-container style="height: 50%; width: 60%;"><v-img :src="imgPresentacion" > </v-img> </v-container>
             
           </v-card>
+          <v-container style="padding-top: 3em; padding-bottom: 1em;" >
+  
+            <v-row>
+
+              <v-col cols="12" md="9">
+                <v-text-field type="text" v-model="input" placeholder="Busca tu restaurante favorito..." >  <v-icon >mdi-magnify</v-icon> </v-text-field>
+              </v-col>
+              
+
+              <v-col cols="1" md="2">
+                  <v-select
+                  v-model="selectedCategory"
+                  :items="categories"
+                  label="Categoría"
+                  multiple
+                  chips
+                  small-chips
+                  hint="Filtra por categorías"
+                  persistent-hint
+                  
+                  >
+                  </v-select>
+
+              </v-col>
+              <v-btn @click="selectedCategory = [] " icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+
+            </v-row>
+  
+          </v-container>
         </v-container>
+
+
         <v-container>
           <h2 style="margin-bottom: 3% ;">Nuestra seleción:</h2>
         <v-row>
@@ -51,6 +89,11 @@
             </v-card>
           </v-col>
         </v-row>
+        <v-row v-if="input&&!filteredList().length">
+          <v-col cols="12">
+            <h4>Resultados no encontrados!</h4>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col cols="12">
             <v-pagination v-model="currentPage" :length="totalPages" @input="changePage" />
@@ -75,6 +118,12 @@ import { onMounted } from 'vue'
 import { baseUrl } from '../env/env-variables';
 import imgPresentacion from '../img/restaurante.png';
 
+let input = ref('');
+let categories = ref(['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano']);
+let selectedCategory = ref < string[] > ([]);
+
+//const fruits = ["apple", "banana", "orange"];
+
 
 const restaurants = ref < [string, string, string, string, string[]] []>();
 const itemsPerPage = 3;
@@ -87,12 +136,17 @@ const allInfoIsLoaded = ref(0); // 0 = no, 1 = si, 2 = error
 const paginatedRestaurants = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
+  if (input.value || selectedCategory.value.length > 0) {
+    return filteredList().slice(startIndex, endIndex);
+  }
   return restaurants.value?.slice(startIndex, endIndex);
 })
 
 const totalPages = computed(() => {
-  if (restaurants.value) {
-    return Math.ceil(restaurants.value.length / itemsPerPage);
+  if (input.value || selectedCategory.value.length > 0) {
+    return Math.ceil(filteredList().length / itemsPerPage);
+  } else if (input.value.length == 0 && restaurants.value) {
+    return Math.ceil(restaurants.value?.length / itemsPerPage);
   }
   return 0;
 });
@@ -128,5 +182,17 @@ onMounted(async () => {
   }
 });
 
+function filteredList() {
+  // return fruits.filter((fruit) =>
+  //   fruit.toLowerCase().includes(input.value.toLowerCase())
+  // );
+  if (!restaurants.value) {
+    return [];
+  }
+
+  return restaurants.value?.filter((restaurant) =>
+  restaurant[0].toLowerCase().includes(input.value.toLowerCase()) && (selectedCategory.value.length == 0 || selectedCategory.value.includes(restaurant[2].toLowerCase()))
+  );
+}
 
 </script>

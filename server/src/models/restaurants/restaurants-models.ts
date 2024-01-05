@@ -154,3 +154,29 @@ export async function validateRestaurantSchema(restaurant: restaurantsDocumentIn
   return { code: 0, errors: '' };
 
 }
+
+
+
+export async function validateRestaurantSchemaEdit(restaurant: restaurantsDocumentInterface, email: boolean, phoneNumber: boolean): Promise<{ code: number, errors: string }> {
+  if (email == true) {
+    const existingUser = await UserModel.findOne({ email: restaurant.email }); // Comprueba si existe en la base de datos de usuarios un usuario con este email
+    const existingRestaurant = await RestaurantModel.findOne({ email: restaurant.email });
+    if (existingUser || existingRestaurant) {
+      if (existingUser?.email === restaurant.email || existingRestaurant?.email === restaurant.email) {
+        return { code: 3, errors: 'Ya existe ese correo electrónico' };
+      }
+    }
+  }
+  
+  if (phoneNumber == true) {
+    const existingUser = await UserModel.findOne({ phoneNumber: restaurant.phoneNumber });
+    const existingRestaurant = await RestaurantModel.findOne({ phoneNumber: restaurant.phoneNumber });
+    if (existingUser || existingRestaurant) {
+      if (existingUser?.phoneNumber === restaurant.phoneNumber || existingRestaurant?.phoneNumber === restaurant.phoneNumber) {
+        return { code: 4, errors: 'Ya existe número de teléfono' };
+      }
+    }
+  }
+
+  return { code: 0, errors: '' };
+}
