@@ -10,12 +10,17 @@
       </v-container>
       <v-container v-else-if="allInfoIsLoaded == 1">
         <v-container>
-          <v-card class="mx-auto my-16 " color="teal">
+          <v-card  color="teal">
             
             <v-card-text class="">
-             <h1 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 180%; margin-left: 5%; margin-top: 3%;" >Descubre y reserva el mejor sitio donde comer para ti</h1>
+             <h1 
+              style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
+              font-size: 180%; 
+              margin-left: 5%;" 
+              >Descubre y reserva el mejor sitio donde comer
+            </h1>
             </v-card-text>
-            <v-container style="height: 70%; width: 70%;"><v-img :src="imgPresentacion" > </v-img> </v-container>
+            <v-container style="height: 50%; width: 60%;"><v-img :src="imgPresentacion" > </v-img> </v-container>
             
           </v-card>
         </v-container>
