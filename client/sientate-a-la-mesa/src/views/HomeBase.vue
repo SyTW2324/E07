@@ -23,15 +23,15 @@
             <v-container style="height: 50%; width: 60%;"><v-img :src="imgPresentacion" > </v-img> </v-container>
             
           </v-card>
+          <v-container style="padding-top: 3em; padding-bottom: 1em;" >
+  
+            <v-row>
+              <v-text-field type="text" v-model="input" placeholder="Busca tu restaurante favorito..." >  <v-icon >mdi-magnify</v-icon> </v-text-field>
+            </v-row>
+  
+          </v-container>
         </v-container>
 
-        <v-container>
-
-          <v-row>
-            <v-text-field type="text" v-model="input" placeholder="Busca tu restaurante favorito..." >  <v-icon >mdi-magnify</v-icon> </v-text-field>
-          </v-row>
-
-        </v-container>
 
         <v-container>
           <h2 style="margin-bottom: 3% ;">Nuestra seleción:</h2>
