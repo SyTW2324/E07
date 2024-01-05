@@ -89,7 +89,7 @@
                 :rules="usernameRules"
                 hide-details
                 required
-                @onmouseover="onmouseover('username')"
+                readonly
               ></v-text-field>
             </v-col>
   
@@ -431,10 +431,9 @@
     }
 
   }
-
-  console.log("antes de getRestaurant()")
+  console.log('antes de getRestaurant()')
   getRestaurant();
-  console.log("despues de getRestaurant()")
+  console.log('despues de getRestaurant()')
 
 
 
@@ -722,13 +721,11 @@
             "menu": pdfBase64,
             "availability": available1,
           };
+          
           this.processingRegister = true;
-          const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
+          // const response = await axios.put(`${baseUrl}users/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedUser);
+          const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, newRestaurantJson);
           this.processingRegister = false;
-         //const response = await axios.get('http://localhost:3000/users/');
-          //console.log('Datos obtenidos de la API', response.data);
-          //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
-          //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
           if (response.status === 201 && responsePdfUpload.status === 201) {
@@ -918,10 +915,5 @@
     },
     };
 
-  function onmouseover(elementId: string) {
-    const firstnameElement = document.getElementById(elementId);
-    if (firstnameElement) {
-      firstnameElement.style.cursor = 'not-allowed';
-    }
-  }
+  
   </script>
