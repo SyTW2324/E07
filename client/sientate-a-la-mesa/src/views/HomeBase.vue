@@ -26,7 +26,31 @@
           <v-container style="padding-top: 3em; padding-bottom: 1em;" >
   
             <v-row>
-              <v-text-field type="text" v-model="input" placeholder="Busca tu restaurante favorito..." >  <v-icon >mdi-magnify</v-icon> </v-text-field>
+
+              <v-col cols="12" md="9">
+                <v-text-field type="text" v-model="input" placeholder="Busca tu restaurante favorito..." >  <v-icon >mdi-magnify</v-icon> </v-text-field>
+              </v-col>
+              
+
+              <v-col cols="1" md="2">
+                  <v-select
+                  v-model="selectedCategory"
+                  :items="categories"
+                  label="Categoría"
+                  multiple
+                  chips
+                  small-chips
+                  hint="Filtra por categorías"
+                  persistent-hint
+                  
+                  >
+                  </v-select>
+
+              </v-col>
+              <v-btn @click="selectedCategory = [] " icon>
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+
             </v-row>
   
           </v-container>
@@ -95,6 +119,8 @@ import { baseUrl } from '../env/env-variables';
 import imgPresentacion from '../img/restaurante.png';
 
 let input = ref('');
+let categories = ref(['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano']);
+let selectedCategory = ref < string[] > ([]);
 
 //const fruits = ["apple", "banana", "orange"];
 
@@ -110,14 +136,14 @@ const allInfoIsLoaded = ref(0); // 0 = no, 1 = si, 2 = error
 const paginatedRestaurants = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
-  if (input.value) {
+  if (input.value || selectedCategory.value.length > 0) {
     return filteredList().slice(startIndex, endIndex);
   }
   return restaurants.value?.slice(startIndex, endIndex);
 })
 
 const totalPages = computed(() => {
-  if (input.value) {
+  if (input.value || selectedCategory.value.length > 0) {
     return Math.ceil(filteredList().length / itemsPerPage);
   } else if (input.value.length == 0 && restaurants.value) {
     return Math.ceil(restaurants.value?.length / itemsPerPage);
@@ -165,7 +191,7 @@ function filteredList() {
   }
 
   return restaurants.value?.filter((restaurant) =>
-  restaurant[0].toLowerCase().includes(input.value.toLowerCase())
+  restaurant[0].toLowerCase().includes(input.value.toLowerCase()) && (selectedCategory.value.length == 0 || selectedCategory.value.includes(restaurant[2].toLowerCase()))
   );
 }
 
