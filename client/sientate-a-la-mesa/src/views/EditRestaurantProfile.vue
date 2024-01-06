@@ -15,7 +15,7 @@
             <v-col cols="12" md="4">
               <v-text-field
                 id="restaurantname"
-                v-model="restaurantname"
+                v-model="restaurantnameModified"
                 :rules="restaurantnameRules"
                 :counter="10"
                 label="Nombre del establecimiento*"
@@ -27,7 +27,7 @@
             <v-col cols="12" md="4">
               <v-text-field
                 id="address"
-                v-model="address"
+                v-model="addressModified"
                 :rules="addressRules"
                 label="Dirección del establecimiento*"
                 required
@@ -38,7 +38,7 @@
             <v-col cols="12" md="4">
               <v-text-field
                 id="description"
-                v-model="description"
+                v-model="descriptionModified"
                 label="Descripción"
                 hide-details
               ></v-text-field>
@@ -48,7 +48,7 @@
             <v-col cols="12" md="4">
               <v-select
                 id="category"
-                v-model="category"
+                v-model="categoryModified"
                 :items="categories"
                 label="Categoría*"
                 :rules="categoryRules"
@@ -62,7 +62,7 @@
             <v-col cols="12" md="4">
               <v-text-field
                 id="email"
-                v-model="email"
+                v-model="emailModified"
                 :rules="emailRules"
                 label="Correo electrónico*"
                 hide-details
@@ -73,7 +73,7 @@
             <v-col cols="12" md="4">
               <v-text-field
                 id="phone"
-                v-model="phone"
+                v-model="phoneModified"
                 :rules="phoneRules"
                 label="Teléfono*"
                 hide-details
@@ -96,7 +96,7 @@
             <v-col cols="12" md="4" class="d-flex align-center justify-space-between">
               <v-text-field v-if="showPassword == false"
               id="password"
-              v-model="password"
+              v-model="passwordModified"
               :rules="passwordRules"
               label="Contraseña*"
               type="password"
@@ -105,7 +105,7 @@
               ></v-text-field>
               <v-text-field v-else
               id="password"
-              v-model="password"
+              v-model="passwordModified"
               :rules="passwordRules"
               label="Contraseña*"
               type="text"
@@ -121,7 +121,7 @@
 
             <v-col cols="12" md="4">
               <v-file-input
-                v-model="profilePicture"
+                v-model="profilePictureModified"
                 label="Foto de perfil (límite 2mb)"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
@@ -138,7 +138,7 @@
                 <v-row>
                   <v-col v-for="day in daysOfWeek" :key="day" cols="1.5">
                     <v-checkbox 
-                    v-model="selectedDays" 
+                    v-model="selectedDaysModified" 
                     :label="day" 
                     :value="day"
                     :rules="timetableRules"
@@ -155,7 +155,7 @@
               <label>Hora de inicio*:</label>
               <v-text-field 
               id="horaInicio" 
-              v-model="startingHour" 
+              v-model="startingHourModified" 
               type="time"
               :rules="startHourRules"
               ></v-text-field>
@@ -166,7 +166,7 @@
               <label>Hora de finalización*:</label>
               <v-text-field 
               id="horaFin" 
-              v-model="finishingHour" 
+              v-model="finishingHourModified" 
               type="time"
               :rules="finishHourRules"
               ></v-text-field>
@@ -175,7 +175,7 @@
             <!-- es un pdf, tamaño máximo 4mb -->
             <v-col cols="12" md="4"> 
               <v-file-input
-                v-model="menu"
+                v-model="menuModified"
                 label="Menú (límite 4mb)"
                 accept="application/pdf"
                 placeholder="Seleccione un pdf"
@@ -190,7 +190,7 @@
               <label>Tiempo de franja de reserva (minutos)*:</label>
               <v-text-field 
               id="franjaTiempo" 
-              v-model="timePeriod" 
+              v-model="timePeriodModified" 
               type="number"
               :rules="timePeriodRules"
               >
@@ -202,7 +202,7 @@
               <label>Número de mesas por franja horaria*:</label>
               <v-text-field 
               id="numberOfTables"
-              v-model="numberOfTables" 
+              v-model="numberOfTablesModified" 
               type="number"
               :rules="numberOfTablesRules"
               >
@@ -212,7 +212,7 @@
             <!-- imágenes del establecimiento, tamaño máximo 2mb -->
             <v-col cols="12" md="4">
               <v-file-input
-                v-model="pictures"
+                v-model="picturesModified"
                 label="Imágenes de portada del establecimiento (limite 2mb)"
                 accept="image/*"
                 placeholder="Seleccione una imagen"
@@ -346,25 +346,43 @@
   import { ref } from 'vue';
 
   let username = ref('');
-  let password = ref('');
+  let password = ref(useAuthStore().user.password);
   let restaurantname = ref('');
   let email = ref('');
   let phone = ref('');
   let description = ref('');
   let address = ref('');
-  // let timeTable = ref([]);
   let category = ref('');
   let selectedDays = ref([]);
   let startingHour = ref('');
   let finishingHour = ref('');
-  let hours = ref('');
   let menu = ref([]);
   let pictures: File[] = [];
   let timePeriod = ref('');
   let numberOfTables = ref('');
-
   let profilePicture: File[] = [];
   let pageIsLoaded = ref(false);
+
+  // Atributos modificables
+  let passwordModified = ref(password.value);
+  let restaurantnameModified = ref('');
+  let emailModified = ref('');
+  let phoneModified = ref('');
+  let descriptionModified = ref('');
+  let addressModified = ref('');
+  let categoryModified = ref('');
+  let selectedDaysModified = ref([]);
+  let startingHourModified = ref('');
+  let finishingHourModified = ref('');
+  let menuModified = ref([]);
+  let picturesModified: File[] = [];
+  let timePeriodModified = ref('');
+  let numberOfTablesModified = ref('');
+  let profilePictureModified: File[] = [];
+
+
+
+
 
   interface timeTable {
     selectedDays: string[];
@@ -381,7 +399,7 @@
   async function getRestaurant() {
     pageIsLoaded.value = false;
     const authStore = useAuthStore();
-    // console.log('dentro getrestaurant()')
+    console.log('dentro getrestaurant()')
     if (authStore.user) {
       if (authStore.isExpired() === true) {
           const userToken = authStore.getToken();
@@ -393,29 +411,38 @@
             email.value = response.data.message.email;
             phone.value = response.data.message.phoneNumber;
             address.value = response.data.message.restaurantAddress;
-            // timeTable.value = response.data.message.timeTable;
             selectedDays.value = response.data.message.timeTable[0].selectedDays;
             startingHour.value = response.data.message.timeTable[0].startingHour;
             finishingHour.value = response.data.message.timeTable[0].finishingHour;
             timePeriod.value = response.data.message.timePeriod;
             numberOfTables.value = response.data.message.numberOfTables;
             description.value = response.data.message.description;
-
             category.value = response.data.message.category;
-
             selectedDays.value = response.data.message.timeTable[0].selectedDays;
             startingHour.value = response.data.message.timeTable[0].startingHour;
             finishingHour.value = response.data.message.timeTable[0].finishingHour;
-            hours.value = startingHour.value + " - " + finishingHour.value;
             menu.value = response.data.message.menu;
-
             profilePicture.values = response.data.message.profilePicture;
             pictures.values = response.data.message.pictures;
 
-            console.log('direccion:', address.value);
-            console.log('descripcion:', description.value);
-            console.log('timePeriod:', timePeriod.value);
-            console.log('numberOfTables:', numberOfTables.value);
+            // Atributos modificables
+            passwordModified.value = password.value;
+            restaurantnameModified.value = restaurantname.value;
+            emailModified.value = email.value;
+            phoneModified.value = phone.value;
+            addressModified.value = address.value;
+            categoryModified.value = category.value;
+            selectedDaysModified.value = selectedDays.value;
+            startingHourModified.value = startingHour.value;
+            finishingHourModified.value = finishingHour.value;
+            timePeriodModified.value = timePeriod.value;
+            numberOfTablesModified.value = numberOfTables.value;
+            descriptionModified.value = description.value;
+            menuModified.value = menu.value;
+            profilePictureModified.values = profilePicture.values;
+            picturesModified.values = pictures.values;
+
+
 
             pageIsLoaded.value = true;
           } 
@@ -431,12 +458,8 @@
     }
 
   }
-  console.log('antes de getRestaurant()')
+
   getRestaurant();
-  console.log('despues de getRestaurant()')
-
-
-
 
 
     export default {
@@ -462,7 +485,6 @@
         validProfilePicture: true,
         validPictures: true,
         userRegistered: false,
-        // restaurantname: '',
         showPassword: false,
         restaurantnameRules: [
           (value: string) => {
@@ -471,7 +493,6 @@
             return 'El nombre del establecimiento es obligatorio.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a restaurantnameRules
-        // address: '',
         addressRules: [
           (value: string) => {
             if (value) return true;
@@ -479,12 +500,6 @@
             return 'La dirección del establecimiento es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a addressRules
-        // description: '',
-        // timetable: {
-        //   selectedDays: [],
-        //   startingHour: null,
-        //   finishingHour: null,
-        // },
         daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
     
         timetableRules: [
@@ -494,7 +509,6 @@
             return 'El horario es obligatorio.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a timetableRules
-        // category: '',
         categories: ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'],
         categoryRules: [
           (value: string) => {
@@ -503,7 +517,6 @@
             return 'La categoría es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a categoryRules
-        // email: '',
         emailError: '',
         emailRules: [
           (value: string) => {
@@ -517,7 +530,6 @@
             return 'El correo debe ser válido.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a emailRules
-        // phone: '',
         phoneError: '',
         phoneRules: [
           (value: string) => {
@@ -531,7 +543,6 @@
             return 'El teléfono debe tener 9 dígitos.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a phoneRules
-        // username: '',
         usernameRules: [
           (value: string) => {
             if (value) return true;
@@ -540,7 +551,6 @@
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a usernameRules
         // Patrón de la contraseña [ /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, 'Password must contain at least one lowercase letter, one uppercase letter and one number' ],
-        // password: '',
         passwordError: '',
         passwordRules: [
           (value: string) => {
@@ -554,7 +564,6 @@
             return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
-        // profilePicture: [],
         profilePictureRules: [
           (value: File) => {
             if (!value) return true;
@@ -569,9 +578,7 @@
           },
         ],
         profilePictureError: '',
-        // pictures: [],
         picturesError: '',
-        // menu: [], // es un pdf
         menuRules: [
           (value: File) => {
             if (!value) return true;
@@ -619,11 +626,6 @@
             return 'La hora de finalización es obligatoria.';
           },
         ] as ((value: string) => true | string)[], // Asigna un tipo a finishHourRules
-        // available: {
-        //   timePeriod: null,
-        //   numberOfTables: null,
-        // },
-
       }),
       methods: {
       submitForm() {
@@ -631,14 +633,8 @@
         const isValid = this.validateForm();
   
         if (isValid) {
-          // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-          //console.log('Formulario válido. Enviar datos.');
-          this.RegisterRestaurantApi();
-        } else {
-          // al usuario debe mostrarle en la web el problema 
-          // y no enviar el formulario hasta que no lo corrija
           
-          //console.log('Formulario inválido. Por favor, corrija los errores.');
+          this.RegisterRestaurantApi();
         }
       },
       controlShowPassword() {
@@ -668,63 +664,143 @@
           this.validPhone = true;
           this.processingRegister = false;
 
-          //console.log('Enviando datos a la API'); 
-          // const textContainer = this.$refs.textContainer as HTMLElement;
+          let modifiedRestaurant = {}
+
+          if (passwordModified.value !== password.value) {
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              passwd: passwordModified.value
+            }
+          }
+
+          if (restaurantnameModified.value !== restaurantname.value) {
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              restaurantName: restaurantnameModified.value
+            }
+          }
+
+          if (emailModified.value !== email.value) {
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              email: emailModified.value
+            }
+          }
+
+          if (phoneModified.value !== phone.value) {
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              phoneNumber: phoneModified.value
+            }
+          }
+
+          if (addressModified.value !== address.value) {
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              restaurantAddress: addressModified.value
+            }
+          }
+
+          if (categoryModified.value !== category.value) {
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              category: categoryModified.value
+            }
+          }
+
+          if (descriptionModified.value !== description.value) {
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              description: descriptionModified.value
+            }
+          }
+
+          if ((selectedDaysModified.value !== selectedDays.value) || (startingHourModified.value !== startingHour.value) || (finishingHourModified.value !== finishingHour.value)) {
+            // necesito construir time table comprobando si los valores se han modificado o no
+            const timeTableModified: timeTable = {
+              selectedDays: selectedDays.value,
+              startingHour: startingHour.value,
+              finishingHour: finishingHour.value
+            }
+            if (selectedDaysModified.value !== selectedDays.value) {
+              timeTableModified.selectedDays = selectedDaysModified.value;
+            }
+            if (startingHourModified.value !== startingHour.value) {
+              timeTableModified.startingHour = startingHourModified.value;
+            }
+            if (finishingHourModified.value !== finishingHour.value) {
+              timeTableModified.finishingHour = finishingHourModified.value;
+            }
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              timeTable: [timeTableModified]
+            }
+          }
+
+          if (timePeriodModified.value !== timePeriod.value || numberOfTablesModified.value !== numberOfTables.value) {
+            const availableModified: available = {
+              timePeriod: timePeriod.value,
+              numberOfTables: numberOfTables.value
+            }
+            if (timePeriodModified.value !== timePeriod.value) {
+              if (typeof timePeriodModified.value === 'number') {
+                availableModified.timePeriod = timePeriodModified.value.toString();
+              }
+            }
+            if (numberOfTablesModified.value !== numberOfTables.value) {
+              availableModified.numberOfTables = numberOfTablesModified.value;
+            }
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              available: [availableModified]
+            }
+          }
+
+          if (menuModified.value.length > 0) {
+            const menuBase64 = await this.convertFileToBase64(menuModified.value[0]);
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              menu: menuBase64
+            }
+          }
+
+          if (profilePictureModified.length > 0) {
+            const profilePictureBase64 = await this.convertFileToBase64(profilePictureModified[0]);
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              profilePicture: profilePictureBase64
+            }
+          }
+
+          if (picturesModified.length > 0) {
+            const picturesBase64 = [];
+            for (let i = 0; i < picturesModified.length; i++) {
+              const pictureBase64 = await this.convertFileToBase64(picturesModified[i]);
+              picturesBase64.push(pictureBase64);
+            }
+            modifiedRestaurant = {
+              ...modifiedRestaurant,
+              pictures: picturesBase64
+            }
+          }
+
+
+
+
+
+          // CONTINUAR POR AQUÍ
+
+
+
+
       
-          // Crea un elemento de imagen
-          const textElement = document.createElement('h3');
-          textElement.innerText = ' ';
 
-          let photoBase64_profile: string = ' ';
-          let photoBase64_pictures: string[] = [];
-          if (pictures.length > 0) {
-            for (let i = 0; i < pictures.length; i++) {
-              photoBase64_pictures[i] = await this.convertFileToBase64(pictures[i]) as string;
-            }
-          }
-          if (profilePicture.length == 1) {
-            if (profilePicture.length > 0) {
-              photoBase64_profile = await this.convertFileToBase64(profilePicture[0]) as string;
-            }
-          }
-          
-          let pdfBase64: string = ' ';
-            if (menu.value.length == 1) {
-            pdfBase64 = await this.convertFileToBase64(menu.value[0] as File) as string;
-          }
-
-          // comprimir el pdf
-          let timetable1: timeTable = {
-            selectedDays: selectedDays.value,
-            startingHour: startingHour.value,
-            finishingHour: finishingHour.value,
-          };
-
-          let available1: available = {
-            timePeriod: Number(timePeriod.value),
-            numberOfTables: Number(numberOfTables.value),
-          };
-                    
-
-          const newRestaurantJson = {
-            "userName": username,
-            "passwd": password,
-            "email": email,
-            "restaurantName": restaurantname,
-            "restaurantAddress": address,
-            "description": description,
-            "timeTable": timetable1,
-            "category": category,
-            "phoneNumber": phone,
-            "profilePicture": photoBase64_profile,
-            "pictures": photoBase64_pictures,
-            "menu": pdfBase64,
-            "availability": available1,
-          };
           
           this.processingRegister = true;
           // const response = await axios.put(`${baseUrl}users/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedUser);
-          const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, newRestaurantJson);
+          
+          //! ****** SÓLO PASAR LOS ATRIBUTOS MODIFICADOS, NO TODOS
+          const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedRestaurant);
           this.processingRegister = false;
           const responsePdfUpload = {status: 201};
           // Añade la imagen al contenedor
@@ -743,8 +819,8 @@
           const textContainer = this.$refs.textContainer as HTMLElement;
           const textElement = document.createElement('h3');
   
-          //console.error('Error al realizar la solicitud:', response.status, response.statusText);
-          //console.error('Código de error:', response.data.code);
+          console.error('Error al realizar la solicitud:', response.status, response.statusText);
+          console.error('Código de error:', response.data.code);
           if (response.status === 400) {
             console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
