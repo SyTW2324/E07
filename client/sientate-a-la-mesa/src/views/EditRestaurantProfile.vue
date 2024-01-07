@@ -16,7 +16,6 @@
               <v-text-field
                 id="restaurantname"
                 v-model="restaurantnameModified"
-                :rules="restaurantnameRules"
                 :counter="10"
                 label="Nombre del establecimiento*"
                 required
@@ -28,7 +27,6 @@
               <v-text-field
                 id="address"
                 v-model="addressModified"
-                :rules="addressRules"
                 label="Dirección del establecimiento*"
                 required
                 hide-details
@@ -51,7 +49,6 @@
                 v-model="categoryModified"
                 :items="categories"
                 label="Categoría*"
-                :rules="categoryRules"
                 required
                 hide-details
 
@@ -63,7 +60,6 @@
               <v-text-field
                 id="email"
                 v-model="emailModified"
-                :rules="emailRules"
                 label="Correo electrónico*"
                 hide-details
                 required
@@ -74,7 +70,6 @@
               <v-text-field
                 id="phone"
                 v-model="phoneModified"
-                :rules="phoneRules"
                 label="Teléfono*"
                 hide-details
                 required
@@ -86,7 +81,6 @@
                 id="username"
                 label="Nombre de usuario*"
                 v-model="username"
-                :rules="usernameRules"
                 hide-details
                 required
                 readonly
@@ -97,7 +91,6 @@
               <v-text-field v-if="showPassword == false"
               id="password"
               v-model="passwordModified"
-              :rules="passwordRules"
               label="Contraseña*"
               type="password"
               hide-details
@@ -106,7 +99,6 @@
               <v-text-field v-else
               id="password"
               v-model="passwordModified"
-              :rules="passwordRules"
               label="Contraseña*"
               type="text"
               hide-details
@@ -141,7 +133,6 @@
                     v-model="selectedDaysModified" 
                     :label="day" 
                     :value="day"
-                    :rules="timetableRules"
                     >
                   </v-checkbox>
                   </v-col>
@@ -157,7 +148,6 @@
               id="horaInicio" 
               v-model="startingHourModified" 
               type="time"
-              :rules="startHourRules"
               ></v-text-field>
             </v-col>
 
@@ -168,7 +158,6 @@
               id="horaFin" 
               v-model="finishingHourModified" 
               type="time"
-              :rules="finishHourRules"
               ></v-text-field>
             </v-col>
 
@@ -192,7 +181,6 @@
               id="franjaTiempo" 
               v-model="timePeriodModified" 
               type="number"
-              :rules="timePeriodRules"
               >
             </v-text-field>
             </v-col>
@@ -204,7 +192,6 @@
               id="numberOfTables"
               v-model="numberOfTablesModified" 
               type="number"
-              :rules="numberOfTablesRules"
               >
               </v-text-field>
             </v-col>
@@ -322,7 +309,7 @@
           <v-alert v-if="!validPictures" type="error" closable class="my-custom-alert2">
             El tamaño de las imágenes no puede exceder los 2 MB.
             <br>
-            El número de imágenes debe ser de entre 1 y 10.
+            El número de imágenes máximo es 4.
           </v-alert>
         </v-container>
       </v-container>
@@ -337,7 +324,6 @@
   import Footer from '../components/Footer.vue'
   </script>
   
-  <!-- Está separado en dos scripts por el export defaults, en Footer ya hay uno y entra en conflicto con el nuevo export default -->
   <script lang="ts">
   
   import axios from 'axios';
@@ -347,7 +333,6 @@
 
 
   let username = ref('');
-  
   let password = ref('');
   let restaurantname = ref('');
   let email = ref('');
@@ -366,7 +351,7 @@
   let pageIsLoaded = ref(false);
 
   // Atributos modificables
-  let passwordModified = ref(password.value);
+  let passwordModified = ref('');
   let restaurantnameModified = ref('');
   let emailModified = ref('');
   let phoneModified = ref('');
@@ -380,11 +365,37 @@
   let picturesModified: File[] = [];
   let timePeriodModified = ref(0);
   let numberOfTablesModified = ref(0);
-
   let profilePictureModified: File[] = [];
 
 
 
+  let processingRegister = ref(false);
+  // let valid = ref(true);
+  let validUserName = ref(true);
+  let validUserName2 = ref(true);
+  let validEmail = ref(true);
+  let validEmail2 = ref(true);
+  let validPhone = ref(true);
+  let validPhone2 = ref(true);
+  let validRestaurantName = ref(true);
+  let validAddress = ref(true);
+  let validCategory = ref(true);
+  let validPassword = ref(true);
+  let validWeekDays = ref(true);
+  let validStartingHour = ref(true);
+  let validFinishingHour = ref(true);
+  let validTimePeriod = ref(true);
+  let validNumberOfTables = ref(true);
+  let validMenu = ref(true);
+  let validProfilePicture = ref(true);
+  let validPictures = ref(true);
+  let userRegistered = ref(true);
+  let showPassword = ref(true);
+
+
+
+  let daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+  let categories: string[] = ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'];
 
 
   interface timeTable {
@@ -428,6 +439,9 @@
             profilePicture.values = response.data.message.profilePicture;
             pictures.values = response.data.message.pictures;
 
+            // password.value = useAuthStore().user.username
+            // passwordModified.value = password.value;
+
             // Atributos modificables
             passwordModified.value = password.value;
             restaurantnameModified.value = restaurantname.value;
@@ -464,542 +478,309 @@
 
   getRestaurant();
 
+  function checkPassword(): boolean {
+    if (passwordModified.value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(passwordModified.value)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-    export default {
-      data: () => ({
-        processingRegister: false,
-        valid: true,
-        validUserName: true,
-        validUserName2: true,
-        validEmail: true,
-        validEmail2: true,
-        validPhone: true,
-        validPhone2: true,
-        validRestaurantName: true,
-        validAddress: true,
-        validCategory: true,
-        validPassword: true,  
-        validWeekDays: true,
-        validStartingHour: true,
-        validFinishingHour: true,
-        validTimePeriod: true,
-        validNumberOfTables: true,
-        validMenu: true,
-        validProfilePicture: true,
-        validPictures: true,
-        userRegistered: false,
-        showPassword: false,
-        restaurantnameRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'El nombre del establecimiento es obligatorio.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a restaurantnameRules
-        addressRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'La dirección del establecimiento es obligatoria.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a addressRules
-        daysOfWeek: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
-    
-        timetableRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'El horario es obligatorio.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a timetableRules
-        categories: ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'],
-        categoryRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'La categoría es obligatoria.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a categoryRules
-        emailError: '',
-        emailRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'El correo es obligatorio.';
-          },
-          (value: string) => {
-            if (/.+@.+\..+/.test(value)) return true;
-  
-            return 'El correo debe ser válido.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a emailRules
-        phoneError: '',
-        phoneRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'El teléfono es obligatorio.';
-          },
-          (value: string) => {
-            if (/^\d{9}$/.test(value)) return true;
-  
-            return 'El teléfono debe tener 9 dígitos.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a phoneRules
-        usernameRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'El nombre de usuario es obligatorio.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a usernameRules
-        // Patrón de la contraseña [ /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, 'Password must contain at least one lowercase letter, one uppercase letter and one number' ],
-        passwordError: '',
-        passwordRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'La contraseña es obligatoria.';
-          },
-          (value: string) => {
-            if (value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(value)) return true;
-  
-            return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
-        profilePictureRules: [
-          (value: File) => {
-            if (!value) return true;
+  function checkEmail(): boolean {
+    if ((/.+@.+\..+/).test(emailModified.value)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-            const fileSize = value.size;
-            const maxFileSize = 2 * 1024 * 1024; // 2 MB
-            if (fileSize > maxFileSize) {
-              return false;
-            }
-            
-            return true;
-          },
-        ],
-        profilePictureError: '',
-        picturesError: '',
-        menuRules: [
-          (value: File) => {
-            if (!value) return true;
+  async function submitForm() {
+    try {
+      validUserName.value = true;
+      validEmail.value = true;
+      validPhone.value = true;
+      processingRegister.value = false;
 
-            const fileSize = value.size;
-            const maxFileSize = 4 * 1024 * 1024; // 4 MB
+      validUserName.value = true;
+      validUserName2.value = true;
+      validEmail.value = true;
+      validEmail2.value = true;
+      validPhone.value = true;
+      validPhone2.value = true;
+      validRestaurantName.value = true;
+      validAddress.value = true;
+      validCategory.value = true;
+      validPassword.value = true;
+      validWeekDays.value = true;
+      validStartingHour.value = true;
+      validFinishingHour.value = true;
+      validTimePeriod.value = true;
+      validNumberOfTables.value = true;
+      validMenu.value = true;
+      validProfilePicture.value = true;
+      validPictures.value = true;
 
-            if (fileSize > maxFileSize) {
-              return false;
-            }
-            
-            return true;
-          },
-        ],
-        menuError: '',
-        timePeriodRules: [
-          (value: number) => {
-            if (value) {
-              if (value > 0) return true;
-              else return 'El tiempo de franja de reserva debe ser mayor que 0.';
-            }
-            return 'El tiempo de franja de reserva es obligatorio.';
-          },
-        ] as ((value: number) => true | string)[], // Asigna un tipo a timePeriodRules
-        numberOfTablesRules: [
-          (value: number) => {
-            if (value) {
-              if (value > 0) return true;
-              else return 'El número de mesas por franja horaria debe ser mayor que 0.';
-            }
-            return 'El número de mesas por franja horaria es obligatorio.';
-          },
-        ] as ((value: number) => true | string)[], // Asigna un tipo a numberOfTablesRules
-        startHourRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'La hora de inicio es obligatoria.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a startHourRules
-        finishHourRules: [
-          (value: string) => {
-            if (value) return true;
-  
-            return 'La hora de finalización es obligatoria.';
-          },
-        ] as ((value: string) => true | string)[], // Asigna un tipo a finishHourRules
-      }),
-      methods: {
-      submitForm() {
-        // Validar los campos del formulario
-        const isValid = this.validateForm();
-  
-        if (isValid) {
-          
-          this.RegisterRestaurantApi();
+
+      
+      let modifiedRestaurant = {}
+      console.log(password.value);
+      console.log(passwordModified.value);
+
+      if (passwordModified.value !== password.value) {
+        if (checkPassword()) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            password: passwordModified.value
+          }
+          validPassword.value = true;
+        } else {
+          validPassword.value = false;
+          return
         }
-      },
-      controlShowPassword() {
-        this.showPassword = !this.showPassword;
-      },
-      
-      async convertFileToBase64(file: File) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+      }
 
-        reader.onload = () => {
-          resolve(reader.result);
-        };
 
-        reader.onerror = (error) => {
-          reject(error);
-        };
-
-        reader.readAsDataURL(file);
-      });
-    },
-      
-      async RegisterRestaurantApi() {
-        try {
-          this.validUserName = true;
-          this.validEmail = true;
-          this.validPhone = true;
-          this.processingRegister = false;
-
-          let modifiedRestaurant = {}
-
-          if (passwordModified.value !== password.value) {
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              passwd: passwordModified.value
-            }
+      if (restaurantnameModified.value !== restaurantname.value) {
+        // comprobamos que no esté vacío
+        if (restaurantnameModified.value.length > 0) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            restaurantName: restaurantnameModified.value
           }
+          validRestaurantName.value = true;
+        } else {
+          validRestaurantName.value = false;
+          return
+        }
+      }
 
-          if (restaurantnameModified.value !== restaurantname.value) {
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              restaurantName: restaurantnameModified.value
-            }
+      if (emailModified.value !== email.value) {
+        if (checkEmail()) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            email: emailModified.value
           }
+          validEmail.value = true;
+        } else {
+          validEmail.value = false;
+          return
+        }
+      }
 
-          if (emailModified.value !== email.value) {
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              email: emailModified.value
-            }
+      if (phoneModified.value !== phoneModified.value) {
+        if ((/^\d{9}$/).test(phoneModified.value)) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            phoneNumber: phoneModified.value
           }
+          validPhone.value = true;
+        } else {
+          validPhone.value = false;
+          return
+        }
+      }
 
-          if (phoneModified.value !== phone.value) {
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              phoneNumber: phoneModified.value
-            }
+      if (addressModified.value !== address.value) {
+        if (addressModified.value.length > 0) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            restaurantAddress: addressModified.value
           }
+          validAddress.value = true;
+        } else {
+          validAddress.value = false;
+          return
+        }
+      }
 
-          if (addressModified.value !== address.value) {
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              restaurantAddress: addressModified.value
-            }
+      if (categoryModified.value !== category.value) {
+        if (categoryModified.value.length > 0) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            category: categoryModified.value
           }
+          validCategory.value = true;
+        } else {
+          validCategory.value = false;
+          return
+        }
+      }
 
-          if (categoryModified.value !== category.value) {
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              category: categoryModified.value
-            }
+      if (descriptionModified.value !== description.value) {
+        modifiedRestaurant = {
+          ...modifiedRestaurant,
+          description: descriptionModified.value
+        }
+      }
+
+      if ((selectedDaysModified.value !== selectedDays.value) || (startingHourModified.value !== startingHour.value) || (finishingHourModified.value !== finishingHour.value)) {
+        // necesito construir time table comprobando si los valores se han modificado o no
+        const timeTableModified: timeTable = {
+          selectedDays: selectedDaysModified.value,
+          startingHour: startingHourModified.value,
+          finishingHour: finishingHour.value
+        }
+
+        if (selectedDaysModified.value.length === 0) {
+          validWeekDays.value = false;
+        }
+        
+        if (startingHourModified.value.length === 0) {
+          validStartingHour.value = false;
+        }
+
+        if (finishingHourModified.value.length === 0) {
+          validFinishingHour.value = false;
+        }
+        
+        if (validWeekDays.value === true || validStartingHour.value === true || validFinishingHour.value === true) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            timeTable: [timeTableModified]
           }
-
-          if (descriptionModified.value !== description.value) {
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              description: descriptionModified.value
-            }
-          }
-
-          if ((selectedDaysModified.value !== selectedDays.value) || (startingHourModified.value !== startingHour.value) || (finishingHourModified.value !== finishingHour.value)) {
-            // necesito construir time table comprobando si los valores se han modificado o no
-            const timeTableModified: timeTable = {
-              selectedDays: selectedDays.value,
-              startingHour: startingHour.value,
-              finishingHour: finishingHour.value
-            }
-            if (selectedDaysModified.value !== selectedDays.value) {
-              timeTableModified.selectedDays = selectedDaysModified.value;
-            }
-            if (startingHourModified.value !== startingHour.value) {
-              timeTableModified.startingHour = startingHourModified.value;
-            }
-            if (finishingHourModified.value !== finishingHour.value) {
-              timeTableModified.finishingHour = finishingHourModified.value;
-            }
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              timeTable: [timeTableModified]
-            }
-          }
-
-          console.log('timePeriodModified:', timePeriodModified);
-          console.log('timePeriod.value:', timePeriod.value)
-          console.log('numberOfTablesModified:', numberOfTablesModified);
-          console.log('numberOfTables.value:', numberOfTables.value)
-
-
-          if (timePeriodModified.value !== (timePeriod.value as unknown as number) || numberOfTablesModified.value !== (numberOfTables.value as unknown as number)) {
-            console.log('parte 1')
-            const availableModified: available = {
-              timePeriod: timePeriod.value as unknown as number,
-              numberOfTables: numberOfTables.value as unknown as number
-            }
-            if (timePeriodModified.value !== (timePeriod.value as unknown as number)) {
-              availableModified.timePeriod = timePeriodModified.value;
-              console.log('parte 2')
-            }
-            if (numberOfTablesModified.value !== (numberOfTables.value as unknown as number)) {
-              availableModified.numberOfTables = numberOfTablesModified.value;
-              console.log('parte 3')
-            }
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              available: [availableModified]
-            }
-          }
-
-          if (menuModified.value.length > 0) {
-            const menuBase64 = await this.convertFileToBase64(menuModified.value[0]);
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              menu: menuBase64
-            }
-          }
-
-          if (profilePictureModified.length > 0) {
-            const profilePictureBase64 = await this.convertFileToBase64(profilePictureModified[0]);
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              profilePicture: profilePictureBase64
-            }
-          }
-
-          if (picturesModified.length > 0) {
-            const picturesBase64 = [];
-            for (let i = 0; i < picturesModified.length; i++) {
-              const pictureBase64 = await this.convertFileToBase64(picturesModified[i]);
-              picturesBase64.push(pictureBase64);
-            }
-            modifiedRestaurant = {
-              ...modifiedRestaurant,
-              pictures: picturesBase64
-            }
-          }
-
-
-
-
-
-          // CONTINUAR POR AQUÍ
-
-
-
+        } else {
+          return
+        }
+      }
 
       
 
-          
-          this.processingRegister = true;
-          // const response = await axios.put(`${baseUrl}users/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedUser);
-          
-          //! ****** SÓLO PASAR LOS ATRIBUTOS MODIFICADOS, NO TODOS
-          const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedRestaurant);
-          this.processingRegister = false;
-          const responsePdfUpload = {status: 201};
-          // Añade la imagen al contenedor
-          if (response.status === 201 && responsePdfUpload.status === 201) {
-            //this.$router.push('/login');
-            //console.log('Restaurante registrado correctamente');
-            this.userRegistered = true;
-            const authStore = useAuthStore();
-            return authStore.login(username.value, password.value).catch(error => console.log(error));
-          
+      if (timePeriodModified.value !== Number(timePeriod.value) || numberOfTablesModified.value !== Number(numberOfTables.value)) {
+        console.log('parte 1')
+        const availableModified: available = {
+          timePeriod: Number(timePeriodModified.value),
+          numberOfTables: Number(numberOfTablesModified.value)
+        }
+        
+        if (availableModified.timePeriod <= 0 || Number(timePeriod.value)) {
+          validTimePeriod.value = false;
+        }
+
+        if (availableModified.numberOfTables <= 0 || Number(numberOfTables.value)) {
+          validNumberOfTables.value = false;
+        }
+
+        if (validTimePeriod.value === true || validNumberOfTables.value === true) {
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            available: [availableModified]
           }
-        } catch (error) {
-          this.processingRegister = false;
-          if (axios.isAxiosError(error) && error.response) {
-          const response = error.response;
-          const textContainer = this.$refs.textContainer as HTMLElement;
-          const textElement = document.createElement('h3');
-  
-          console.error('Error al realizar la solicitud:', response.status, response.statusText);
-          console.error('Código de error:', response.data.code);
-          if (response.status === 400) {
-            console.error('Faltan campos obligatorios');
-            if (response.data.code === 1) {
-              //console.error('Faltan campos obligatorios');
-              textElement.innerText = 'Faltan campos obligatorios';
-            } 
-            else if (response.data.code === 2) {
-              //console.error('El nombre de usuario ya existe');
-              this.validUserName = false;
-            } 
-            else if (response.data.code === 3) {
-              //console.error('El correo ya existe');
-              this.validEmail = false;
-            } 
-            else if (response.data.code === 4) {
-              this.validPhone = false;
+        } else {
+          return
+        }
+      }
+
+      if (menuModified.value.length > 0) {
+        // tamaño máximo = 4mb
+        if ((menuModified.value[0] as File).size > 1024*1024*4) {
+          validMenu.value = false;
+          return
+        } else {
+          const menuBase64 = await convertFileToBase64(menuModified.value[0]);
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            menu: menuBase64
+          }
+        }
+      }
+
+      if (profilePictureModified.length > 0) {
+        // tamaño máximo = 2mb
+        if ((profilePictureModified[0] as File).size > 1024*1024*2) {
+          validProfilePicture.value = false;
+          return
+        } else {
+          const profilePictureBase64 = await convertFileToBase64(profilePictureModified[0]);
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            profilePicture: profilePictureBase64
+          }
+        }
+      }
+
+      if (picturesModified.length > 0) {
+        // tamaño máximo = 2mb
+        // máximo 4 fotos
+        const picturesBase64 = [];
+        if (picturesModified.length > 4) {
+          validPictures.value = false;
+          return
+        } 
+        else {
+          for (let i = 0; i < picturesModified.length; i++) {
+            if ((picturesModified[i] as File).size > 1024*1024*2) {
+              validPictures.value = false;
+              return
             } 
             else {
-            //console.error('Error desconocido:', response.status);
-            textElement.innerText = 'Error desconocido';
-            }
-          } 
-          else {
-            //console.error('Error al realizar la solicitud:', error.message);
-          }
-  
-          // Añade el elemento de texto al contenedor
-          textContainer.innerHTML = '';
-          textContainer.appendChild(textElement);
-          }
-  
-        }
-      },
-  
-      validateForm() {
-        // Lógica para validar cada campo según las reglas definidas
-        // Devuelve true si el formulario es válido, false de lo contrario
-        // También puedes actualizar el estado "valid" si es necesario
-        
-        this.emailError = '';
-        this.phoneError = '';
-        this.passwordError = '';
-        this.menuError = '';
-        this.validEmail = true;
-        this.validPhone = true;
-
-        
-        this.validPhone2 = this.phoneRules.every(rule => {
-          const isValid = rule(phone.value) === true;
-          if (!isValid) this.phoneError = rule(phone.value) as string;
-          return isValid;
-        });
-        console.log('this.validPhone2:', this.validPhone2);
-
-        this.validEmail2 = this.emailRules.every(rule => {
-          const isValid = rule(email.value) === true;
-          return isValid;
-        });
-        console.log('this.validEmail2:', this.validEmail2);
-  
-        this.validPassword = this.passwordRules.every(rule => {
-          const isValid = rule(password.value) === true;
-          if (!isValid) this.passwordError = rule(password.value) as string;
-          return isValid;
-        });
-
-        this.validRestaurantName = this.restaurantnameRules.every(rule => {
-          const isValid = rule(restaurantname.value) === true;
-          return isValid;
-        });
-
-        this.validAddress = this.addressRules.every(rule => {
-          const isValid = rule(address.value) === true;
-          return isValid;
-        });
-
-        this.validCategory = this.categoryRules.every(rule => {
-          const isValid = rule(category.value) === true;
-          return isValid;
-        });
-        
-        this.validUserName2 = this.usernameRules.every(rule => {
-          const isValid = rule(username.value) === true;
-          return isValid;
-        });
-
-
-        this.validWeekDays = this.timetableRules.every(rule => {
-          const isValid = rule(selectedDays.value.join(',')) === true;
-          return isValid;
-        });
-
-        // hora de inicio, comprobar que no esté vacío
-        this.validStartingHour = this.startHourRules.every(rule => {
-          const isValid = rule(startingHour.value !== null ? startingHour.value : '') === true;
-          return isValid;
-        });
-
-        // hora de finalización, comprobar que no esté vacíoue
-        this.validFinishingHour = this.finishHourRules.every(rule => {
-          const isValid = rule(finishingHour.value !== null ? finishingHour.value : '') === true;
-          return isValid;
-        });
-
-        // tiempo de franja de reserva, comprobar que no esté vacío y que sea mayor que 0
-        this.validTimePeriod = this.timePeriodRules.every(rule => {
-          const isValid = rule(timePeriod.value !== null ? Number(timePeriod.value) : 0) === true;
-          return isValid;
-        });
-
-        // número de mesas por franja horaria, comprobar que no esté vacío y que sea mayor que 0
-        this.validNumberOfTables = this.numberOfTablesRules.every(rule => {
-          const isValid = rule(Number(numberOfTables.value !== null ? numberOfTables.value : 0)) === true;
-          return isValid;
-        });
-
-
-        // menú, tamaño no debe exceder 10mb
-        // exceedsSizeLimit.value = true;
-        // utilizar menuRules para comprobar si el menu es valido o no
-        const rule = this.menuRules[0];
-        this.validMenu = true;
-        const isValid2 = menu.value.length > 0 && rule(menu.value[0]) === true;
-        if (!isValid2) {
-          this.menuError = rule(menu.value[0]) as unknown as string;
-          this.validMenu = false;
-          //console.log('Fallo, el menú supera los 4mb');
-        }
-        
-
-        // foto de perfil, tamaño no debe exceder 3mb, pero no es obligatoria
-        // utilizar profilePictureRules para comprobar si la foto de perfil es valida o no
-        const rule2 = this.profilePictureRules[0];
-        this.validProfilePicture = true;
-        const file = new File([profilePicture[0]], "filename");
-        const isValid = rule2(file) === true;
-        if (!isValid) {
-          const file = new File([profilePicture[0]], "filename");
-          this.profilePictureError = rule2(file) as unknown as string;
-          this.validProfilePicture = false;
-          //console.log('Fallo, la foto de perfil supera los 2mb');
-        }
-
-        // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
-        this.validPictures = true;
-        if (pictures.length > 4) {
-          this.validPictures = false;
-          //console.log('Fallo, el número de imágenes está limitado a 4');
-        }
-        else {
-          for (let i = 0; i < pictures.length; i++) {
-            const rule3 = this.profilePictureRules[0]; // las reglas son las mismas que para la foto de perfil
-            const file = new File([pictures[i]], "filename");
-            const isValid3 = rule3(file) === true;
-            if (!isValid3) {
-              const file = new File([pictures[i]], "filename");
-              this.picturesError = rule3(file) as unknown as string;
-              this.validPictures = false; // si alguna imagen no es válida, el formulario ya no es válido
-              //console.log('Fallo, alguna/s imagen/es superan los 2mb');
+              const pictureBase64 = await convertFileToBase64(picturesModified[i]);
+              picturesBase64.push(pictureBase64);
+              modifiedRestaurant = {
+                ...modifiedRestaurant,
+                pictures: picturesBase64
+              }
             }
           }
         }
+      }
 
-        // Actualizar el estado "valid" si es necesario
-        this.valid = this.validEmail2 && this.validPhone2 && this.validUserName && this.validUserName2 && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
-        return this.valid;
-      },
-    },
-    };
+      
+      processingRegister.value = true;
+      const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedRestaurant);
+      processingRegister.value = false;
+      const responsePdfUpload = {status: 201};
+      // Añade la imagen al contenedor
+      if (response.status === 201 && responsePdfUpload.status === 201) {
+        //$router.push('/login');
+        //console.log('Restaurante registrado correctamente');
+        userRegistered.value = true;
+        const authStore = useAuthStore();
+        return authStore.login(username.value, password.value).catch(error => console.log(error));
+      
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        const response = error.response;
+        if (response.status === 400) {
+          if (response.data.code === 3) {
+            validEmail.value = true;
+          } else if (response.data.code === 4) {
+            validPhone.value = true;
+          } else {
+            console.error('Error al realizar la solicitud:', error.message);
+  
+          }
+        } else {
+          console.error('Error al realizar la solicitud:', error.message);
+          // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+        } 
+      } else {
+        console.error('Error al realizar la solicitud');
+        // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+      }
+    }  
+  }
 
   
+  
+
+  async function convertFileToBase64(file: File){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload =  () => {
+        resolve(reader.result);
+      };
+
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function controlShowPassword() {
+    showPassword.value = !showPassword.value;
+  }
   </script>
