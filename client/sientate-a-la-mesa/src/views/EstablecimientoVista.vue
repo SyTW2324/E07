@@ -255,57 +255,60 @@ function onClick() {
               </v-card>
             </v-col>
           </v-row>
-        </v-container>
-      <v-container class="d-flex align-center justify-center" > 
-        <v-container v-show="calendar"  >
-                <v-row>
-                  <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
-                </v-row>
-                <v-row justify="center" class="mt-3">
-                  <v-btn @click="selectionDay()">Selección</v-btn>
-                </v-row>
-              </v-container>
-              <v-container style="align-items: center: inherit;" v-show="!calendar">
-                <v-card :loading="loading" class="mx-auto my-12 " max-width="1000" >
-                  <template v-slot:loader="{ isActive }">
-                    <v-progress-linear :active="isActive" color="teal" height="4" indeterminate></v-progress-linear>
-                  </template>
-                  <v-card-title>Disponibilidad: </v-card-title>
-
-                  <div class="px-10">
-                    <v-chip-group v-model="selection">
-                      <!-- Utiliza v-for para iterar sobre el array de horas -->
-                      <v-chip v-for="hour in availableHours" :key="hour">{{ hour }}</v-chip>
-                    </v-chip-group>
-                  </div>
-
-                  <v-card-actions>
-                    <v-btn color="teal" variant="text" @click="reserve(selection)">Reservar</v-btn>
-                  </v-card-actions>
-                </v-card>
-                
-              </v-container>
+        </v-container >
         <v-container>
-          <v-card class="mx-auto"  theme=""> 
-                <v-carousel cycle height="400" hide-delimiters >
-                    <v-carousel-item
-                      v-for="(item,i) in pictures"
-                      :key="i"
-                      :src="item"
-                    ></v-carousel-item>
-                  </v-carousel>
-                <v-card-title> Sobre nosotros</v-card-title>
-                <v-card-text>
-                  <p>{{ email }} </p>
-                  <p>{{ phoneNumber }} </p>
-                  <p>{{ restaurantAddress }} </p>
-                  <p>{{ category }} </p>
-                  
-                </v-card-text>
-              </v-card>
-          </v-container>
+          <v-row >     
+                  <v-col >
+                            <v-container v-if="calendar"  >
+                              <v-row>
+                                <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
+                              </v-row>
+                              <v-row justify="center" class="mt-3">
+                                <v-btn @click="selectionDay()">Selección</v-btn>
+                              </v-row>
+                            </v-container>
+                            <v-container style="align-items: center: inherit;" v-if="!calendar">
+                              <v-card :loading="loading" class="mx-auto my-12 " max-width="1000" >
+                                <template v-slot:loader="{ isActive }">
+                                  <v-progress-linear :active="isActive" color="teal" height="4" indeterminate></v-progress-linear>
+                                </template>
+                                <v-card-title>Disponibilidad: </v-card-title>
+
+                                <div class="px-10">
+                                  <v-chip-group v-model="selection">
+                                    <!-- Utiliza v-for para iterar sobre el array de horas -->
+                                    <v-chip v-for="hour in availableHours" :key="hour">{{ hour }}</v-chip>
+                                  </v-chip-group>
+                                </div>
+
+                                <v-card-actions>
+                                  <v-btn color="teal" variant="text" @click="reserve(selection)">Reservar</v-btn>
+                                </v-card-actions>
+                              </v-card>
+                            </v-container>
+                  </v-col>          
+                  <v-col >
+                      <v-card class="mx-auto"  theme=""> 
+                        <v-carousel cycle height="400" hide-delimiters >
+                            <v-carousel-item
+                              v-for="(item,i) in pictures"
+                              :key="i"
+                              :src="item"
+                            ></v-carousel-item>
+                          </v-carousel>
+                        <v-card-title> Sobre nosotros</v-card-title>
+                        <v-card-text>
+                          <p>{{ email }} </p>
+                          <p>{{ phoneNumber }} </p>
+                          <p>{{ restaurantAddress }} </p>
+                          <p>{{ category }} </p>
+                          
+                        </v-card-text>
+                      </v-card>
+                    </v-col>
+          </v-row>
       </v-container>
-  
+      
       <v-container>
         <v-container>
               <v-container>

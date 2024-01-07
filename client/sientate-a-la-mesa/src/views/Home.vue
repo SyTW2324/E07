@@ -3,9 +3,15 @@
 
 <v-app>
 
-  <v-app-bar>
+  <v-app-bar
+  :image="imgbar"
+  >
       
-    
+  <template v-slot:image>
+          <v-img
+          gradient="to top right, rgba(220, 230, 245, 0.6), rgba(245, 240, 255, 0.2)"
+          ></v-img>
+  </template>
     <v-app-bar-title></v-app-bar-title>
 
     <!-- <v-btn density="default" color="teal">Acceso restaurantes</v-btn> -->
@@ -14,12 +20,14 @@
 
   <v-main>
 
-    <v-card class="mx-auto my-16 my-custom-card-home" color="teal" >
-      <v-card-title class="my-custom-card-home"> Bienvenido a sientate a la mesa</v-card-title>
-
-      
+   
+    <v-container style="padding-bottom: 3em; padding-top: 3em;">
+    <v-card color="teal" align-center >
+      <!-- Utiliza las clases de Vuetify para centrar la imagen -->
+      <v-img class="mx-auto" style="height: 20%; width: 40%;" :src="imgPresentacion"></v-img>
     </v-card>
-    <v-divider></v-divider>
+  </v-container>
+    <v-divider style="padding: 1em; " ></v-divider>
     <v-container>
     <v-row justify="center" align="center">
       <router-link to="/login">
@@ -53,4 +61,6 @@
 
 <script setup lang="ts">
 import Footer from '../components/Footer.vue'
+import imgPresentacion from '../img/presentacion2.png';
+import imgbar from '../img/image.jpg';
 </script>
