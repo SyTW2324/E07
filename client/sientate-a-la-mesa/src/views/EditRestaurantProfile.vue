@@ -496,6 +496,8 @@
 
   async function submitForm() {
     try {
+      processingRegister.value = true;
+
       validUserName.value = true;
       validEmail.value = true;
       validPhone.value = true;
@@ -715,19 +717,21 @@
             else {
               const pictureBase64 = await convertFileToBase64(picturesModified[i]);
               picturesBase64.push(pictureBase64);
-              modifiedRestaurant = {
-                ...modifiedRestaurant,
-                pictures: picturesBase64
-              }
+    
             }
+          }
+          modifiedRestaurant = {
+            ...modifiedRestaurant,
+            pictures: picturesBase64
           }
         }
       }
-
       
-      processingRegister.value = true;
+
       const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedRestaurant);
+      
       processingRegister.value = false;
+
       const responsePdfUpload = {status: 201};
       // Añade la imagen al contenedor
       if (response.status === 201 && responsePdfUpload.status === 201) {
@@ -735,10 +739,11 @@
         //console.log('Restaurante registrado correctamente');
         userRegistered.value = true;
         const authStore = useAuthStore();
-        return authStore.login(username.value, password.value).catch(error => console.log(error));
+        return authStore.reLogin(username.value, password.value).catch(error => console.log(error));
       
       }
-    } catch (error) {
+    } 
+    catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const response = error.response;
         if (response.status === 400) {
