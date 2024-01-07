@@ -12,6 +12,7 @@ import { UserModel } from '../../models/users/users-model.js';
 import { RestaurantModel } from '../../models/restaurants/restaurants-models.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
+import { jwtDecode } from 'jwt-decode';
 
 
 export const loginRouter = express.Router();
@@ -20,7 +21,6 @@ export const loginRouter = express.Router();
  loginRouter.post('/login/authenticate', async (req, res) => {
   
     try {
-
       if(req.body.userName && req.body.password) {
         // const login: loginInterface = {
         //   userName: req.body.userName,
@@ -38,6 +38,7 @@ export const loginRouter = express.Router();
             const userToken = jsonwebtoken.sign({ username: user.userName, password: user.password }, secretKey, { expiresIn: '1h' });
             const resMessage = {
               username: user.userName,
+              password: user.password,
               accessToken: userToken,
               tipo: "user",
               profilePhoto: " "
@@ -53,6 +54,7 @@ export const loginRouter = express.Router();
             const userToken = jsonwebtoken.sign({ username: restaurant.userName, password: restaurant.passwd }, secretKey, { expiresIn: '1h' });
             const resMessage = {
               username: restaurant.userName,
+              password: restaurant.passwd,
               accessToken: userToken,
               tipo: "restaurant",
               profilePhoto: " ",
@@ -65,7 +67,7 @@ export const loginRouter = express.Router();
             }
             return res.status(200).send({ code: 0, message: resMessage});
           } else{
-            return res.status(404).send({code: 4, message: "Contraseña incorrecta"});
+            return res.status(400).send({code: 4, message: "Credenciales incorrectas"});
           }
   
       } else {
