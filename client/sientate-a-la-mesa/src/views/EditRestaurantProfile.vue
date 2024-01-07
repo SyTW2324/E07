@@ -197,7 +197,7 @@
             </v-text-field>
             </v-col>
 
-            <!-- Número de personas -->
+            <!-- Número de mesas -->
             <v-col cols="12" md="4">
               <label>Número de mesas por franja horaria*:</label>
               <v-text-field 
@@ -345,8 +345,10 @@
   import { useAuthStore } from '../stores/useAuthStore';
   import { ref } from 'vue';
 
+
   let username = ref('');
-  let password = ref(useAuthStore().user.password);
+  
+  let password = ref('');
   let restaurantname = ref('');
   let email = ref('');
   let phone = ref('');
@@ -376,8 +378,9 @@
   let finishingHourModified = ref('');
   let menuModified = ref([]);
   let picturesModified: File[] = [];
-  let timePeriodModified = ref('');
-  let numberOfTablesModified = ref('');
+  let timePeriodModified = ref(0);
+  let numberOfTablesModified = ref(0);
+
   let profilePictureModified: File[] = [];
 
 
@@ -435,8 +438,8 @@
             selectedDaysModified.value = selectedDays.value;
             startingHourModified.value = startingHour.value;
             finishingHourModified.value = finishingHour.value;
-            timePeriodModified.value = timePeriod.value;
-            numberOfTablesModified.value = numberOfTables.value;
+            timePeriodModified.value = timePeriod.value as unknown as number;
+            numberOfTablesModified.value = numberOfTables.value as unknown as number;
             descriptionModified.value = description.value;
             menuModified.value = menu.value;
             profilePictureModified.values = profilePicture.values;
@@ -737,18 +740,25 @@
             }
           }
 
-          if (timePeriodModified.value !== timePeriod.value || numberOfTablesModified.value !== numberOfTables.value) {
+          console.log('timePeriodModified:', timePeriodModified);
+          console.log('timePeriod.value:', timePeriod.value)
+          console.log('numberOfTablesModified:', numberOfTablesModified);
+          console.log('numberOfTables.value:', numberOfTables.value)
+
+
+          if (timePeriodModified.value !== (timePeriod.value as unknown as number) || numberOfTablesModified.value !== (numberOfTables.value as unknown as number)) {
+            console.log('parte 1')
             const availableModified: available = {
-              timePeriod: timePeriod.value,
-              numberOfTables: numberOfTables.value
+              timePeriod: timePeriod.value as unknown as number,
+              numberOfTables: numberOfTables.value as unknown as number
             }
-            if (timePeriodModified.value !== timePeriod.value) {
-              if (typeof timePeriodModified.value === 'number') {
-                availableModified.timePeriod = timePeriodModified.value.toString();
-              }
+            if (timePeriodModified.value !== (timePeriod.value as unknown as number)) {
+              availableModified.timePeriod = timePeriodModified.value;
+              console.log('parte 2')
             }
-            if (numberOfTablesModified.value !== numberOfTables.value) {
+            if (numberOfTablesModified.value !== (numberOfTables.value as unknown as number)) {
               availableModified.numberOfTables = numberOfTablesModified.value;
+              console.log('parte 3')
             }
             modifiedRestaurant = {
               ...modifiedRestaurant,
