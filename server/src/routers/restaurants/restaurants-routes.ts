@@ -200,6 +200,7 @@ restaurantsRouter.delete('/restaurants', async (req, res) => {
 restaurantsRouter.put('/restaurants', async (req, res) => {
   try{
     if (req.query.token && req.query.userName) {
+
       const verified = jsonwebtoken.verify(req.query.token as string, secretKey);
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
@@ -223,6 +224,7 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
             'menu',
             'availability',
           ];
+          console.log(req.body);
           const modifiedAtributes = Object.keys(req.body);
           const isValidOperation = modifiedAtributes.every((atribute) => atributesModifiedEnable.includes(atribute));
           if (!isValidOperation) {
