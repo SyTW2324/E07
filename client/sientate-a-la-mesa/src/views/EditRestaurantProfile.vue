@@ -315,6 +315,9 @@
             <br>
             El número de imágenes máximo es 4.
           </v-alert>
+          <v-alert v-if="userRegistered == true" type="success" closable class="my-custom-alert">
+            Perfil modificado correctamente.
+          </v-alert>
         </v-container>
       </v-container>
       
@@ -333,6 +336,7 @@
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
   import { ref } from 'vue';
+  import router from '../router';
 
 
   let username = ref('');
@@ -393,7 +397,7 @@
   let validMenu = ref(true);
   let validProfilePicture = ref(true);
   let validPictures = ref(true);
-  let userRegistered = ref(true);
+  let userRegistered = ref(false);
   let showPassword = ref(true);
 
   let daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
@@ -528,7 +532,7 @@
         if (checkPassword()) {
           modifiedRestaurant = {
             ...modifiedRestaurant,
-            password: passwordModified.value
+            passwd: passwordModified.value
           }
           validPassword.value = true;
         } else {
@@ -565,7 +569,7 @@
         }
       }
 
-      if (phoneModified.value !== phoneModified.value) {
+      if (phoneModified.value !== phone.value) {
         if ((/^\d{9}$/).test(phoneModified.value)) {
           modifiedRestaurant = {
             ...modifiedRestaurant,
@@ -661,7 +665,7 @@
         if (validTimePeriod.value === true || validNumberOfTables.value === true) {
           modifiedRestaurant = {
             ...modifiedRestaurant,
-            available: [availableModified]
+            availability: [availableModified]
           }
         } else {
           return
@@ -728,15 +732,12 @@
       
       processingRegister.value = false;
 
-      const responsePdfUpload = {status: 201};
       // Añade la imagen al contenedor
-      if (response.status === 201 && responsePdfUpload.status === 201) {
-        //$router.push('/login');
-        //console.log('Restaurante registrado correctamente');
+      if (response.data.code === 0) {
         userRegistered.value = true;
         const authStore = useAuthStore();
-        return authStore.reLogin(username.value, password.value).catch(error => console.log(error));
-      
+        await authStore.reLogin(username.value, passwordModified.value);
+        router.push('/my-profile-restaurants');
       }
     } 
     catch (error) {
@@ -747,7 +748,10 @@
             validEmail.value = true;
           } else if (response.data.code === 4) {
             validPhone.value = true;
-          } else {
+          } else if (response.data.code === 1) {
+            console.log('Error al realizar la solicitud:', error.message);
+          } 
+          else {
             console.error('Error al realizar la solicitud:', error.message);
   
           }

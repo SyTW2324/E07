@@ -80,6 +80,7 @@ export const useAuthStore = defineStore({
                 localStorage.removeItem('user');
                 localStorage.removeItem('profilePhoto');
                 const result = await axios.post(`${baseUrl}login/authenticate`, { userName: username, password: passwordInput });
+                console.log(result);
                 if (result.data.code == 0) {
                     // {username: data.message.username, token: data.message.accessToken, tipo: data.message.tipo, profilePhoto: data.message.profilePhoto, pictures: data.message.pictures}
                     const resultUser = {
@@ -93,13 +94,6 @@ export const useAuthStore = defineStore({
                     this.password = result.data.message.password;
                     localStorage.setItem('user', JSON.stringify(resultUser));
                     localStorage.setItem('profilePhoto', resultUser.profilePhoto);
-
-                    if (this.user.tipo === 'user') {
-                        router.push('/home-base'); // cambio para que lleve a la home-base
-                    }
-                    else if (this.user.tipo === 'restaurant') {
-                        router.push('/home-restaurants');
-                    }
                     return {code: 0, message: "Usuario logeado"};
                 }
                 else {
