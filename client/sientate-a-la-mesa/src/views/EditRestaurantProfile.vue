@@ -2,7 +2,15 @@
 
   <v-app>
     <Barnav></Barnav>
-    <v-main>
+    <v-main v-if="pageIsLoaded == false">
+      <v-container class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;">
+            <v-progress-circular
+            indeterminate
+            size="150" 
+            color="teal"></v-progress-circular> 
+      </v-container>
+    </v-main>
+    <v-main v-if="pageIsLoaded == true">
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
         <h1>Editar perfil de mi restaurante</h1>
       </v-container>
@@ -392,8 +400,6 @@
   let userRegistered = ref(true);
   let showPassword = ref(true);
 
-
-
   let daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   let categories: string[] = ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'];
 
@@ -418,6 +424,7 @@
       if (authStore.isExpired() === true) {
           const userToken = authStore.getToken();
           const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
+          pageIsLoaded.value = true;
           console.log('Datos obtenidos de la API', response.data);
           if (response.data.code === 0) {
             username.value = response.data.message.userName;
@@ -497,7 +504,6 @@
   async function submitForm() {
     try {
       processingRegister.value = true;
-
       validUserName.value = true;
       validEmail.value = true;
       validPhone.value = true;
