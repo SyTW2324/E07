@@ -182,7 +182,8 @@ let surname = ref("");
 let email = ref("");
 let phoneNumber = ref("");
 let address = ref("");
-let password = ref(useAuthStore().user.password);
+
+let password = ref(useAuthStore().getPassWord());
 
 
 
@@ -202,7 +203,7 @@ let existPhone = ref(false);
 /// Datos modificados
 let modifiedProfilePhoto = ref<File[]>([]);
 
-let modifiedPassword = ref(password.value);
+let modifiedPassword = ref(useAuthStore().getPassWord());
 let modifedPhoneNumber = ref("");
 let modifiedEmail = ref("");
 let modifiedAddress = ref("");
@@ -245,7 +246,7 @@ async function getUser() {
 getUser();
 
 function checkPassword(): boolean {
-  if (modifiedPassword.value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(modifiedPassword.value)) {
+  if (modifiedPassword.value && modifiedPassword.value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(modifiedPassword.value)) {
     return true;
   } else {
     return false;

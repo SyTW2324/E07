@@ -14,7 +14,6 @@
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
         <h1>Editar perfil de mi restaurante</h1>
       </v-container>
-  
       <v-container>
   
         <v-form @submit.prevent="submitForm">
@@ -232,9 +231,6 @@
         </v-container>
 
       </v-container>
-      <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
-        <div ref="textContainer"></div>
-      </v-container>
 
       <!-- Alertas -->
       <v-container class="d-flex align-center justify-center" style="min-height: 10px">
@@ -321,7 +317,9 @@
           </v-alert>
         </v-container>
       </v-container>
+      
     </v-main>
+
     <Footer></Footer>
   </v-app>
   
@@ -330,9 +328,6 @@
   <script setup lang="ts">
   import Barnav from '../components/Barnav.vue';
   import Footer from '../components/Footer.vue'
-  </script>
-  
-  <script lang="ts">
   
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
@@ -341,7 +336,8 @@
 
 
   let username = ref('');
-  let password = ref('');
+
+  let password = ref(useAuthStore().getPassWord());
   let restaurantname = ref('');
   let email = ref('');
   let phone = ref('');
@@ -359,7 +355,7 @@
   let pageIsLoaded = ref(false);
 
   // Atributos modificables
-  let passwordModified = ref('');
+  let passwordModified = ref(useAuthStore().getPassWord());
   let restaurantnameModified = ref('');
   let emailModified = ref('');
   let phoneModified = ref('');
@@ -417,14 +413,12 @@
 
 
   async function getRestaurant() {
-    pageIsLoaded.value = false;
     const authStore = useAuthStore();
     console.log('dentro getrestaurant()')
     if (authStore.user) {
       if (authStore.isExpired() === true) {
           const userToken = authStore.getToken();
           const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-          pageIsLoaded.value = true;
           console.log('Datos obtenidos de la API', response.data);
           if (response.data.code === 0) {
             username.value = response.data.message.userName;
@@ -462,18 +456,14 @@
             timePeriodModified.value = timePeriod.value as unknown as number;
             numberOfTablesModified.value = numberOfTables.value as unknown as number;
             descriptionModified.value = description.value;
-            menuModified.value = menu.value;
-            profilePictureModified.values = profilePicture.values;
-            picturesModified.values = pictures.values;
 
 
 
-            pageIsLoaded.value = true;
           } 
           else {
             authStore.logout();
           }
-
+          pageIsLoaded.value = true;
       } else {
         authStore.logout();
       }
@@ -507,7 +497,7 @@
       validUserName.value = true;
       validEmail.value = true;
       validPhone.value = true;
-      processingRegister.value = false;
+
 
       validUserName.value = true;
       validUserName2.value = true;
@@ -660,11 +650,11 @@
           numberOfTables: Number(numberOfTablesModified.value)
         }
         
-        if (availableModified.timePeriod <= 0 || Number(timePeriod.value)) {
+        if (availableModified.timePeriod <= 0 ) {
           validTimePeriod.value = false;
         }
 
-        if (availableModified.numberOfTables <= 0 || Number(numberOfTables.value)) {
+        if (availableModified.numberOfTables <= 0 ) {
           validNumberOfTables.value = false;
         }
 
