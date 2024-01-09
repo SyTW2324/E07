@@ -727,18 +727,41 @@
         }
       }
       
-
-      const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedRestaurant);
-      
-      processingRegister.value = false;
-
-      // Añade la imagen al contenedor
-      if (response.data.code === 0) {
-        userRegistered.value = true;
-        const authStore = useAuthStore();
-        await authStore.reLogin(username.value, passwordModified.value);
-        router.push('/my-profile-restaurants');
+      if (!validUserName.value ||
+        !validUserName2.value ||
+        !validEmail.value ||
+        !validEmail2.value ||
+        !validPhone.value ||
+        !validPhone2.value ||
+        !validRestaurantName.value ||
+        !validAddress.value ||
+        !validCategory.value ||
+        !validPassword.value ||
+        !validWeekDays.value ||
+        !validStartingHour.value ||
+        !validFinishingHour.value ||
+        !validTimePeriod.value ||
+        !validNumberOfTables.value ||
+        !validMenu.value ||
+        !validProfilePicture.value ||
+        !validPictures.value) {
+          console.log('validaciones incorrectas')
+          return
       }
+      else {
+        console.log('validaciones correctas')
+        const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedRestaurant);
+        processingRegister.value = false;
+  
+        // Añade la imagen al contenedor
+        if (response.data.code === 0) {
+          userRegistered.value = true;
+          const authStore = useAuthStore();
+          await authStore.reLogin(username.value, passwordModified.value);
+          router.push('/my-profile-restaurants');
+        }
+      }
+      
     } 
     catch (error) {
       if (axios.isAxiosError(error) && error.response) {
