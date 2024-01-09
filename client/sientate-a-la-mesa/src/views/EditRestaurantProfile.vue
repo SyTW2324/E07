@@ -423,12 +423,10 @@
 
   async function getRestaurant() {
     const authStore = useAuthStore();
-    console.log('dentro getrestaurant()')
     if (authStore.user) {
       if (authStore.isExpired() === true) {
           const userToken = authStore.getToken();
-          const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`)
-          console.log('Datos obtenidos de la API', response.data);
+          const response = await axios.get(`${baseUrl}restaurants/?token=${userToken}&userName=${authStore.user.username}`);
           if (response.data.code === 0) {
             username.value = response.data.message.userName;
             restaurantname.value = response.data.message.restaurantName;
@@ -651,7 +649,6 @@
       
 
       if (timePeriodModified.value !== Number(timePeriod.value) || numberOfTablesModified.value !== Number(numberOfTables.value)) {
-        console.log('parte 1')
         const availableModified: available = {
           timePeriod: Number(timePeriodModified.value),
           numberOfTables: Number(numberOfTablesModified.value)
@@ -748,11 +745,9 @@
         !validMenu.value ||
         !validProfilePicture.value ||
         !validPictures.value) {
-          console.log('validaciones incorrectas')
           return
       }
       else {
-        console.log('validaciones correctas')
         const response = await axios.put(`${baseUrl}restaurants/?token=${useAuthStore().getToken()}&userName=${useAuthStore().user.username}`, modifiedRestaurant);
         processingRegister.value = false;
   
@@ -775,20 +770,16 @@
           } else if (response.data.code === 4) {
             validPhone.value = false;
           } else if (response.data.code === 1) {
-            console.log('Error al realizar la solicitud:', error.message);
             validRequest.value = false;
           } 
           else {
-            console.error('Error al realizar la solicitud:', error.message);
             validRequest.value = false;
   
           }
         } else {
-          console.error('Error al realizar la solicitud:', error.message);
           validRequest.value = false;
         } 
       } else {
-        console.error('Error al realizar la solicitud');
         validRequest.value = false;
       }
     }  
