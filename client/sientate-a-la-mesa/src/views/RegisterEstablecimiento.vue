@@ -541,6 +541,7 @@
       methods: {
       submitForm() {
         // Validar los campos del formulario
+
         const isValid = this.validateForm();
   
         if (isValid) {
@@ -648,7 +649,6 @@
           //console.error('Error al realizar la solicitud:', response.status, response.statusText);
           //console.error('Código de error:', response.data.code);
           if (response.status === 400) {
-            console.error('Faltan campos obligatorios');
             if (response.data.code === 1) {
               //console.error('Faltan campos obligatorios');
               textElement.innerText = 'Faltan campos obligatorios';
@@ -690,8 +690,10 @@
         this.phoneError = '';
         this.passwordError = '';
         this.menuError = '';
+
         this.validEmail = true;
         this.validPhone = true;
+        this.validUserName = true;
 
         
         this.validPhone2 = this.phoneRules.every(rule => {
@@ -699,13 +701,13 @@
           if (!isValid) this.phoneError = rule(this.phone) as string;
           return isValid;
         });
-        console.log('this.validPhone2:', this.validPhone2);
+
 
         this.validEmail2 = this.emailRules.every(rule => {
           const isValid = rule(this.email) === true;
           return isValid;
         });
-        console.log('this.validEmail2:', this.validEmail2);
+
   
         this.validPassword = this.passwordRules.every(rule => {
           const isValid = rule(this.password) === true;
@@ -807,7 +809,8 @@
         }
 
         // Actualizar el estado "valid" si es necesario
-        this.valid = this.validEmail2 && this.validPhone2 && this.validUserName && this.validUserName2 && this.validEmail && this.validPhone && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
+        this.valid = this.validEmail2 && this.validPhone2 && this.validUserName2 && this.validRestaurantName && this.validAddress && this.validCategory && this.validPassword && this.validWeekDays && this.validStartingHour && this.validFinishingHour && this.validTimePeriod && this.validNumberOfTables && this.validMenu && this.validProfilePicture && this.validPictures;
+
         return this.valid;
       },
     },
