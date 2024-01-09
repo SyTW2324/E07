@@ -665,7 +665,7 @@
           validNumberOfTables.value = false;
         }
 
-        if (validTimePeriod.value === true || validNumberOfTables.value === true) {
+        if (validTimePeriod.value === true && validNumberOfTables.value === true) {
           modifiedRestaurant = {
             ...modifiedRestaurant,
             availability: [availableModified]
