@@ -2,13 +2,13 @@
  * En este fichero se especifican todas las variables de entorno requeridas por la aplicación.
  */
 
-export const uri_bbdd: string = 'mongodb+srv://adminProyecto:yfKv8NjhFtFX7R2@sientatealamesa-cluster.kxe1jau.mongodb.net/sientatealamesa';
+export const uri_bbdd: string = 'mongodb+srv://adminProyecto:XrGAiCeGbROwlsPv@sientatealamesa-cluster.kxe1jau.mongodb.net/sientatealamesa';
 
-export const uri_bbdd_test: string = 'mongodb+srv://adminProyecto:yfKv8NjhFtFX7R2@sientatealamesa-cluster.kxe1jau.mongodb.net/sientatealamesa-test';
+export const uri_bbdd_test: string = 'mongodb+srv://adminProyecto:XrGAiCeGbROwlsPv@sientatealamesa-cluster.kxe1jau.mongodb.net/sientatealamesa-test';
 
 export const uri_bbdd_local: string = 'mongodb://adminProyecto:1234@172.16.131.2:27017/sientateMesa?retryWrites=true&w=majority';
 
-export const uri_bbdd_dev: string = 'mongodb+srv://adminProyecto:yfKv8NjhFtFX7R2@sientatealamesa-cluster.kxe1jau.mongodb.net/sientatealamesa-dev';
+export const uri_bbdd_dev: string = 'mongodb+srv://adminProyecto:XrGAiCeGbROwlsPv@sientatealamesa-cluster.kxe1jau.mongodb.net/sientatealamesa-dev';
 
 export const port: number = 8081;
 
