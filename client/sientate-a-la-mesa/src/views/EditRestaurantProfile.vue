@@ -235,6 +235,10 @@
       <!-- Alertas -->
       <v-container class="d-flex align-center justify-center" style="min-height: 10px">
         <v-container class="my-custom-container" style="width: 100%; height: 100%">
+
+          <v-alert v-if="!validRequest" type="error" closable class="my-custom-alert2">
+            Error al realizar la solicitud
+          </v-alert>
           
           <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert2">
             El correo ya existe.
@@ -379,6 +383,7 @@
 
   let processingRegister = ref(false);
   // let valid = ref(true);
+  let validRequest = ref(true);
   let validUserName = ref(true);
   let validUserName2 = ref(true);
   let validEmail = ref(true);
@@ -502,7 +507,7 @@
       validEmail.value = true;
       validPhone.value = true;
 
-
+      validRequest.value = true;
       validUserName.value = true;
       validUserName2.value = true;
       validEmail.value = true;
@@ -525,8 +530,6 @@
 
       
       let modifiedRestaurant = {}
-      console.log(password.value);
-      console.log(passwordModified.value);
 
       if (passwordModified.value !== password.value) {
         if (checkPassword()) {
@@ -768,23 +771,25 @@
         const response = error.response;
         if (response.status === 400) {
           if (response.data.code === 3) {
-            validEmail.value = true;
+            validEmail.value = false;
           } else if (response.data.code === 4) {
-            validPhone.value = true;
+            validPhone.value = false;
           } else if (response.data.code === 1) {
             console.log('Error al realizar la solicitud:', error.message);
+            validRequest.value = false;
           } 
           else {
             console.error('Error al realizar la solicitud:', error.message);
+            validRequest.value = false;
   
           }
         } else {
           console.error('Error al realizar la solicitud:', error.message);
-          // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+          validRequest.value = false;
         } 
       } else {
         console.error('Error al realizar la solicitud');
-        // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
+        validRequest.value = false;
       }
     }  
   }
