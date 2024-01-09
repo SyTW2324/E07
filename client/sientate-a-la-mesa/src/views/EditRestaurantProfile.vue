@@ -91,6 +91,7 @@
                 hide-details
                 required
                 readonly
+                @mouseover="onmouseover('username')"
               ></v-text-field>
             </v-col>
   
@@ -802,6 +803,13 @@
 
       reader.readAsDataURL(file);
     });
+  }
+
+  function onmouseover(elementId: string) {
+    const firstnameElement = document.getElementById(elementId);
+    if (firstnameElement) {
+      firstnameElement.style.cursor = 'not-allowed';
+    }
   }
 
   function controlShowPassword() {
