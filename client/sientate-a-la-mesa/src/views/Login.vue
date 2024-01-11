@@ -155,17 +155,6 @@ import { useAuthStore } from '../stores/useAuthStore';
       </v-card>
     </v-container>  
 
-    <v-container style="padding-top: 4em; text-align: center;">
-      
-      <router-link to="password-recovery" >
-      <p >¿Olvidaste la contraseña?</p>
-      </router-link>
-    </v-container>  
-    
-
-
-
-
   </v-main>
 
   <Footer></Footer>
