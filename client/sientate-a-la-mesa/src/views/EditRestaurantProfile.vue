@@ -248,7 +248,7 @@
           <v-alert v-if="!validEmail2" type="error" closable class="my-custom-alert2">
             El correo es obligatorio
             <br>
-            El correo deber ser válido
+            El correo deber tener un formato válido
           </v-alert>
 
           <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
@@ -404,7 +404,7 @@
   let validProfilePicture = ref(true);
   let validPictures = ref(true);
   let userRegistered = ref(false);
-  let showPassword = ref(true);
+  let showPassword = ref(false);
 
   let daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   let categories: string[] = ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'];
@@ -564,9 +564,9 @@
             ...modifiedRestaurant,
             email: emailModified.value
           }
-          validEmail.value = true;
+          validEmail2.value = true;
         } else {
-          validEmail.value = false;
+          validEmail2.value = false;
           return
         }
       }
@@ -577,9 +577,9 @@
             ...modifiedRestaurant,
             phoneNumber: phoneModified.value
           }
-          validPhone.value = true;
+          validPhone2.value = true;
         } else {
-          validPhone.value = false;
+          validPhone2.value = false;
           return
         }
       }
@@ -622,7 +622,7 @@
         const timeTableModified: timeTable = {
           selectedDays: selectedDaysModified.value,
           startingHour: startingHourModified.value,
-          finishingHour: finishingHour.value
+          finishingHour: finishingHourModified.value
         }
 
         if (selectedDaysModified.value.length === 0) {
@@ -638,6 +638,13 @@
         }
         
         if (validWeekDays.value === true || validStartingHour.value === true || validFinishingHour.value === true) {
+          // ordenamos los días de la semana, los tenemos en daysOfWeek bien ordenados
+          timeTableModified.selectedDays.sort((a, b) => {
+            return daysOfWeek.indexOf(a) - daysOfWeek.indexOf(b);
+          });
+          
+
+
           modifiedRestaurant = {
             ...modifiedRestaurant,
             timeTable: [timeTableModified]
