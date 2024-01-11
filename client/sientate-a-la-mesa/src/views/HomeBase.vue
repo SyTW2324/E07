@@ -27,29 +27,31 @@
   
             <v-row>
 
-              <v-col cols="12" md="9">
+              <v-col class="d-flex align-center justify-space-between" md="9">
                 <v-text-field type="text" v-model="input" placeholder="Busca tu restaurante favorito..." >  <v-icon >mdi-magnify</v-icon> </v-text-field>
               </v-col>
               
 
-              <v-col cols="1" md="2">
-                  <v-select
-                  v-model="selectedCategory"
-                  :items="categories"
-                  label="Categoría"
-                  multiple
-                  chips
-                  small-chips
-                  hint="Filtra por categorías"
-                  persistent-hint
-                  
-                  >
-                  </v-select>
+              <v-col class="d-flex align-center justify-space-between" md="3">
+                  <v-row>
+                    <v-select
+                    v-model="selectedCategory"
+                    :items="categories"
+                    label="Categoría"
+                    multiple
+                    chips
+                    hint="Selecciona una o varias categorías"
+                    style="padding-right: 1em;"
+                    >
+                    </v-select>
+  
+                    <v-btn @click="selectedCategory = []; input = '' " icon>
+                      <v-icon>mdi-delete-circle</v-icon>
+                    </v-btn>
+                  </v-row>
 
               </v-col>
-              <v-btn @click="selectedCategory = [] " icon>
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+
 
             </v-row>
   
@@ -122,7 +124,6 @@ let input = ref('');
 let categories = ref(['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano']);
 let selectedCategory = ref < string[] > ([]);
 
-//const fruits = ["apple", "banana", "orange"];
 
 
 const restaurants = ref < [string, string, string, string, string[]] []>();
@@ -143,6 +144,7 @@ const paginatedRestaurants = computed(() => {
 })
 
 const totalPages = computed(() => {
+  currentPage.value = 1;
   if (input.value || selectedCategory.value.length > 0) {
     return Math.ceil(filteredList().length / itemsPerPage);
   } else if (input.value.length == 0 && restaurants.value) {
@@ -183,9 +185,6 @@ onMounted(async () => {
 });
 
 function filteredList() {
-  // return fruits.filter((fruit) =>
-  //   fruit.toLowerCase().includes(input.value.toLowerCase())
-  // );
   if (!restaurants.value) {
     return [];
   }
