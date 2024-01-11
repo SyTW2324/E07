@@ -232,12 +232,11 @@ function onClick() {
         v-model="ReservaExitosa"
         location="center"
         color="success"
-        width="50%"
-        height="30%"
-        
+        width="33%"
+        height="20%" 
       >
-                  Reserva exitosa! Le esperamos próximamente!
-           Más información acerca de tu reserva en la página mi perfil
+                 <h2> ¡Reserva exitosa! Le esperamos próximamente</h2>
+           <h3>Más información acerca de tu reserva en la página mi perfil</h3>
           <template v-slot:actions>
             <v-btn @click="onClick()">Aceptar</v-btn>
           </template>
