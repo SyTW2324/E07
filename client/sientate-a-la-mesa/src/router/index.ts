@@ -4,7 +4,6 @@ import Home from '../views/Home.vue';
 import RegisterMain from '../views/RegisterMain.vue';
 import RegisterUsers from '../views/RegisterUsers.vue';
 import RegisterEstablecimiento from '../views/RegisterEstablecimiento.vue';
-import RecuperarContraseña from '../views/RecuperarContraseña.vue';
 import Login from '../views/Login.vue';
 import MyProfile from '../views/MyProfile.vue'
 import HomeBase from '../views/HomeBase.vue'
@@ -37,11 +36,6 @@ const routes: RouteRecordRaw[] = [
     path: '/register-restaurants',
     name: 'register-restaurants',
     component: RegisterEstablecimiento
-  },
-  {
-    path: '/password-recovery',
-    name: 'password-recovery',
-    component: RecuperarContraseña
   },
   {
     path: '/login',
@@ -107,7 +101,7 @@ const router =  createRouter({
 
 router.beforeEach( async (to) => {
 
-  const publicPages = ['/login', '/register-main', '/password-recovery', '/', '/register-users', '/register-restaurants'];
+  const publicPages = ['/login', '/register-main', '/', '/register-users', '/register-restaurants'];
   const userPages = ['/my-profile', '/home-base', '/establecimientos', '/edit-user-profile']; // Página a las que solo puede acceder un usuario
   const restaurantPages = ['/my-profile-restaurants', '/home-restaurants']; // Página a las que solo puede acceder un restaurante
 
