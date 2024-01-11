@@ -248,7 +248,7 @@
           <v-alert v-if="!validEmail2" type="error" closable class="my-custom-alert2">
             El correo es obligatorio
             <br>
-            El correo deber ser válido
+            El correo deber tener un formato válido
           </v-alert>
 
           <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert2">
@@ -564,9 +564,9 @@
             ...modifiedRestaurant,
             email: emailModified.value
           }
-          validEmail.value = true;
+          validEmail2.value = true;
         } else {
-          validEmail.value = false;
+          validEmail2.value = false;
           return
         }
       }
@@ -577,9 +577,9 @@
             ...modifiedRestaurant,
             phoneNumber: phoneModified.value
           }
-          validPhone.value = true;
+          validPhone2.value = true;
         } else {
-          validPhone.value = false;
+          validPhone2.value = false;
           return
         }
       }
