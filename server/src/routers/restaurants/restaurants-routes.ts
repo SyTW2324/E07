@@ -232,7 +232,7 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
           }
           const restaurant = await RestaurantModel.findOne({userName: req.query.userName});
           if(restaurant !== null){
-            if (req.body.password) {
+            if (req.body.passwd) {
               restaurant.passwd = req.body.passwd;
             }
             if (req.body.email) {
@@ -268,8 +268,6 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
             if (req.body.availability) {
               restaurant.availability = req.body.availability;
             }
-            console.log('restaurante modificado:');
-            console.log(restaurant);
             const email = req.body.email ? true : false;
             const phoneNumber = req.body.phoneNumber ? true : false;
             const RestaurantSchemaValidation = await validateRestaurantSchemaEdit(restaurant, email, phoneNumber);
