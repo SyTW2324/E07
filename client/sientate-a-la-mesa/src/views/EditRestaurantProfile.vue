@@ -404,7 +404,7 @@
   let validProfilePicture = ref(true);
   let validPictures = ref(true);
   let userRegistered = ref(false);
-  let showPassword = ref(true);
+  let showPassword = ref(false);
 
   let daysOfWeek: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   let categories: string[] = ['asador', 'cafeteria', 'chino', 'comida rapida', 'español', 'hindu', 'italiano', 'japones', 'mexicano', 'pizzeria', 'vegetariano'];
