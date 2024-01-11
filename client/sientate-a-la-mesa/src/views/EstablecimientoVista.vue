@@ -258,10 +258,12 @@ function onClick() {
         </v-container >
         <v-container>
           <v-row >     
-                  <v-col >
+                  <v-col>
                             <v-container v-if="calendar"  >
                               <v-row>
-                                <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
+                                <v-col md="1">
+                                  <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
+                                </v-col>
                               </v-row>
                               <v-row justify="center" class="mt-3">
                                 <v-btn @click="selectionDay()">Selección</v-btn>
