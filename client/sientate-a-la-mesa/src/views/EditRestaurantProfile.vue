@@ -638,6 +638,13 @@
         }
         
         if (validWeekDays.value === true || validStartingHour.value === true || validFinishingHour.value === true) {
+          // ordenamos los días de la semana, los tenemos en daysOfWeek bien ordenados
+          timeTableModified.selectedDays.sort((a, b) => {
+            return daysOfWeek.indexOf(a) - daysOfWeek.indexOf(b);
+          });
+          
+
+
           modifiedRestaurant = {
             ...modifiedRestaurant,
             timeTable: [timeTableModified]
