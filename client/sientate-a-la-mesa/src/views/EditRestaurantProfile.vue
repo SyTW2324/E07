@@ -622,7 +622,7 @@
         const timeTableModified: timeTable = {
           selectedDays: selectedDaysModified.value,
           startingHour: startingHourModified.value,
-          finishingHour: finishingHour.value
+          finishingHour: finishingHourModified.value
         }
 
         if (selectedDaysModified.value.length === 0) {
