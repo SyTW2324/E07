@@ -73,7 +73,7 @@
       
               <v-col cols="40">
                   <v-card max-width="75%" elevation="16" color="teal" density="compact">
-                    <v-title>Mis reservas anteriores</v-title>
+                    <h2>Mis reservas anteriores</h2>
                     <v-card-item v-if="historicReservationsFlag == false">No tienes reservas anteriores</v-card-item>
                     <v-card-item v-else v-for="(reservation, index) in paginatedHistoricReservations" :key="index" cols="12">
                       <p><strong>Restaurante: </strong>{{ reservation.restaurant }}</p>

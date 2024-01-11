@@ -232,12 +232,11 @@ function onClick() {
         v-model="ReservaExitosa"
         location="center"
         color="success"
-        width="50%"
-        height="30%"
-        
+        width="33%"
+        height="20%" 
       >
-                  Reserva exitosa! Le esperamos próximamente!
-           Más información acerca de tu reserva en la página mi perfil
+                 <h2> ¡Reserva exitosa! Le esperamos próximamente</h2>
+           <h3>Más información acerca de tu reserva en la página mi perfil</h3>
           <template v-slot:actions>
             <v-btn @click="onClick()">Aceptar</v-btn>
           </template>
@@ -258,10 +257,12 @@ function onClick() {
         </v-container >
         <v-container>
           <v-row >     
-                  <v-col >
+                  <v-col>
                             <v-container v-if="calendar"  >
                               <v-row>
-                                <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
+                                <v-col md="1">
+                                  <v-date-picker v-model="selectedDate" :min="obtenerDiaActual()" :allowed-dates="allowedDtes()" title="Seleciona el día deseado" >Reserva ya!</v-date-picker>
+                                </v-col>
                               </v-row>
                               <v-row justify="center" class="mt-3">
                                 <v-btn @click="selectionDay()">Selección</v-btn>

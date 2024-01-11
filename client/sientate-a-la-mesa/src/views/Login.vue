@@ -95,7 +95,7 @@ import { useAuthStore } from '../stores/useAuthStore';
           <v-text-field v-else
           id="password"
           v-model="password"
-          label="Contraseña*"
+          label="Contraseña"
           type="text"
           hide-details
           required

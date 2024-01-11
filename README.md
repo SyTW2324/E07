@@ -15,3 +15,6 @@
 ### Contenido:
 Este proyecto final corresponde a la asignatura Sistemas y Tecnologías Web, del 4º curso del grado en Ingeniería Informática. (Itinerario 5: Tecnologías de la información y las comunicaciones).
 La idea principal es la creación de una plataforma de gestión de reservas para restaurantes.
+
+Acceso a la aplicación web desplegada: ``https://sientate-a-la-mesa.netlify.app/``
+
