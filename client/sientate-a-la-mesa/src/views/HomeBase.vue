@@ -76,6 +76,8 @@
                       v-for="(item,i) in restaurant[4]"
                       :key="i"
                       :src="item"
+                      height="15em"
+                      width="90em"
                     ></v-carousel-item>
                   </v-carousel>
               <v-btn
