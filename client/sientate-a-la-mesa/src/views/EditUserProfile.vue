@@ -205,8 +205,8 @@ let modifiedEmail = ref("");
 let modifiedAddress = ref("");
 
 async function getUser() {
+  modifiedPassword.value = password.value;
   const authStore = useAuthStore();
-
   if (authStore.user) {
     if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
