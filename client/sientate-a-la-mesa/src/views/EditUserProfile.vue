@@ -341,7 +341,7 @@ async function submitForm() {
 
   if (response.data.code === 0) {
     userRegistered.value = true;
-    let reloginPassword = useAuthStore().getPassWord()
+    let reloginPassword = await useAuthStore().getPassWord()
     console.log(reloginPassword);
     if (modifiedPassword.value !== password.value && modifiedPassword.value !== " ") {
       reloginPassword = modifiedPassword.value;
