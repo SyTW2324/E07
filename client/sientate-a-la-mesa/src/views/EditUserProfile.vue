@@ -182,8 +182,9 @@ let email = ref("");
 let phoneNumber = ref("");
 let address = ref("");
 
-const password = ref(await useAuthStore().getPassWord());
+let password = ref<string>(" ");
 
+password.value = useAuthStore().getPassWord();
 
 
 // Flags alertas
