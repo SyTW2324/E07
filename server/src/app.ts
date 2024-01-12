@@ -38,4 +38,4 @@ app.use(loginRouter);
 app.use(restaurantsRouter);
 app.use(reservationsRouter);
 
-while (true) {const a = 1;}
+
