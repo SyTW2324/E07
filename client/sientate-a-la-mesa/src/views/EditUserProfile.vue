@@ -205,7 +205,6 @@ let modifiedEmail = ref("");
 let modifiedAddress = ref("");
 
 async function getUser() {
-  modifiedPassword.value = password.value;
   const authStore = useAuthStore();
   if (authStore.user) {
     if (authStore.isExpired() === true) {
@@ -343,6 +342,7 @@ async function submitForm() {
   if (response.data.code === 0) {
     userRegistered.value = true;
     let reloginPassword = password.value;
+    console.log( "contraseña", modifiedPassword.value);
     if (modifiedPassword.value !== password.value && modifiedPassword.value !== " ") {
       reloginPassword = modifiedPassword.value;
     }
