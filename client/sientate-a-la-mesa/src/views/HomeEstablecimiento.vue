@@ -21,6 +21,8 @@
                 v-for="(item,i) in pictures"
                 :key="i"
                 :src="item"
+                height="30em"
+                width="90em"
               ></v-carousel-item>
             </v-carousel>
             <br />
