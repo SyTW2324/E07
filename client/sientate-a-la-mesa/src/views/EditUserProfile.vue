@@ -182,7 +182,7 @@ let email = ref("");
 let phoneNumber = ref("");
 let address = ref("");
 
-const password = ref(useAuthStore().getPassWord());
+const password = ref(await useAuthStore().getPassWord());
 
 
 
