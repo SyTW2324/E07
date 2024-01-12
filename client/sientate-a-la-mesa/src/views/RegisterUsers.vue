@@ -18,10 +18,10 @@
               id="firstname"
               v-model="firstname"
               :rules="nameRules"
-              :counter="10"
               label="Nombre*"
               required
               hide-details
+              @input="nameAlert = false"
             ></v-text-field>
           </v-col>
 
@@ -29,11 +29,11 @@
             <v-text-field
               id="lastname"
               v-model="lastname"
-              :rules="nameRules"
-              :counter="10"
+              :rules="lastnameRules"
               label="Apellidos*"
               hide-details
               required
+              @input="surnameAlert = false"
             ></v-text-field>
           </v-col>
 
@@ -45,6 +45,7 @@
               label="Correo electrónico*"
               hide-details
               required
+              @input="emailAlert = false; existEmail = true; validEmail = true"
             ></v-text-field>
           </v-col>
 
@@ -56,6 +57,7 @@
               label="Teléfono*"
               hide-details
               required
+              @input="phoneAlert = false; existPhone = true; validPhone = true"
             ></v-text-field>
           </v-col>
 
@@ -64,8 +66,10 @@
               id="username"
               label="Nombre de usuario*"
               v-model="username"
+              :rules="usernameRules"
               hide-details
               required
+              @input="usernameAlert = false; existUserName = true; validUserName = true"
             ></v-text-field>
           </v-col>
           
@@ -78,6 +82,7 @@
             type="password"
             hide-details
             required
+            @input="passwordAlert = false; existPassword = true; validPassword = true"
             ></v-text-field>
             <v-text-field v-else
             id="password"
@@ -87,6 +92,7 @@
             type="text"
             hide-details
             required
+            @input="passwordAlert = false; existPassword = true; validPassword = true"
             ></v-text-field>
             <v-btn @click="controlShowPassword" icon>
               <v-icon v-if="showPassword == false">mdi-eye</v-icon>
@@ -99,17 +105,23 @@
               id="address"
               label="Calle*"
               v-model="address"
+              :rules="addressRules"
               hide-details
               required
+              @input="addressAlert = false"
             ></v-text-field>
           </v-col>
           <v-spacer></v-spacer>
           <v-col cols="12" md="4">
             <v-file-input
-              label="Foto de perfil"
+              label="Foto de perfil (límite 2MB)"
               v-model="profilePhoto"
+              :multiple="false"
+              :maxSize="1024*1024*2"
+              :rules="photoRules"
               accept="image/*"
               placeholder="Seleccione una imagen"
+              @input="profilePhotoAlert = false; validPhoto = true"
             ></v-file-input>
           </v-col>
 
@@ -129,32 +141,60 @@
       </v-container>
 
     </v-container>
-    <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
-      <v-alert v-if="!valid" type="warning" closable class="my-custom-alert">
-        Por favor, corrija los errores en el formulario.
-        <br>
-        - Contraseña: La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
-        <br>
-        - Correo: El correo debe ser válido.
-        <br>
-        - Teléfono: El teléfono debe tener 9 dígitos.
+    <v-container class="align-center justify-center">
+      <v-alert v-if="nameAlert == true" type="warning" closable class="my-custom-alert2">
+        El nombre es obligatorio.
       </v-alert>
 
-      <v-alert v-if="!validUserName" type="error" closable class="my-custom-alert">
+      <v-alert v-if="surnameAlert == true" type="warning" closable class="my-custom-alert2">
+        El apellido es obligatorio.
+      </v-alert>
+
+      <v-alert v-if="emailAlert == true" type="warning" closable class="my-custom-alert2">
+        <p v-if="existEmail == false">El correo es obligatorio.</p>
+        <p v-if="validEmail == false">El correo debe ser válido.</p>
+      </v-alert>
+
+      <v-alert v-if="phoneAlert == true" type="warning" closable class="my-custom-alert2">
+        <p v-if="existPhone == false">El teléfono es obligatorio.</p>
+        <p v-if="validPhone == false">El teléfono debe tener 9 dígitos.</p>
+      </v-alert>
+
+      <v-alert v-if="addressAlert == true" type="warning" closable class="my-custom-alert2">
+        La dirección es obligatoria.
+      </v-alert>
+
+      <v-alert v-if="passwordAlert == true" type="warning" closable class="my-custom-alert2">
+        <p v-if="existPassword == false">La contraseña es obligatoria.</p>
+        <p v-if="validPassword == false">La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.</p>
+      </v-alert>
+
+      
+      <v-alert v-if="usernameAlert == true" type="warning" closable class="my-custom-alert2">
+        <p v-if="validUserName == false">El nombre de usuario no puede contener espacios.</p>
+        <p v-if="validUserName == true">El nombre de usuario es obligatorio.</p>
+      </v-alert>
+      
+      <v-alert v-if="profilePhotoAlert == true" type="warning" closable class="my-custom-alert2">
+        La foto de perfil no puede superar los 2MB.
+      </v-alert>
+
+      <v-alert v-if="repeatedUserName == true" type="error" closable class="my-custom-alert2">
         El nombre de usuario ya existe elige otro.
       </v-alert>
 
-      <v-alert v-if="!validEmail" type="error" closable class="my-custom-alert">
+      <v-alert v-if="repeatedEmail == true" type="error" closable class="my-custom-alert2">
         El correo ya existe.
       </v-alert>
 
-      <v-alert v-if="!validPhone" type="error" closable class="my-custom-alert">
+      <v-alert v-if="repeatedPhone == true" type="error" closable class="my-custom-alert2">
         El teléfono ya existe.
       </v-alert>
 
-      <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert">
+      <v-alert v-if="userRegistered" type="success" closable class="my-custom-alert2">
         Usuario registrado correctamente.
       </v-alert>
+
     </v-container>
   </v-main>
 
@@ -167,101 +207,199 @@
 <script setup lang="ts">
 import Barnav from '../components/Barnav.vue';
 import Footer from '../components/Footer.vue'
-</script>
-
-<!-- Está separado en dos scripts por el export defaults, en Footer ya hay uno y entra en conflicto con el nuevo export default -->
-<script lang="ts">
-
+import { ref } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
 import { baseUrl } from '../env/env-variables';
 
-  export default {
-    data: () => ({
-      processingRegister: false,
-      valid: true,
-      validUserName: true,
-      validEmail: true,
-      validPhone: true,
-      userRegistered: false,
-      firstname: '',
-      lastname: '',
-      username: '',
-      address: '',
-      profilePhoto: [],
-      nameError: '',
-      showPassword: false,
-      nameRules: [
-        (value: string) => {
-          if (value) return true;
+let firstname = ref('');
+let lastname = ref('');
+let username = ref(''); 
+let email = ref('');
+let phone = ref('');
+let address = ref('');
+let password = ref('');
+let profilePhoto = ref<File[]>([]);
 
-          return 'El nombre  y los apellidos son obligatorios.';
-        },
-      ] as ((value: string) => true | string)[], // Asigna un tipo a nameRules
-      email: '',
-      emailError: '',
-      emailRules: [
-        (value: string) => {
-          if (value) return true;
+// Flags procesamiento
+let processingRegister = ref(false);
+let valid = ref(true);
+let userRegistered = ref(false);
+let showPassword = ref(false);
 
-          return 'El correo es obligatorio.';
-        },
-        (value: string) => {
-          if (/.+@.+\..+/.test(value)) return true;
+// Flags campos obligatorios
+let existEmail = ref(true);
+let existPhone = ref(true);
+let existPassword = ref(true);
+let existUserName = ref(true);
 
-          return 'El correo debe ser válido.';
-        },
-      ] as ((value: string) => true | string)[], // Asigna un tipo a emailRules
-      phone: '',
-      phoneError: '',
-      phoneRules: [
-        (value: string) => {
-          if (value) return true;
+// Flags validez de campos
+let validPassword = ref(true);
+let validUserName = ref(true);
+let validEmail = ref(true);
+let validPhone = ref(true);
+let validPhoto = ref(true);
 
-          return 'El teléfono es obligatorio.';
-        },
-        (value: string) => {
-          if (/^\d{9}$/.test(value)) return true;
+// Flags alertas
+let nameAlert = ref(false);
+let surnameAlert = ref(false);
+let emailAlert = ref(false);
+let phoneAlert = ref(false);
+let addressAlert = ref(false);
+let passwordAlert = ref(false);
+let profilePhotoAlert = ref(false);
+let usernameAlert = ref(false);
 
-          return 'El teléfono debe tener 9 dígitos.';
-        },
-      ] as ((value: string) => true | string)[], // Asigna un tipo a phoneRules
-      // Patrón de la contraseña [ /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, 'Password must contain at least one lowercase letter, one uppercase letter and one number' ],
-      password: '',
-      passwordError: '',
-      passwordRules: [
-        (value: string) => {
-          if (value) return true;
+// Flags valores repetidos
+let repeatedUserName = ref(false);
+let repeatedEmail = ref(false);
+let repeatedPhone = ref(false);
 
-          return 'La contraseña es obligatoria.';
-        },
-        (value: string) => {
-          if (value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(value)) return true;
 
-          return 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.';
-        },
-      ] as ((value: string) => true | string)[], // Asigna un tipo a passwordRules
-    }),
-    methods: {
-    submitForm() {
-      // Validar los campos del formulario
-      const isValid = this.validateForm();
 
-      if (isValid) {
-        // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-        this.RegisterUserApi();
-      } else {
-        // al usuario debe mostrarle en la web el problema 
-        // y no enviar el formulario hasta que no lo corrija
-        this.valid = false;
-        console.error('Formulario inválido. Por favor, corrija los errores.');
-      }
-    },
-    controlShowPassword() {
-      this.showPassword = !this.showPassword;
-    },
-    async convertFileToBase64(file: File) {
-      return new Promise((resolve, reject) => {
+// Rules
+const nameRules = [
+  (value: string) => {
+    if (value) {
+      return true;
+    } else {
+
+      return false;
+    }
+  },
+] as ((value: string) => true | false)[]; // Asigna un tipo a nameRules
+
+const lastnameRules = [
+  (value: string) => {
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+] as ((value: string) => true | false)[]; // Asigna un tipo a lastnameRules
+
+const usernameRules = [
+  (value: string) => {
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  (value: string) => {
+    if (value.indexOf(' ') === -1){
+      return true;
+    } else {
+      return false;
+    }
+  },
+] as ((value: string) => true | false)[]; // Asigna un tipo a usernameRules
+
+const emailRules = [
+  (value: string) => {
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  (value: string) => {
+    if (/.+@.+\..+/.test(value)) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+] as ((value: string) => true | false)[]; // Asigna un tipo a emailRules
+
+const phoneRules = [
+  (value: string) => {
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  (value: string) => {
+    if (/^\d{9}$/.test(value)) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+] as ((value: string) => true | false)[]; // Asigna un tipo a phoneRules
+
+const passwordRules = [
+  (value: string) => {
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+  (value: string) => {
+    if (value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(value)) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+] as ((value: string) => true | false)[]; // Asigna un tipo a passwordRules
+
+
+const addressRules = [
+  (value: string) => {
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+] as ((value: string) => true | false)[]; // Asigna un tipo a addressRules
+
+const photoRules = [
+  (value: File) => {
+    const fileSize = value.size;
+    const maxFileSize = 2 * 1024 * 1024; // 2 MB
+    if (fileSize > maxFileSize) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+] as ((value: File) => true | false)[]; // Asigna un tipo a photoRules
+
+// Methods
+function controlShowPassword() {
+  showPassword.value = !showPassword.value;
+}
+
+async function submitForm() {
+    // Inicializa las variables de error
+  nameAlert.value = false;
+  surnameAlert.value = false;
+  emailAlert.value = false;
+  phoneAlert.value = false;
+  addressAlert.value = false;
+  passwordAlert.value = false;
+  profilePhotoAlert.value = false;
+  usernameAlert.value = false;
+
+  const isValid = validateForm();
+
+  if (isValid) {
+
+    await RegisterUserApi();
+  } else {
+
+    valid.value = false;
+    console.error('Formulario inválido. Por favor, corrija los errores.');
+  }
+}
+
+async function convertFileToBase64(file: File) {
+  return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
         reader.onload = () => {
@@ -274,123 +412,214 @@ import { baseUrl } from '../env/env-variables';
 
         reader.readAsDataURL(file);
       });
-    },
+}
 
-    async RegisterUserApi() {
-      try {
+async function RegisterUserApi() {
+  try {
 
-        // Inicializa las variables de error
-        this.validUserName = true;
-        this.validEmail = true;
-        this.validPhone = true;
-        this.valid = true;
-        this.processingRegister = false;
-      
+  // Inicializa las variables de error
+  nameAlert.value = false;
+  surnameAlert.value = false;
+  emailAlert.value = false;
+  phoneAlert.value = false;
+  addressAlert.value = false;
+  passwordAlert.value = false;
+  profilePhotoAlert.value = false;
+  usernameAlert.value = false;
+  repeatedUserName.value = false;
+  repeatedEmail.value = false;
+  repeatedPhone.value = false;
 
 
 
-        //const formDataPhoto = new FormData();
-        let photoBase64: string = ' ';
-        if (this.profilePhoto.length > 0) {
-          photoBase64 = await this.convertFileToBase64(this.profilePhoto[0]) as string;
-        }
-       
-        const newUserJson = {
-          name: this.firstname,
-          surname: this.lastname,
-          userName: this.username,
-          password: this.password,
-          email: this.email,
-          phoneNumber: this.phone,
-          address: this.address,
-          profilePhoto: photoBase64,
-        };
-        this.processingRegister = true;
+  //const formDataPhoto = new FormData();
+  let photoBase64: string = ' ';
+  if (profilePhoto.value.length > 0) {
+    photoBase64 = await convertFileToBase64(profilePhoto.value[0]) as string;
+  }
 
-        const response = await axios.post(`${baseUrl}users/`, newUserJson);
-
-        this.processingRegister = false;
-
-       //const response = await axios.get('http://localhost:3000/users/');
-        //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
-
-        // Añade la imagen al contenedor
-        if (response.status === 201) {
-          //this.$router.push('/login');
-          
-          this.userRegistered = true;
-
-          const authStore = useAuthStore();
-          return authStore.login(this.username, this.password).catch(error => console.error(error));
-          
-        }
-      } catch (error) {
-        this.processingRegister = false;
-        if (axios.isAxiosError(error) && error.response) {
-        const response = error.response;
-
-        if (response.status === 400) {
-          if (response.data.code === 1) {
-          console.error('Faltan campos obligatorios');
-          } else if (response.data.code === 2) {
-          console.error('El nombre de usuario ya existe');
-          this.validUserName = false;
-
-          } else if (response.data.code === 3) {
-          console.error('El correo ya existe');
-          this.validEmail = false;
-
-          } else if (response.data.code === 4) {
-          console.error('El teléfono ya existe');
-          this.validPhone = false;
-
-          }
-        } else {
-        console.error('Error al realizar la solicitud:', error.message);
-        // Puedes manejar el error de manera adecuada, por ejemplo, mostrar un mensaje al usuario.
-        }
-        }
-
-      }
-    },
-
-    validateForm() {
-      // Lógica para validar cada campo según las reglas definidas
-      // Devuelve true si el formulario es válido, false de lo contrario
-      // También puedes actualizar el estado "valid" si es necesario
-      this.nameError = '';
-      this.emailError = '';
-      this.phoneError = '';
-      this.passwordError = '';
-      const isNameValid = this.nameRules.every(rule => {
-        const isValid = rule(this.firstname) === true;
-        if (!isValid) this.nameError = rule(this.firstname) as string;
-        return isValid;
-      });
-
-      const isEmailValid = this.emailRules.every(rule => {
-        const isValid = rule(this.email) === true;
-        if (!isValid) this.emailError = rule(this.email) as string;
-        return isValid;
-      });
-
-      const isPhoneValid = this.phoneRules.every(rule => {
-        const isValid = rule(this.phone) === true;
-        if (!isValid) this.phoneError = rule(this.phone) as string;
-        return isValid;
-      });
-
-      const isPasswordValid = this.passwordRules.every(rule => {
-        const isValid = rule(this.password) === true;
-        if (!isValid) this.passwordError = rule(this.password) as string;
-        return isValid;
-      });
-
-      // Actualizar el estado "valid" si es necesario
-      this.valid = isNameValid && isEmailValid && isPhoneValid && isPasswordValid;
-
-      return this.valid;
-    },
-  },
+  const newUserJson = {
+    name: firstname.value,
+    surname: lastname.value,
+    userName: username.value,
+    password: password.value,
+    email: email.value,
+    phoneNumber: phone.value,
+    address: address.value,
+    profilePhoto: photoBase64,
   };
+  processingRegister.value = true;
+
+  const response = await axios.post(`${baseUrl}users/`, newUserJson);
+
+  processingRegister.value = false;
+
+  if (response.status === 201) {
+    
+    userRegistered.value= true;
+
+    const authStore = useAuthStore();
+    return authStore.login(username.value, password.value).catch(error => console.error(error));
+    
+  }
+  } catch (error) {
+  processingRegister.value = false;
+  if (axios.isAxiosError(error) && error.response) {
+  const response = error.response;
+
+  if (response.status === 400) {
+    if (response.data.code === 1) {
+    console.error('Faltan campos obligatorios');
+    } else if (response.data.code === 2) {
+    console.error('El nombre de usuario ya existe');
+    repeatedUserName.value = true;
+
+    } else if (response.data.code === 3) {
+    console.error('El correo ya existe');
+    repeatedEmail.value = true;
+
+    } else if (response.data.code === 4) {
+    console.error('El teléfono ya existe');
+    repeatedPhone.value = true;
+
+    }
+  } else {
+  console.error('Error al realizar la solicitud:', error.message);
+
+  }
+  }
+
+  }
+}
+
+function validateForm(): boolean {
+  if (firstname.value) {
+    nameAlert.value = false;
+  } else {
+    nameAlert.value = true;
+  }
+
+  if (lastname.value) {
+    surnameAlert.value = false;
+  } else {
+    surnameAlert.value = true;
+  }
+
+  if (email.value) {
+    if (emailIsvValid(email.value)) {
+      emailAlert.value = false;
+    } else {
+      validEmail.value = false;
+      emailAlert.value = true;
+    }
+  } else {
+    existEmail.value = false;
+    emailAlert.value = true;
+  }
+
+  if (phone.value) {
+    if (phoneIsValid(phone.value)) {
+      phoneAlert.value = false;
+    } else {
+      validPhone.value = false;
+      phoneAlert.value = true;
+    }
+  } else {
+    existPhone.value = false;
+    phoneAlert.value = true;
+  }
+
+  if (address.value) {
+    addressAlert.value = false;
+  } else {
+    addressAlert.value = true;
+  }
+
+  if (password.value) {
+    if (passwordIsValid(password.value)) {
+      passwordAlert.value = false;
+    } else {
+      validPassword.value = false;
+      passwordAlert.value = true;
+    }
+  } else {
+    existPassword.value = false;
+    passwordAlert.value = true;
+  }
+
+  if (profilePhoto.value.length > 0) {
+    if (photoIsValid(profilePhoto.value[0])) {
+      profilePhotoAlert.value = false;
+    } else {
+      validPhoto.value = false;
+      profilePhotoAlert.value = true;
+    }
+  } 
+
+  if (username.value) {
+    if (userNameIsValid(username.value)) {
+      usernameAlert.value = false;
+    } else {
+      validUserName.value = false;
+      usernameAlert.value = true;
+    }
+    existUserName.value = true;
+  } else {
+    existUserName.value = false;
+    usernameAlert.value = true;
+  }
+
+
+
+  
+  return !nameAlert.value && !surnameAlert.value && !emailAlert.value && !phoneAlert.value && !addressAlert.value && !passwordAlert.value && !profilePhotoAlert.value && !usernameAlert.value;
+
+}
+
+
+function emailIsvValid(value: string): boolean {
+  if (/.+@.+\..+/.test(value)) {
+    return true;
+  } else {
+
+    return false;
+  }
+}
+
+function phoneIsValid(value: string): boolean {
+  if (/^\d{9}$/.test(value)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function passwordIsValid(value: string): boolean {
+  if (value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(value)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function userNameIsValid(value: string): boolean {
+  if (!value.includes(' ')) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
+function photoIsValid(value: File): boolean {
+  const fileSize = value.size;
+  const maxFileSize = 2 * 1024 * 1024; // 2 MB
+  if (fileSize > maxFileSize) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
 </script>

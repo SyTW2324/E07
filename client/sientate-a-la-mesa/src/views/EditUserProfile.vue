@@ -48,7 +48,7 @@
                 outlined
                 v-model="modifiedEmail"
               ></v-text-field>
-              <v-alert v-if="validEmail == false" type="warning" closable class="my-custom-alert">
+              <v-alert v-if="validEmail == false" type="warning" class="my-custom-alert">
                 El correo debe ser válido.
               </v-alert>
             </v-col>
@@ -60,7 +60,7 @@
                 outlined
                 v-model="modifedPhoneNumber"
               ></v-text-field>
-              <v-alert v-if="validPhone == false" type="warning" closable class="my-custom-alert">
+              <v-alert v-if="validPhone == false" type="warning" class="my-custom-alert">
                 El teléfono debe tener 9 dígitos.
               </v-alert>
             </v-col>
@@ -84,7 +84,6 @@
               type="password"
               hide-details
               required
-              @update="checkPassword"
               ></v-text-field>
               <v-text-field v-else
               id="password"
@@ -98,7 +97,7 @@
                 <v-icon v-if="showPassword == false">mdi-eye</v-icon>
                 <v-icon v-else>mdi-eye-off</v-icon>
               </v-btn>
-              <v-alert v-if="validPassword == false" type="warning" closable class="my-custom-alert">
+              <v-alert v-if="validPassword == false" type="warning" class="my-custom-alert">
                 La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
               </v-alert>
             </v-col>
@@ -122,7 +121,7 @@
                 :multiple="false"
                 :maxSize="1024*1024*4"
               ></v-file-input>
-              <v-alert v-if="validProfilePhoto == false" type="warning" closable class="my-custom-alert">
+              <v-alert v-if="validProfilePhoto == false" type="warning" class="my-custom-alert">
                 La foto de perfil debe tener un tamaño máximo de 4MB.
               </v-alert>
             </v-col> 
@@ -138,15 +137,15 @@
       <v-container  class="d-flex align-center justify-center" style="min-height: 10px">
         
 
-        <v-alert v-if="existEmail == true" type="error" closable class="my-custom-alert">
+        <v-alert v-if="existEmail == true" type="error"  class="my-custom-alert">
           El correo ya existe.
         </v-alert>
   
-        <v-alert v-if="existPhone == true" type="error" closable class="my-custom-alert">
+        <v-alert v-if="existPhone == true" type="error"  class="my-custom-alert">
           El teléfono ya existe.
         </v-alert>
   
-        <v-alert v-if="userRegistered == true" type="success" closable class="my-custom-alert">
+        <v-alert v-if="userRegistered == true" type="success"  class="my-custom-alert">
           Perfil modificado correctamente.
         </v-alert>
       </v-container>
@@ -183,10 +182,7 @@ let email = ref("");
 let phoneNumber = ref("");
 let address = ref("");
 
-let password = ref(useAuthStore().getPassWord());
-
-
-
+const password = ref(useAuthStore().getPassWord());
 
 
 
@@ -203,14 +199,14 @@ let existPhone = ref(false);
 /// Datos modificados
 let modifiedProfilePhoto = ref<File[]>([]);
 
-let modifiedPassword = ref(useAuthStore().getPassWord());
+let modifiedPassword = ref<string>(password.value);
 let modifedPhoneNumber = ref("");
 let modifiedEmail = ref("");
 let modifiedAddress = ref("");
 
 async function getUser() {
   const authStore = useAuthStore();
-  console.log("dentro de getUser");
+
   if (authStore.user) {
     if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
@@ -246,9 +242,11 @@ async function getUser() {
 getUser();
 
 function checkPassword(): boolean {
-  if (modifiedPassword.value && modifiedPassword.value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(modifiedPassword.value)) {
+  if (modifiedPassword.value !== " " && modifiedPassword.value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(modifiedPassword.value)) {
+    console.log("contraseña válida");
     return true;
   } else {
+    console.log("contraseña no válida");
     return false;
   }
 }
@@ -344,7 +342,11 @@ async function submitForm() {
 
   if (response.data.code === 0) {
     userRegistered.value = true;
-    await useAuthStore().reLogin(username.value, modifiedPassword.value);
+    let reloginPassword = password.value;
+    if (modifiedPassword.value !== password.value && modifiedPassword.value.length !== 0) {
+      reloginPassword = modifiedPassword.value;
+    }
+    await useAuthStore().reLogin(username.value, reloginPassword);
     router.push('/my-profile');
   }
   } catch (error) {
