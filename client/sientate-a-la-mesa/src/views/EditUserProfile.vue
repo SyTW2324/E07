@@ -341,11 +341,12 @@ async function submitForm() {
 
   if (response.data.code === 0) {
     userRegistered.value = true;
-    let reloginPassword = password.value;
-    console.log( "contraseña", modifiedPassword.value);
+    let reloginPassword = useAuthStore().getPassWord()
+    console.log(reloginPassword);
     if (modifiedPassword.value !== password.value && modifiedPassword.value !== " ") {
       reloginPassword = modifiedPassword.value;
     }
+    console.log(reloginPassword);
     await useAuthStore().reLogin(username.value, reloginPassword);
     router.push('/my-profile');
   }
