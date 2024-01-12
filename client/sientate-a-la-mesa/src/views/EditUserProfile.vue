@@ -346,6 +346,7 @@ async function submitForm() {
     if (modifiedPassword.value !== password.value && modifiedPassword.value !== " ") {
       reloginPassword = modifiedPassword.value;
     }
+    console.log("aquí")
     console.log(reloginPassword);
     await useAuthStore().reLogin(username.value, reloginPassword);
     router.push('/my-profile');
