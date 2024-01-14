@@ -3,7 +3,10 @@ import request from 'supertest';
 import { app } from '../../src/app.js';
 import { expect } from 'chai';
 import { UserModel } from '../../src/models/users/users-model.js';
+import { RestaurantModel } from '../../src/models/restaurants/restaurants-models.js';
+import { reservationModel } from '../../src/models/reservations/reservantions-models.js';
 import jsonwebtoken from 'jsonwebtoken';
+import { addHistoricReservations } from '../../src/models/users/users.js';
 
 describe ('Users', () => {
 
@@ -137,6 +140,8 @@ describe ('Users', () => {
   //Antes de empezar
   before(async () => {
     await UserModel.deleteMany(); // Limpieamos la base de datos de usuarios antes de empezar
+    await RestaurantModel.deleteMany(); // Limpieamos la base de datos de restaurantes antes de empezar
+    await reservationModel.deleteMany(); // Limpieamos la base de datos de reservas antes de empezar
   });
 
   // Test
@@ -267,11 +272,110 @@ describe ('Users', () => {
       }
       const response = await request(app).post('/users').send(user13).expect(201);
       const token2 = response.body.accessToken;
-      const reservaFalsa = "edwe2912313123";
+      const reservaFalsa = "659febe03bd40849a9b0d96b";
       UserModel.findOneAndUpdate({userName: user13.userName}, {$push: {nextReservations: reservaFalsa}});
       const response2 = await request(app).get(`/users/?token=${token2}&&userName=${user13.userName}`).expect(500);
     });
 
   });
+
+  describe('PUT /users', () => {
+    let token = " ";
+    before(async () => {
+      const response = await request(app).post('/login/authenticate').send({userName: user1.userName, password: user1.password});
+      token = response.body.message.accessToken;
+    });
+
+    it('Should get an error if email is already in use', async () => {
+      const userUpdate = {
+        email: user1.email
+      }
+      const response = await request(app).put(`/users/?token=${token}&&userName=${user1.userName}`).send(userUpdate).expect(400);
+      expect(response.body).to.eql({code: 3, errors: 'Ya existe ese correo electrónico'});
+    });
+
+    it('Should get an error if phoneNumber is already in use', async () => {
+      const userUpdate = {
+        phoneNumber: user1.phoneNumber
+      }
+      const response = await request(app).put(`/users/?token=${token}&&userName=${user1.userName}`).send(userUpdate).expect(400);
+      expect(response.body).to.eql({code: 4, errors: 'Ya existe número de teléfono'});
+    });
+
+    it('Should update the user email', async () => {
+      const userUpdate = {
+        email: "juanito@email.com"
+      }
+      const response = await request(app).put(`/users/?token=${token}&&userName=${user1.userName}`).send(userUpdate).expect(200);
+    });
+
+    it('Should get an error if trying to update the userName', async () => {
+      const userUpdate = {
+        userName: "juanito"
+      }
+      const response = await request(app).put(`/users/?token=${token}&&userName=${user1.userName}`).send(userUpdate).expect(400);
+      expect(response.body).to.eql({code: 1, message: 'Atributos no modificables'});
+    });
+
+    it('Should get an error if token is not provided', async () => {
+      const userUpdate = {
+        email: "juanito@email.com"
+      }
+      const response = await request(app).put(`/users/?userName=${user1.userName}`).send(userUpdate).expect(400);
+      expect(response.body).to.eql({code: 8, message: 'Falta el token en la query'});
+    });
+
+    it('Should get an error if user does not exist, and trying to update it reservations', async () => {
+      const userEmail = {
+        email: "juanito@email.com"
+      }
+      const response = await request(app).put(`/users/?token=${token}&&userName=pepe`).send(userEmail).expect(500);
+    });
+
+
+  });
+
+  describe('Functions from users-model', () => {
+    it('Should update the user historic reservations if it exists', async () => {
+      expect(await addHistoricReservations(user1.userName)).to.eql(true);
+    });
+
+    it ('Should not update the user historic reservations if it does not exist', async () => {
+      expect(await addHistoricReservations("pepe")).to.eql(false);
+    });
+
+    it('Should not update the user historic reservations if is corrupted', async () => {
+      const corruptedReservation = '659febe03bd40849a9b0d96b';
+      await UserModel.findOneAndUpdate({userName: user1.userName}, {$push: {nextReservations: corruptedReservation}});
+      expect(await addHistoricReservations(user1.userName)).to.eql(false);
+    });
+
+  });
+
+  describe('DELETE /users', () => {
+    it('Should delete the user', async () => {
+      const response = await request(app).delete(`/users/?userName=${user1.userName}`).expect(200);
+      expect(response.body.name).to.eql(user1.name);
+      expect(response.body.surname).to.eql(user1.surname);
+      expect(response.body.userName).to.eql(user1.userName);
+      expect(response.body.password).to.eql(user1.password);
+      expect(response.body.email).to.eql("juanito@email.com");
+      expect(response.body.phoneNumber).to.eql(String(user1.phoneNumber));
+      expect(response.body.address).to.eql(user1.address);
+    });
+
+    it('Should return an error if the user does not exist', async () => {
+      const response = await request(app).delete(`/users/?userName=${user1.userName}`).expect(404);
+      expect(response.body).to.eql({code: 4, message: 'Usuario no encontrado'});
+    });
+
+    it('Should return an error if the userName is missing', async () => {
+      const response = await request(app).delete('/users/').expect(400);
+      expect(response.body).to.eql({code: 3, message: 'Falta el nombre de usuario'});
+    });
+
+  });
+
+
 
 });

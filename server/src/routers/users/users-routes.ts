@@ -159,11 +159,9 @@ usersRouter.put('/users', async (req, res) => {
             if (req.body.address) {
               user.address = req.body.address;
             }
-            console.log(user);
             const email = req.body.email ? true : false;
             const phoneNumber = req.body.phoneNumber ? true : false;
             const userSchemaValidation = await validateUserSchemaEdit(user, email, phoneNumber);
-            console.log(userSchemaValidation);
             if (userSchemaValidation.code !== 0) {
               return res.status(400).send(userSchemaValidation);
             }

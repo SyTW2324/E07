@@ -3,8 +3,6 @@ import { reservationModel } from "../reservations/reservantions-models.js";
 
 export async function addHistoricReservations(userName: string): Promise<boolean> {
   try {
-
-    console.log("addHistoricReservations");
     const user = await UserModel.findOne({ userName: userName });
     if (user === null) return false;
     const nextReservations = user.nextReservations;
@@ -28,7 +26,6 @@ export async function addHistoricReservations(userName: string): Promise<boolean
     }
     return true;
   } catch (error) {
-    console.log(error);
     return false;
   }
 }
