@@ -72,23 +72,19 @@ usersRouter.get('/users', async (req, res) => {
               return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
             }
             const user = await UserModel.findOne({userName: req.query.userName});
-            if(user){
-              // renderizar la página de perfil de usuario y guardarla en una carpeta
-              const userSend = {
-                name: user.name,
-                surname: user.surname,
-                userName: user.userName,
-                email: user.email,
-                phoneNumber: user.phoneNumber,
-                address: user.address,
-                nextReservations: user.nextReservations,
-                historicReservations: user.historicReservations
-              }
-              return res.status(200).send({code: 0, message: userSend});
+            // renderizar la página de perfil de usuario y guardarla en una carpeta
+            const userSend = {
+              name: user?.name,
+              surname: user?.surname,
+              userName: user?.userName,
+              email: user?.email,
+              phoneNumber: user?.phoneNumber,
+              address: user?.address,
+              nextReservations: user?.nextReservations,
+              historicReservations: user?.historicReservations
             }
-            else{
-              return res.status(404).send({code: 1, message: "Usuario no encontrado"});
-            }
+            return res.status(200).send({code: 0, message: userSend});
+
           } else {
             return res.status(404).send({code: 1, message: "Usuario no encontrado"});
           }

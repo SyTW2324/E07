@@ -3,6 +3,7 @@ import request from 'supertest';
 import { app } from '../../src/app.js';
 import { expect } from 'chai';
 import { UserModel } from '../../src/models/users/users-model.js';
+import jsonwebtoken from 'jsonwebtoken';
 
 describe ('Users', () => {
 
@@ -242,6 +243,33 @@ describe ('Users', () => {
     it ('Should return an error if the user does not exist', async () => {
       const response = await request(app).get(`/users/?token=${token}&&userName=pepe`).expect(404);
       expect(response.body).to.eql({code: 1, message: 'Usuario no encontrado'});
+    });
+
+    it('Should return an error if the token is not valid', async () => {
+      const notValidToken = jsonwebtoken.sign({userName: user1.userName, password: user1.password}, "notValid", {expiresIn: '1h'});
+      await request(app).get(`/users/?token=${notValidToken}&&userName=${user1.userName}`).expect(500);
+    });
+
+    it('Should return an error if the token is missing', async () => {
+      const response = await request(app).get(`/users/?userName=${user1.userName}`).expect(400);
+      expect(response.body).to.eql({code: 5, message: 'Falta el token en la query'});
+    });
+
+    it('Should return an error if user schema is corrupted', async () => {
+      const user13 = {
+        name : "Reservas",
+        surname : "Reservas",
+        userName : "reervasPrueba",
+        password: "reservasPrueba200A",
+        email: "reservas@email.com",
+        phoneNumber: 364724829,
+        address: "Calle Falsa 123"
+      }
+      const response = await request(app).post('/users').send(user13).expect(201);
+      const token2 = response.body.accessToken;
+      const reservaFalsa = "edwe2912313123";
+      UserModel.findOneAndUpdate({userName: user13.userName}, {$push: {nextReservations: reservaFalsa}});
+      const response2 = await request(app).get(`/users/?token=${token2}&&userName=${user13.userName}`).expect(500);
     });
 
   });
