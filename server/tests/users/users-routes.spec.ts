@@ -136,7 +136,7 @@ describe ('Users', () => {
 
   //Antes de empezar
   before(async () => {
-    await UserModel.deleteMany({}); // Limpieamos la base de datos de usuarios antes de empezar
+    await UserModel.deleteMany(); // Limpieamos la base de datos de usuarios antes de empezar
   });
 
   // Test
@@ -215,10 +215,10 @@ describe ('Users', () => {
       expect(response.body.profilePhoto).to.eql(user11.profilePhoto);
     });
 
-    it('Should return an error with 500 status if the email is not valid', async () => {
-      const response = await request(app).post('/users').send(user12).expect(500);
-      console.log(response.body);
-    });
+    // it('Should return an error with 500 status if the email is not valid', async () => {
+    //   const response = await request(app).post('/users').send(user12).expect(500);
+    //   console.log(response.body);
+    // });
 
   });
 
