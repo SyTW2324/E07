@@ -128,10 +128,9 @@ describe ('Users', () => {
     userName: "pepegarcia",
     password: "pepe200A",
     email: "pepeemail.com", 
-    phoneNumber: 123456789,
+    phoneNumber: 321654987,
     address: "Calle Falsa 123"  
   }
-
 
 
   //Antes de empezar
@@ -215,10 +214,35 @@ describe ('Users', () => {
       expect(response.body.profilePhoto).to.eql(user11.profilePhoto);
     });
 
-    // it('Should return an error with 500 status if the email is not valid', async () => {
-    //   const response = await request(app).post('/users').send(user12).expect(500);
-    //   console.log(response.body);
-    // });
+    it('Should return an error with 500 status if the email is not valid', async () => {
+      await request(app).post('/users').expect(500).send(user12);
+    });
+
+  });
+
+  describe('GET /users', () => {
+    let token = " ";
+    before(async () => {
+      const response = await request(app).post('/login/authenticate').send({userName: user1.userName, password: user1.password});
+      token = response.body.message.accessToken;
+    });
+
+    it ('Should return the user information', async () => {
+      const response = await request(app).get(`/users/?token=${token}&&userName=${user1.userName}`).expect(200);
+      expect(response.body.message.name).to.eql(user1.name);
+      expect(response.body.message.surname).to.eql(user1.surname);
+      expect(response.body.message.userName).to.eql(user1.userName);
+      expect(response.body.message.email).to.eql(user1.email);
+      expect(response.body.message.phoneNumber).to.eql(String(user1.phoneNumber));
+      expect(response.body.message.address).to.eql(user1.address);
+      expect(response.body.message.nextReservations).exist;
+      expect(response.body.message.historicReservations).exist;
+    });
+
+    it ('Should return an error if the user does not exist', async () => {
+      const response = await request(app).get(`/users/?token=${token}&&userName=pepe`).expect(404);
+      expect(response.body).to.eql({code: 1, message: 'Usuario no encontrado'});
+    });
 
   });
 

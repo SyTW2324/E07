@@ -12,7 +12,7 @@ import { UserModel } from '../../models/users/users-model.js';
 import { RestaurantModel } from '../../models/restaurants/restaurants-models.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { secretKey } from '../../env-variables.js';
-import { jwtDecode } from 'jwt-decode';
+
 
 
 export const loginRouter = express.Router();
@@ -22,19 +22,11 @@ export const loginRouter = express.Router();
   
     try {
       if(req.body.userName && req.body.password) {
-        // const login: loginInterface = {
-        //   userName: req.body.userName,
-        //   password: req.body.password,
-        // }
-          //const loginSchemaValidation = await validateLoginSchema(login);
           const user = await UserModel.findOne({userName: req.body.userName});
           const restaurant = await RestaurantModel.findOne({userName: req.body.userName});
-          // if (loginSchemaValidation.code !== 0) {
-          //   return res.status(400).send(loginSchemaValidation);
-          // }
+
           if(user && user.password === req.body.password){
-            // const newLogin = new LoginModel(login);
-            // const loginMessage = await newLogin.save();
+
             const userToken = jsonwebtoken.sign({ username: user.userName, password: user.password }, secretKey, { expiresIn: '1h' });
             const resMessage = {
               username: user.userName,
