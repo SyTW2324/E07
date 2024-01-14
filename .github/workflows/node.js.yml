@@ -33,6 +33,6 @@ jobs:
       run: npm run installClient
 
     - name: Run tests
-      run: npm test
+      run: npm test --verbose
 
 # Agregar trabajos adicionales si es necesario
