@@ -4,9 +4,9 @@ name: Tests
 
 on:
   push:
-    branches: [ "backend-dev-imh"]
+    branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
   pull_request:
-    branches: ["backend-dev-imh"]
+    branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
 
 jobs:
   build-and-test:
@@ -33,6 +33,6 @@ jobs:
       run: npm run installClient
 
     - name: Run tests
-      run: npm test
+      run: npm test --verbose
 
 # Agregar trabajos adicionales si es necesario
