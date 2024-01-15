@@ -46,6 +46,15 @@ describe('Reservations', () => {
 
     it('should return the available periods', () => {
       const startingHour = '12:00';
+      const finishingHour = '00:00';
+      const timePeriod = 60;
+      const availablePeriods = calcularPeriodosDisponibles(startingHour, finishingHour, timePeriod);
+      expect(availablePeriods).to.eql(['12:00 - 12:59', '13:00 - 13:59', '14:00 - 14:59', '15:00 - 15:59', '16:00 - 16:59', '17:00 - 17:59', '18:00 - 18:59', '19:00 - 19:59', '20:00 - 20:59', '21:00 - 21:59', '22:00 - 22:59', '23:00 - 23:59']);
+      
+    });
+
+    it('should return the available periods', () => {
+      const startingHour = '12:00';
       const finishingHour = '16:00';
       const timePeriod = 15;
       const availablePeriods = calcularPeriodosDisponibles(startingHour, finishingHour, timePeriod);
@@ -80,7 +89,7 @@ describe('Reservations', () => {
       phoneNumber: 123456787,
       availability:  {
         timePeriod: 60,
-        numberOfTables:  10,  
+        numberOfTables:  2,  
       }
 
      }
@@ -117,6 +126,33 @@ describe('Reservations', () => {
         userName: user1.userName,
         day: new Date('2024-01-21T14:50:43.042+00:00')});
       expect(response.status).to.eql(200);
+  
+    });
+
+    it('should create a reservation', async () => {
+      const response = await request(app).post('/reservations').send({token: token,
+        restaurantName: restaurant1.restaurantName,
+        userName: user1.userName,
+        day: new Date('2024-02-21T14:50:43.042+00:00')});
+      expect(response.status).to.eql(200);
+  
+    });
+
+    it('should create a reservation', async () => {
+      const response = await request(app).post('/reservations').send({token: token,
+        restaurantName: restaurant1.restaurantName,
+        userName: user1.userName,
+        day: new Date('2024-02-21T14:50:43.042+00:00')});
+      expect(response.status).to.eql(200);
+  
+    });
+
+    it('should create a reservation', async () => {
+      const response = await request(app).post('/reservations').send({token: "token",
+        restaurantName: restaurant1.restaurantName,
+        userName: user1.userName,
+        day: new Date('2024-02-21T14:50:43.042+00:00')});
+      expect(response.status).to.eql(500);
   
     });
 
@@ -186,6 +222,13 @@ describe('Reservations', () => {
   describe('GET /reservationsAvailable', async () => {
 
     it('should get the available reservations of a day', async () => {
+      let day = '03/21/2024';
+      const response = await request(app).get(`/reservationsAvailable/?RestaurantName=${restaurant1.restaurantName}&day=${day}`).expect(200);
+      expect(response.status).to.eql(200);
+      expect(response.body.message).to.eql(['12:00 - 12:59', '13:00 - 13:59', '14:00 - 14:59', '15:00 - 15:59']);
+    });
+
+    it('should get the available reservations of a day', async () => {
       let day = '02/21/2024';
       const response = await request(app).get(`/reservationsAvailable/?RestaurantName=${restaurant1.restaurantName}&day=${day}`).expect(200);
       expect(response.status).to.eql(200);
@@ -202,6 +245,12 @@ describe('Reservations', () => {
       let day = '02/21/2024';
       const response = await request(app).get(`/reservationsAvailable/?RestaurantName=${restaurant1.restaurantName}`).expect(404);
       expect(response.status).to.eql(404);
+    });
+
+    it('should not get the available reservations of a day if the day is not valid', async () => {
+      let day = '01/21/2024';
+      const response = await request(app).get(`/reservationsAvailable/?RestaurantName=${restaurant1.restaurantName}&day=${day}`).expect(200);
+      expect(response.body.message).to.eql(['12:00 - 12:59', '13:00 - 13:59', '14:00 - 14:59', '15:00 - 15:59']);
     });
 
   });
