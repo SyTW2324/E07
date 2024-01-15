@@ -280,6 +280,11 @@ describe('Reservations', () => {
       expect(response.status).to.eql(400);
     });
 
+    it('should not delete a reservation', async () => {
+      const response = await request(app).delete(`/reservations/?token=${"token"}&userName=${user1.userName}&reservationId=${reservationId}`).expect(200);
+      expect(response.status).to.eql(500);
+    });
+
     it('should not delete a reservation if the user does not exist', async () => {
       const response = await request(app).delete(`/reservations/?token=${token}&userName=Usuario que no existe&reservationId=${reservationId}`).expect(404);
       expect(response.status).to.eql(404);
