@@ -205,8 +205,43 @@ describe('Restaurants', () => {
       const response = await request(app).get(`/restaurants/info/?userName=${'all'}`).expect(200);
     });
 
+    it('creamos un nuevo restaurante para probar las reservas', async () => {
+      restaurant2.email = 'restaurant2@gmail.com';
+      restaurant2.userName = 'rest2';
+      restaurant2.phoneNumber = '123334777';
+      const response = await request(app).post('/restaurants').send(restaurant2);
+      expect(response.status).to.equal(201);
+    });
+     
   });
 
+  context('/get con reservas', () => {
+    let token = " ";
+    before(async () => {
+      const response = await request(app).post('/login/authenticate').send({userName: user1.userName, password: user1.password});
+      token = response.body.message.accessToken;
+    });
+
+    it('creamos la reserva para el futuro', async () => {
+      const response = await request(app).post('/reservations').send({token: token,
+        restaurantName: restaurant2.restaurantName,
+        userName: user1.userName,
+        day: new Date('2025-01-21T14:50:43.042+00:00')});
+      expect(response.status).to.eql(200);
+    });
+
+    it('creamos la reserva histórica', async () => {
+      const response = await request(app).post('/reservations').send({token: token,
+        restaurantName: restaurant2.restaurantName,
+        userName: user1.userName,
+        day: new Date('2024-01-14T14:50:43.042+00:00')});
+      expect(response.status).to.eql(200);
+    });
+
+    it('obtenemos el restaurante con las reservas, forzamos a usar la función addHistoricReservations', async () => {
+      const response = await request(app).get(`/restaurants/?token=${token}&&userName=${restaurant2.userName}`).expect(200);
+    });
+  });
 
 
   context('PUT /restaurants/:id', () => {
@@ -245,14 +280,6 @@ describe('Restaurants', () => {
     it('falla al modificar atributos no permitidos', async () => {
       const response = await request(app).put(`/restaurants/?token=${token}&&userName=${restaurant1.userName}`).send({userName: 'restaurant1 modificado'}).expect(400);
       expect(response.body).to.eql({code: 1, message: 'Atributos no modificables'});
-    });
-
-    it('creamos un nuevo restaurante para probar los errores', async () => {
-      restaurant2.email = 'restaurant2@gmail.com';
-      restaurant2.userName = 'rest2';
-      restaurant2.phoneNumber = '123334777';
-      const response = await request(app).post('/restaurants').send(restaurant2);
-      expect(response.status).to.equal(201);
     });
 
 
