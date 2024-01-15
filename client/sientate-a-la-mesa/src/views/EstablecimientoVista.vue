@@ -295,8 +295,8 @@ function onClick() {
                               v-for="(item,i) in pictures"
                               :key="i"
                               :src="item"
-                              height="30em"
-                              width="50em"
+                              height="25em"
+                              width="40em"
                             ></v-carousel-item>
                           </v-carousel>
                         <v-card-title> Sobre nosotros</v-card-title>

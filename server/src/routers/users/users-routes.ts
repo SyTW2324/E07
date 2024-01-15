@@ -66,29 +66,28 @@ usersRouter.get('/users', async (req, res) => {
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
         if (Number(decodedToken.exp) > (Date.now() / 1000)) {
-          const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
-          if (upDateHistoricReservations  === false) {
-            return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
-          }
-          const user = await UserModel.findOne({userName: req.query.userName});
-          if(user){
+          if (await UserModel.findOne({userName: req.query.userName})) {
+            const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
+            if (upDateHistoricReservations  === false) {
+              return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
+            }
+            const user = await UserModel.findOne({userName: req.query.userName});
             // renderizar la página de perfil de usuario y guardarla en una carpeta
             const userSend = {
-              name: user.name,
-              surname: user.surname,
-              userName: user.userName,
-              email: user.email,
-              phoneNumber: user.phoneNumber,
-              address: user.address,
-              nextReservations: user.nextReservations,
-              historicReservations: user.historicReservations
+              name: user?.name,
+              surname: user?.surname,
+              userName: user?.userName,
+              email: user?.email,
+              phoneNumber: user?.phoneNumber,
+              address: user?.address,
+              nextReservations: user?.nextReservations,
+              historicReservations: user?.historicReservations
             }
             return res.status(200).send({code: 0, message: userSend});
-          }
-          else{
+
+          } else {
             return res.status(404).send({code: 1, message: "Usuario no encontrado"});
           }
-  
         } else {
           return res.status(400).send({code: 2, message: "Token expirado"});
         }
@@ -160,11 +159,9 @@ usersRouter.put('/users', async (req, res) => {
             if (req.body.address) {
               user.address = req.body.address;
             }
-            console.log(user);
             const email = req.body.email ? true : false;
             const phoneNumber = req.body.phoneNumber ? true : false;
             const userSchemaValidation = await validateUserSchemaEdit(user, email, phoneNumber);
-            console.log(userSchemaValidation);
             if (userSchemaValidation.code !== 0) {
               return res.status(400).send(userSchemaValidation);
             }

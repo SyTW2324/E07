@@ -1,7 +1,6 @@
 import { connect } from 'mongoose';
 import { uri_bbdd } from '../env-variables.js';
 import { uri_bbdd_test } from '../env-variables.js';
-import { uri_bbdd_local } from '../env-variables.js';
 import { uri_bbdd_dev } from '../env-variables.js';
 
 let bbdd = uri_bbdd_test;
