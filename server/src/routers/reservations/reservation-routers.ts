@@ -27,6 +27,7 @@ export const reservationsRouter = express.Router();
 //pero hay que comprobar que no haya ninguna reserva para ese dia y esa hora 
 reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
 
+  
 
   try {
     if (req.query.RestaurantName && req.query.day)  {
@@ -102,36 +103,10 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
                 }
               }
             }
-
-            //Saco la hora y los minutos de la reserva
-            // const reservationHour = reservationDay.getHours();
-            // const reservationMinutes = reservationDay.getMinutes();
-            // // los junto en este formato 00:00
-            // const reservationHourString = reservationHour + ":" + reservationMinutes;
-
-            //recorro el array de periodos disponibles y voy eliminando los que coincidan con la reserva
-            // for (let i = 0; i < availableHours.length; i++) {
-            //   const availableHour = availableHours[i];
-
-            //   if (availableHour.includes(reservationHourString)) {
-            //     availableHours.splice(i, 1);
-            //   }
-            // }
-          }
-
-
-        
-        }
-
-        
-
+          }   
+        } 
         return res.status(200).send({code: 0, message: availableHours});
-
-      } 
-
-      
-
-      
+      }  
     }
     return res.status(404).send({code: 1, message: "No se ha encontrado los dias libres del restaurante indicado"});
   }
@@ -143,8 +118,8 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
       }
     );
   }
-}
-);
+});
+
 reservationsRouter.get('/reservations/', async (req, res) => {
 
   try {
