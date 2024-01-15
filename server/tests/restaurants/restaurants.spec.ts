@@ -187,15 +187,18 @@ describe('Restaurants', () => {
     });
 
     it('Obtener un restaurante falla, token inválido', async () => {
-      const response = await request(app).get(`/restaurants/?token=${'1234'}&&userName=${restaurant1.userName}`).expect(500);
+      const response = await request(app).get(`/restaurants/?token=${'1234abcd'}&&userName=${restaurant1.userName}`).expect(500);
     });
 
     it('Obtener un restaurante falla, userName inválido', async () => {
-      const response = await request(app).get(`/restaurants/?token=${token}&&userName=${'pepe09'}`).expect(500);
+      const response = await request(app).get(`/restaurants/?token=${token}&&userName=${'pepe09'}`).expect(404);
+      // {code: 1, error: "Restaurante no encontrado"}
+      expect(response.body).to.eql({code: 1, message: 'Restaurante no encontrado'});
     });
 
     it('Obtener un restaurante falla, falta el token en la query', async () => {
       const response = await request(app).get(`/restaurants/?userName=${restaurant1.userName}`).expect(400);
+      expect(response.body).to.eql({code: 5, message: 'Falta el token en la query'});
     });
 
     it('obtener todos los restaurantes', async () => {
@@ -204,26 +207,25 @@ describe('Restaurants', () => {
 
   });
 
-  context('GET /restaurants/:id', () => {
-  });
+
 
   context('PUT /restaurants/:id', () => {
   });
 
   context('DELETE /restaurants/:id', () => {
-    it('Should delete the user', async () => {
-      // const response = await request(app).delete(`/restaurants/?userName=${restaurant1.userName}`).expect(200);
+    it('eliminar usuario correctamente', async () => {
+      const response = await request(app).delete(`/restaurants/?userName=${restaurant1.userName}`).expect(200);
     });
 
-    // it('Should return an error if the user does not exist', async () => {
-    //   const response = await request(app).delete(`/users/?userName=${user1.userName}`).expect(404);
-    //   expect(response.body).to.eql({code: 4, message: 'Usuario no encontrado'});
-    // });
+    it('Devuelve 404 si el usuario no existe', async () => {
+      const response = await request(app).delete(`/restaurants/?userName=${restaurant1.userName}`).expect(404);
+      expect(response.body).to.eql({code: 1, error: 'Restaurante no encontrado'});
+    });
 
-    // it('Should return an error if the userName is missing', async () => {
-    //   const response = await request(app).delete('/users/').expect(400);
-    //   expect(response.body).to.eql({code: 3, message: 'Falta el nombre de usuario'});
-    // });
+    it('Devuelve 400 si el usuario no existe', async () => {
+      const response = await request(app).delete(`/restaurants/`).expect(400);
+      expect(response.body).to.eql({code: 3, error: 'Falta el nombre de usuario'});
+    });
   });
 
 });
