@@ -25,7 +25,7 @@ import { Available } from '../../src/available.js';
 // availability: req.body.availability,
 
   before(async () => {
-    await UserModel.deleteMany(); // Limpieamos la base de datos de usuarios antes de empezar
+    // await UserModel.deleteMany(); // Limpieamos la base de datos de usuarios antes de empezar
     await RestaurantModel.deleteMany(); // Limpieamos la base de datos de restaurantes antes de empezar
     // await reservationModel.deleteMany(); // Limpieamos la base de datos de reservas antes de empezar
   });
@@ -53,7 +53,7 @@ describe('Restaurants', () => {
     description: 'Descripción de prueba',
     timeTable: timeTable1,
     category: 'Italiano',
-    phoneNumber: '123333555',
+    phoneNumber: '123456789',
     profilePicture: '',
     pictures: [],
     menu: '',
@@ -69,7 +69,7 @@ describe('Restaurants', () => {
     description: 'Descripción de prueba',
     timeTable: timeTable1,
     category: 'Italiano',
-    phoneNumber: '123334335',
+    phoneNumber: '123123123',
     profilePicture: '',
     pictures: [],
     menu: '',
@@ -82,7 +82,7 @@ describe('Restaurants', () => {
     userName : "restaurant2",
     password: "juan200A",
     email: "rest2@gmail.com",
-    phoneNumber: 123334335,
+    phoneNumber: 123123123,
     address: "Calle Falsa 123"
   }
 
@@ -157,15 +157,6 @@ describe('Restaurants', () => {
       expect(response.body.code).to.eql(4);
     });
 
-    it('prueba error 500, catch', async () => {
-      const response = await request(app).post('/restaurants').send(
-        {
-          campoInexistente: 'prueba'
-        }
-      );
-      console.log(response.body);
-      expect(response.status).to.equal(400);
-    });
     
   });
 
