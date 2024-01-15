@@ -60,6 +60,32 @@ describe('Restaurants', () => {
     availability: available1
   }
 
+  const restaurant2 = {
+    userName: 'restaurant2',
+    passwd: 'prueba200A',
+    email: 'rest2@gmail.com',
+    restaurantName: 'restaurante 2',
+    restaurantAddress: 'Dirección de prueba',
+    description: 'Descripción de prueba',
+    timeTable: timeTable1,
+    category: 'Italiano',
+    phoneNumber: '123123123',
+    profilePicture: '',
+    pictures: [],
+    menu: '',
+    availability: available1
+  }
+
+  const user1 = {
+    name : "Juan",
+    surname : "Perez",
+    userName : "restaurant2",
+    password: "juan200A",
+    email: "rest2@gmail.com",
+    phoneNumber: 123123123,
+    address: "Calle Falsa 123"
+  }
+
   context('POST /restaurants', () => {
     it('Nuevo restaurante creado correctamente', async () => {
       const response = await request(app).post('/restaurants').send(restaurant1);
@@ -80,6 +106,57 @@ describe('Restaurants', () => {
       expect(response.body.availability[0].timePeriod).to.eql(restaurant1.availability.timePeriod);
       expect(response.body.availability[0].numberOfTables).to.eql(restaurant1.availability.numberOfTables);
     });
+
+    it('error 400, ya existe el nombre de usuario en otro restaurante', async () => {
+      const response = await request(app).post('/restaurants').send(restaurant1);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors).to.eql('Ya existe ese nombre de usuario');
+      expect(response.body.code).to.eql(2);
+    });
+
+    it('error 400, ya existe el email en otro restaurante', async () => {
+      restaurant1.userName = 'restaurant2';
+      const response = await request(app).post('/restaurants').send(restaurant1);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors).to.eql('Ya existe ese correo electrónico');
+      expect(response.body.code).to.eql(3);
+    });
+
+    it('error 400, ya existe el teléfono en otro restaurante', async () => {
+      restaurant1.email = 'rest2@gmail.com';
+      const response = await request(app).post('/restaurants').send(restaurant1);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors).to.eql('Ya existe ese número de teléfono');
+      expect(response.body.code).to.eql(4);
+    });
+
+    it('Usuario de prueba creado', async () => {
+      const response = await request(app).post('/users').send(user1).expect(201);
+    });
+
+    it('error 400, ya existe el nombre de usuario en un usuario', async () => {
+      const response = await request(app).post('/restaurants').send(restaurant2);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors).to.eql('Ya existe ese nombre de usuario');
+      expect(response.body.code).to.eql(2);
+    });
+
+    it('error 400, ya existe el email en un usuario', async () => {
+      restaurant2.userName = 'restaurant3';
+      const response = await request(app).post('/restaurants').send(restaurant2);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors).to.eql('Ya existe ese correo electrónico');
+      expect(response.body.code).to.eql(3);
+    });
+
+    it('error 400, ya existe el teléfono en un usuario', async () => {
+      restaurant2.email = 'restaurant3@gmail.com';
+      const response = await request(app).post('/restaurants').send(restaurant2);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors).to.eql('Ya existe ese número de teléfono');
+      expect(response.body.code).to.eql(4);
+    });
+
     
   });
 
