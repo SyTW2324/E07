@@ -4,9 +4,9 @@ name: Tests
 
 on:
   push:
-    branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
+    branches: [ "backend-dev-imh"]
   pull_request:
-    branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
+    branches: ["backend-dev-imh"]
 
 jobs:
   build-and-test:
