@@ -91,36 +91,40 @@ restaurantsRouter.get('/restaurants', async (req, res) => {
       if (verified) {
         const decodedToken = jwtDecode(req.query.token as string);
         if (Number(decodedToken.exp) > (Date.now() / 1000)) {
-          const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
-          if (upDateHistoricReservations  === false) {
-            return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
-          }
-          const restaurant = await RestaurantModel.findOne({userName: req.query.userName});
-          if(restaurant){
-            // renderizar la página de perfil de usuario y guardarla en una carpeta
-            const restaurantSend = {
-              restaurantName: restaurant.restaurantName,
-              userName: restaurant.userName,
-              email: restaurant.email,
-              phoneNumber: restaurant.phoneNumber,
-              restaurantAddress: restaurant.restaurantAddress,
-              timeTable: restaurant.timeTable,
-              category: restaurant.category,
-              menu: restaurant.menu,
-              description: restaurant.description,
-              pictures: restaurant.pictures,
-              nextReservations: restaurant.nextReservations,
-              historicReservations: restaurant.historicReservations,
-              numberOfTables: restaurant.availability[0].numberOfTables,
-              timePeriod: restaurant.availability[0].timePeriod,
-              // password: restaurant.passwd
+          if(await RestaurantModel.findOne({userName: req.query.userName})){
+            const upDateHistoricReservations = await addHistoricReservations(req.query.userName as string);
+            if (upDateHistoricReservations  === false) {
+              return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
             }
-            return res.status(200).send({code: 0, message: restaurantSend});
-          }
-          else{
+            const restaurant = await RestaurantModel.findOne({userName: req.query.userName});
+            if(restaurant){
+              // renderizar la página de perfil de usuario y guardarla en una carpeta
+              const restaurantSend = {
+                restaurantName: restaurant.restaurantName,
+                userName: restaurant.userName,
+                email: restaurant.email,
+                phoneNumber: restaurant.phoneNumber,
+                restaurantAddress: restaurant.restaurantAddress,
+                timeTable: restaurant.timeTable,
+                category: restaurant.category,
+                menu: restaurant.menu,
+                description: restaurant.description,
+                pictures: restaurant.pictures,
+                nextReservations: restaurant.nextReservations,
+                historicReservations: restaurant.historicReservations,
+                numberOfTables: restaurant.availability[0].numberOfTables,
+                timePeriod: restaurant.availability[0].timePeriod,
+                // password: restaurant.passwd
+              }
+              return res.status(200).send({code: 0, message: restaurantSend});
+            }
+            else{
+              return res.status(404).send({code: 1, message: "Restaurante no encontrado"});
+            }
+          } else {
             return res.status(404).send({code: 1, message: "Restaurante no encontrado"});
           }
-  
+    
         } else {
           return res.status(400).send({code: 2, message: "Token expirado"});
         }
@@ -172,7 +176,7 @@ restaurantsRouter.get('/restaurants/info', async (req, res) => {
 
 restaurantsRouter.delete('/restaurants', async (req, res) => {
   try{
-    
+
     if(req.query.userName){
       const restaurant = await RestaurantModel.findOneAndDelete({userName: req.query.userName});
       if(restaurant){
@@ -224,7 +228,7 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
             'menu',
             'availability',
           ];
-          console.log(req.body);
+          // console.log(req.body);
           const modifiedAtributes = Object.keys(req.body);
           const isValidOperation = modifiedAtributes.every((atribute) => atributesModifiedEnable.includes(atribute));
           if (!isValidOperation) {
@@ -271,7 +275,7 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
             const email = req.body.email ? true : false;
             const phoneNumber = req.body.phoneNumber ? true : false;
             const RestaurantSchemaValidation = await validateRestaurantSchemaEdit(restaurant, email, phoneNumber);
-            console.log(RestaurantSchemaValidation);
+            // console.log(RestaurantSchemaValidation);
             if (RestaurantSchemaValidation.code !== 0) {
               return res.status(400).send(RestaurantSchemaValidation);
             }
