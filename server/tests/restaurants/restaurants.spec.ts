@@ -163,7 +163,6 @@ describe('Restaurants', () => {
           campoInexistente: 'prueba'
         }
       );
-      console.log(response.body);
       expect(response.status).to.equal(400);
     });
     
