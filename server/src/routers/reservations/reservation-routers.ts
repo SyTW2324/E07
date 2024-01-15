@@ -27,6 +27,7 @@ export const reservationsRouter = express.Router();
 //pero hay que comprobar que no haya ninguna reserva para ese dia y esa hora 
 reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
 
+  
 
   try {
     if (req.query.RestaurantName && req.query.day)  {
