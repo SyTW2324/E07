@@ -2,42 +2,6 @@
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 # name: Tests
 
-# on:
-#   push:
-#     branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
-#   pull_request:
-#     branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
-
-# jobs:
-#   build-and-test:
-#     runs-on: ubuntu-latest
-
-#     strategy:
-#       matrix:
-#         node-version: [18.x]
-
-#     steps:
-#     - name: Checkout code
-#       uses: actions/checkout@v3
-
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v3
-#       with:
-#         node-version: ${{ matrix.node-version }}
-#         cache: 'npm'
-
-#     - name: Install server dependencies
-#       run: npm run installServer
-
-#     - name: Install client dependencies
-#       run: npm run installClient
-
-#     - name: Run tests
-#       run: npm test --verbose
-
-# Agregar trabajos adicionales si es necesario
-name: Tests
-
 on:
   push:
     branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
@@ -50,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 19.x, 20.x]
+        node-version: [18.x]
 
     steps:
     - name: Checkout code
@@ -70,3 +34,4 @@ jobs:
 
     - name: Run tests
       run: npm test --verbose
+
