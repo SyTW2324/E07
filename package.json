@@ -17,8 +17,8 @@
     "stop:client": "kill -9 $(pidof http-server)",
     "start:manteinance": "nohup http-server ./manteinance -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
     "test": "npm run test:server && npm run test:client",
-    "test:server": "cd server/ && npm run test",
-    "test:client": "cd client/sientate-a-la-mesa/ && npm run test",
+    "test:server": "cd server/ && npm run startTest && npm run test",
+    "test:client": "cd client/sientate-a-la-mesa/ && npm run test ",
     "installServer": "cd server/ && npm install",
     "installClient": "cd client/sientate-a-la-mesa/ && npm install",
     "coverage-server": "cd server/ && npm run coverage"
