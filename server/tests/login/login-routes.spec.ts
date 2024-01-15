@@ -42,7 +42,7 @@ describe ('/login', () => {
 
 
       //Antes de empezar
-  before(async () => {
+  beforeEach(async () => {
     await UserModel.deleteMany(); // Limpieamos la base de datos de usuarios antes de empezar
     await RestaurantModel.deleteMany(); // Limpieamos la base de datos de restaurantes antes de empezar
     await reservationModel.deleteMany(); // Limpieamos la base de datos de reservas antes de empezar

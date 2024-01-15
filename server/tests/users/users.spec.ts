@@ -138,7 +138,7 @@ describe ('Users', () => {
 
 
   //Antes de empezar
-  before(async () => {
+  beforeEach(async () => {
     await UserModel.deleteMany(); // Limpieamos la base de datos de usuarios antes de empezar
     await RestaurantModel.deleteMany(); // Limpieamos la base de datos de restaurantes antes de empezar
     await reservationModel.deleteMany(); // Limpieamos la base de datos de reservas antes de empezar
@@ -159,16 +159,19 @@ describe ('Users', () => {
     });
 
     it('Should return an error if the userName already in use', async () => {
+      await request(app).post('/users').send(user1).expect(201);
       const response = await request(app).post('/users').send(user1).expect(400);
       expect(response.body).to.eql({code: 2, errors: 'Ya existe ese nombre de usuario'});
     });
 
     it('Should return an error if the email is already in use', async () => {
+      await request(app).post('/users').send(user1).expect(201);
       const response = await request(app).post('/users').send(user2).expect(400);
       expect(response.body).to.eql({code: 3, errors: 'Ya existe ese correo electrónico'});
     });
 
     it('Should return an error if the phoneNumber is already in use', async () => {
+      await request(app).post('/users').send(user1).expect(201);
       const response = await request(app).post('/users').send(user3).expect(400);
       expect(response.body).to.eql({code: 4, errors: 'Ya existe número de teléfono'});
     }); 
@@ -228,12 +231,14 @@ describe ('Users', () => {
 
   describe('GET /users', () => {
     let token = " ";
-    before(async () => {
+    beforeEach(async () => {
+      await request(app).post('/users').send(user1).expect(201);
       const response = await request(app).post('/login/authenticate').send({userName: user1.userName, password: user1.password});
       token = response.body.message.accessToken;
     });
 
     it ('Should return the user information', async () => {
+
       const response = await request(app).get(`/users/?token=${token}&&userName=${user1.userName}`).expect(200);
       expect(response.body.message.name).to.eql(user1.name);
       expect(response.body.message.surname).to.eql(user1.surname);
@@ -281,7 +286,8 @@ describe ('Users', () => {
 
   describe('PUT /users', () => {
     let token = " ";
-    before(async () => {
+    beforeEach(async () => {
+      await request(app).post('/users').send(user1).expect(201);
       const response = await request(app).post('/login/authenticate').send({userName: user1.userName, password: user1.password});
       token = response.body.message.accessToken;
     });
@@ -336,6 +342,10 @@ describe ('Users', () => {
   });
 
   describe('Functions from users-model', () => {
+    beforeEach(async () => {
+      await request(app).post('/users').send(user1).expect(201);
+    });
+    
     it('Should update the user historic reservations if it exists', async () => {
       expect(await addHistoricReservations(user1.userName)).to.eql(true);
     });
@@ -354,12 +364,13 @@ describe ('Users', () => {
 
   describe('DELETE /users', () => {
     it('Should delete the user', async () => {
+      await request(app).post('/users').send(user1).expect(201);
       const response = await request(app).delete(`/users/?userName=${user1.userName}`).expect(200);
       expect(response.body.name).to.eql(user1.name);
       expect(response.body.surname).to.eql(user1.surname);
       expect(response.body.userName).to.eql(user1.userName);
       expect(response.body.password).to.eql(user1.password);
-      expect(response.body.email).to.eql("juanito@email.com");
+      expect(response.body.email).to.eql("juan@email.com");
       expect(response.body.phoneNumber).to.eql(String(user1.phoneNumber));
       expect(response.body.address).to.eql(user1.address);
     });
