@@ -27,7 +27,7 @@ import { Available } from '../../src/available.js';
   before(async () => {
     await UserModel.deleteMany(); // Limpieamos la base de datos de usuarios antes de empezar
     await RestaurantModel.deleteMany(); // Limpieamos la base de datos de restaurantes antes de empezar
-    // await reservationModel.deleteMany(); // Limpieamos la base de datos de reservas antes de empezar
+    await reservationModel.deleteMany(); // Limpieamos la base de datos de reservas antes de empezar
   });
 
 describe('Restaurants', () => {
@@ -128,6 +128,8 @@ describe('Restaurants', () => {
       expect(response.status).to.equal(400);
       expect(response.body.errors).to.eql('Ya existe ese número de teléfono');
       expect(response.body.code).to.eql(4);
+      restaurant1.userName = 'restaurant1';
+      restaurant1.email = 'rest1@gmail.com';
     });
 
     it('Usuario de prueba creado', async () => {
@@ -169,6 +171,37 @@ describe('Restaurants', () => {
   });
 
   context('GET /restaurants', () => {
+    let token = " ";
+    before(async () => {
+      const response = await request(app).post('/login/authenticate').send({userName: restaurant1.userName, password: restaurant1.passwd});
+      // const response = await request(app).post('/login/authenticate').send({userName: 'restaurant1', password: 'prueba200A'});
+      token = response.body.message.accessToken;
+    });
+
+    it('Lista de restaurantes', async () => {
+      // pedir todos los restaurantes
+    });
+
+    it('Obtener un restaurante correctamente', async () => {
+      const response = await request(app).get(`/restaurants/?token=${token}&&userName=${restaurant1.userName}`).expect(200);
+    });
+
+    it('Obtener un restaurante falla, token inválido', async () => {
+      const response = await request(app).get(`/restaurants/?token=${'1234'}&&userName=${restaurant1.userName}`).expect(500);
+    });
+
+    it('Obtener un restaurante falla, userName inválido', async () => {
+      const response = await request(app).get(`/restaurants/?token=${token}&&userName=${'pepe09'}`).expect(500);
+    });
+
+    it('Obtener un restaurante falla, falta el token en la query', async () => {
+      const response = await request(app).get(`/restaurants/?userName=${restaurant1.userName}`).expect(400);
+    });
+
+    it('obtener todos los restaurantes', async () => {
+      const response = await request(app).get(`/restaurants/info/?userName=${'all'}`).expect(200);
+    });
+
   });
 
   context('GET /restaurants/:id', () => {
@@ -178,6 +211,19 @@ describe('Restaurants', () => {
   });
 
   context('DELETE /restaurants/:id', () => {
+    it('Should delete the user', async () => {
+      // const response = await request(app).delete(`/restaurants/?userName=${restaurant1.userName}`).expect(200);
+    });
+
+    // it('Should return an error if the user does not exist', async () => {
+    //   const response = await request(app).delete(`/users/?userName=${user1.userName}`).expect(404);
+    //   expect(response.body).to.eql({code: 4, message: 'Usuario no encontrado'});
+    // });
+
+    // it('Should return an error if the userName is missing', async () => {
+    //   const response = await request(app).delete('/users/').expect(400);
+    //   expect(response.body).to.eql({code: 3, message: 'Falta el nombre de usuario'});
+    // });
   });
 
 });
