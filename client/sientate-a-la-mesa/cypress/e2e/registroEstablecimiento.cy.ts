@@ -18,7 +18,7 @@ describe('Registro de establecimiento', () => {
     cy.visit('http://localhost:5173')
 
     // hace click en boton de registro
-    cy.wait(10000)
+    cy.wait(5000)
     cy.get('#botonRegistro').click()
     cy.get('#botonRegistroEstablecimiento').click();
 
@@ -57,6 +57,9 @@ describe('Registro de establecimiento', () => {
     cy.get('#numberOfTables').type('4')
    
     cy.get('#enviarRegistroEstablecimiento').click()
-    cy.get('#Salir').click()
+
+
+    cy.get('#AbrirNavegacionPerfil').click()
+    cy.get('#CerrarSesionBoton').click()
   })
 })
