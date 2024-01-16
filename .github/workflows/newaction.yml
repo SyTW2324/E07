@@ -1,0 +1,41 @@
+name: Backend
+
+on:
+  push:
+    branches: [ "main"]
+  pull_request:
+    branches: [ "main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: cf739f96b33fdeb4fd8f7274b14543d5b9bcdd4a
+
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: "npm"
+
+      - name: Start MongoDB 6.0
+        uses: supercharge/mongodb-github-action@1.9.0
+        with:
+          mongodb-version: "6.0"
+
+      - name: Install dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Run tests and generate coverage info
+        working-directory: ./server
+        run: npm run coverage
+
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
