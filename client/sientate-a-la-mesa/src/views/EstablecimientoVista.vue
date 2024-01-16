@@ -65,16 +65,10 @@ async function fetchRestaurantData() {
     restaurantAddress.value = restaurant.data.restaurantAddress;
     category.value = restaurant.data.category;
     const Timetable = restaurant.data.timeTable as unknown as [Timetable];
-    // selectedDays
     selectedDay.value = Timetable?.[0]?.selectedDays as string[];
 
-
-    
     selectedDate.value = restaurant.data.time
-    // pictures
 
-    
-       // Añade un nuevo evento load a cada imagen
     pictures.value = restaurant.data.pictures.map((picture: string) => {
       const image = new Image();
       image.src = picture;
@@ -82,38 +76,29 @@ async function fetchRestaurantData() {
     });
 
 
+    loading.value = false; 
 
-    loading.value = false; // Se debe establecer a false aquí, después de obtener los datos.
-
-    // hacer que espere aqui hasta que se carguen los datos
 
     carga.value = true; 
 
   } catch (error) {
     console.error('Error al obtener los datos del restaurante:', error);
-    loading.value = false; // También se debe establecer a false en caso de error.
+    loading.value = false; 
     router.push('/404');
   }
 }
 
-// function esperar(ms: number | undefined) {
-//   return new Promise(resolve => setTimeout(resolve, ms));
-// }
+
 
 // Función para reservar
 async function reserve(selection: string | null) {
   loading.value = true;
-
-  //  una reserva exitosa después de 2 segundos
-
-  //Crear un post con el body incluye el token, nombre restaurante, nombre usuario, y el dia y hora de la reserva en el tipo Date
 
   const date = new Date();
 
   date.setHours(Number(availableHours.value[Number(selection)].split(':')[0]));
   date.setMinutes(Number(availableHours.value[Number(selection)].split(':')[1].split(' ')[0]));
   
-  //pon el dia, mes y año de la reserva
   date.setDate(selectedDate.value ? new Date(selectedDate.value).getDate() : 0);
   date.setMonth(selectedDate.value ? new Date(selectedDate.value).getMonth() : 0);
   date.setFullYear(selectedDate.value ? new Date(selectedDate.value).getFullYear() : 0);
@@ -133,7 +118,6 @@ async function reserve(selection: string | null) {
   if (response.data.code === 0) {
     calendar.value = true;
 
-    //! Alerta de reserva exitosa
     ReservaExitosa.value = true;
 
   } 
@@ -149,7 +133,6 @@ async function reserve(selection: string | null) {
 
 async function selectionDay() {
   
-    //!OJO FORMATO MES/DIA/AÑO
   const selectedDateValue = selectedDate.value ? new Date(selectedDate.value) : null;
   const day = selectedDateValue ? (selectedDateValue.getMonth() + 1) + '/' + selectedDateValue.getDate() + '/' + selectedDateValue.getFullYear() : '';
 
@@ -161,9 +144,6 @@ async function selectionDay() {
 }
 
 function allowedDtes() {
-
-  // Filtrar solo los lunes, miércoles y viernes
-  //Guarda los dias que estan disponibles en el array allowedDays
  const allowedDays: number[] = [];
 
   if (selectedDay.value.includes('Lunes')) {
@@ -190,7 +170,7 @@ function allowedDtes() {
   
 
   return (date: { getDay: () => any; }) => {
-    const dayOfWeek = date.getDay(); // 0 para domingo, 1 para lunes, ..., 6 para sábado
+    const dayOfWeek = date.getDay(); 
     return allowedDays.includes(dayOfWeek);
   };
 
@@ -217,8 +197,6 @@ function onClick() {
   <v-app>
     <Barnav></Barnav>
     <v-main v-if="!carga">
-
-      <!-- CARGA circulo -->
       <v-container class="d-flex align-center justify-center" style="padding-top: 15em; padding-bottom: 5em;"> 
         <v-progress-circular
           indeterminate
@@ -277,7 +255,6 @@ function onClick() {
 
                                 <div class="px-10">
                                   <v-chip-group v-model="selection">
-                                    <!-- Utiliza v-for para iterar sobre el array de horas -->
                                     <v-chip v-for="hour in availableHours" :key="hour">{{ hour }}</v-chip>
                                   </v-chip-group>
                                 </div>
@@ -347,7 +324,7 @@ function onClick() {
 }
 
 .headline-style {
-  font-family: 'Playfair Display', serif; /* Utiliza Playfair Display como fuente para el título */
+  font-family: 'Playfair Display', serif; 
   font-size: 2.5rem;
   font-weight: bold;
   letter-spacing: 1px;
@@ -356,7 +333,7 @@ function onClick() {
 }
 
 .description-style {
-  font-family: 'Roboto', sans-serif; /* Utiliza Roboto como fuente para la descripción */
+  font-family: 'Roboto', sans-serif; 
   font-size: 1.25rem;
   text-align: center;
   color: rgba(0, 0, 0, 0.7);

@@ -15,10 +15,6 @@ export interface Reservation {
   day: Date;
 }
 
-
-
-
-
 export function calcularPeriodosDisponibles(startingHour: string, finishingHour: string, timePeriod: number): string[] {
   // Convertir las horas de apertura y cierre a objetos Date para facilitar la manipulación
   const startTime = new Date(`2000-01-01T${startingHour}:00`);

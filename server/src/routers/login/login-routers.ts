@@ -4,10 +4,6 @@
  * Grado en Ingeniería Informática
  */
 import express from 'express';
-
-// import { validateLoginSchema } from '../../login/login-model.js';
-// import { loginInterface } from '../../login/login.js';
-// import { LoginModel } from '../../login/login-model.js';
 import { UserModel } from '../../models/users/users-model.js';
 import { RestaurantModel } from '../../models/restaurants/restaurants-models.js';
 import jsonwebtoken from 'jsonwebtoken';
@@ -41,8 +37,6 @@ export const loginRouter = express.Router();
             return res.status(200).send({ code: 0, message: resMessage});
           } 
           else if(restaurant && restaurant.passwd === req.body.password){
-            // const newLogin = new LoginModel(login);
-            // const loginMessage = await newLogin.save();
             const userToken = jsonwebtoken.sign({ username: restaurant.userName, password: restaurant.passwd }, secretKey, { expiresIn: '1h' });
             const resMessage = {
               username: restaurant.userName,
@@ -50,7 +44,6 @@ export const loginRouter = express.Router();
               accessToken: userToken,
               tipo: "restaurant",
               profilePhoto: " ",
-              // pictures: restaurant.pictures
             }
             
 
@@ -65,7 +58,6 @@ export const loginRouter = express.Router();
       } else {
         return res.status(400).send({code: 1, message: "Faltan campos obligatorios"});
       }
-      //return res.status(201).send({user: "usuario", message: "mensaje"});
     }
     catch(error) {
       return res.status(500).send(

@@ -13,7 +13,6 @@
     </v-main> 
     <v-main v-if="pageIsLoaded == true">
       <v-container>
-        <!-- carrousel pictures -->
         <v-row>
           <v-col cols="12" md="6">
             <v-carousel cycle height="400" hide-delimiters>
@@ -170,7 +169,7 @@ async function getRestaurant() {
               nextReservations.value.push(newReservation);
             } else {
               console.log("Error al obtener las reservas");
-              // allInfoIsLoaded.value = 2;
+
             }
           }
         } 
@@ -179,11 +178,8 @@ async function getRestaurant() {
         if (authStore.getProfilePhoto() === " " || authStore.getProfilePhoto() === null || authStore.getProfilePhoto() === "undefined") {
           profilePhoto.value = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
         } else {
-          // Reducir tamaño de la imagen
           profilePhoto.value = authStore.getProfilePhoto() as string;
         }
-
-        //pictures
         if(pictures.value.length === 0) {
           pictures.value = [];
           pictures.value[0] = "https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=";
@@ -204,7 +200,6 @@ async function getRestaurant() {
 
 const itemsPerPage = 3;
 
-// Paginación de las próximas reservas
 const currentPageNextReservations = ref(1);
 
 const paginatedNextReservations = computed(() => {

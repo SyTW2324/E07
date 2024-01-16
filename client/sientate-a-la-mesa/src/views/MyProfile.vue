@@ -51,7 +51,6 @@
       <div>
         <v-container>
           <v-row >
-            <!-- <v-col cols="12" sm="6" md="4" lg="3"> -->
               <v-col col="50">
                 <v-card max-width="75%" elevation="16" color="teal" density="compact">
                   <h2>Mis próximas reservas</h2>

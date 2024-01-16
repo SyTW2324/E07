@@ -430,9 +430,6 @@ async function RegisterUserApi() {
   repeatedEmail.value = false;
   repeatedPhone.value = false;
 
-
-
-  //const formDataPhoto = new FormData();
   let photoBase64: string = ' ';
   if (profilePhoto.value.length > 0) {
     photoBase64 = await convertFileToBase64(profilePhoto.value[0]) as string;

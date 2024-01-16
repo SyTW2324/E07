@@ -67,8 +67,6 @@
               <v-card-title>{{ restaurant[0] }}</v-card-title>
 
               <v-card-text class="d-flex justify-space-between">
-                <!-- <v-chip prepend-icon="mdi-brightness-5" @click="">Se</v-chip>
-                <v-chip prepend-icon="mdi-alarm-check" @click="">vienen</v-chip> -->
                 <v-chip icon="mdi-blinds" @click="">Categoria: {{ restaurant[2] }}</v-chip>
               </v-card-text>
               <v-carousel cycle height="100%" hide-delimiters >
@@ -166,7 +164,6 @@ onMounted(async () => {
  
     const response = await axios.get(`${baseUrl}restaurants/info/?userName=all`);
     
-    // array de tuplas string
     let names: [string, string, string, string, string[]] [] = [];
     for (let i = 0; i < response.data.length; i++) {
       let pictures: string[] = [];

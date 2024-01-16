@@ -179,10 +179,7 @@
                   reservationId: reservations[i] as string
                 }
                 nextReservations.value.push(newReservation);
-              } else {
-                console.log("Error al obtener las reservas");
-                // allInfoIsLoaded.value = 2;
-              }
+              } 
             }
           }
 
@@ -195,8 +192,6 @@
               const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
               if (response.data.code === 0) {
                 const fecha = new Date(response.data.message.day);
-
-                // Formatear las horas y minutos con ceros iniciales
                 const horaFormateada = fecha.getHours().toString().padStart(2, '0');
                 const minutoFormateado = fecha.getMinutes().toString().padStart(2, '0');
 
@@ -209,10 +204,7 @@
                   reservationId: reservations[i] as string
                 }
                 historicReservations.value.push(newReservation);
-              } else {
-                console.log("Error al obtener las reservas");
-                // allInfoIsLoaded.value = 2;
-              }
+              } 
             }
 
           }

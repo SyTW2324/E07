@@ -341,16 +341,12 @@
   import Footer from '../components/Footer.vue'
   </script>
   
-  <!-- Está separado en dos scripts por el export defaults, en Footer ya hay uno y entra en conflicto con el nuevo export default -->
   <script lang="ts">
   
   import axios from 'axios';
   import { baseUrl } from '../env/env-variables';
   import { useAuthStore } from '../stores/useAuthStore';
-  // import { ref } from 'vue';
 
-  // const exceedsSizeLimit = ref(false);
-  //CORS
   
     export default {
       data: () => ({
@@ -548,11 +544,6 @@
           // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
           //console.log('Formulario válido. Enviar datos.');
           this.RegisterRestaurantApi();
-        } else {
-          // al usuario debe mostrarle en la web el problema 
-          // y no enviar el formulario hasta que no lo corrija
-          
-          //console.log('Formulario inválido. Por favor, corrija los errores.');
         }
       },
       controlShowPassword() {
@@ -581,11 +572,6 @@
           this.validEmail = true;
           this.validPhone = true;
           this.processingRegister = false;
-
-          //console.log('Enviando datos a la API'); 
-          // const textContainer = this.$refs.textContainer as HTMLElement;
-      
-          // Crea un elemento de imagen
           const textElement = document.createElement('h3');
           textElement.innerText = ' ';
 
@@ -605,8 +591,6 @@
             pdfBase64 = await this.convertFileToBase64(this.menu[0]) as string;
           }
 
-          // comprimir el pdf
-
           const newRestaurantJson = {
             "userName": this.username,
             "passwd": this.password,
@@ -625,15 +609,9 @@
           this.processingRegister = true;
           const response = await axios.post(`${baseUrl}restaurants/`, newRestaurantJson);
           this.processingRegister = false;
-         //const response = await axios.get('http://localhost:3000/users/');
-          //console.log('Datos obtenidos de la API', response.data);
-          //Prueba de que la imagen se ha subido correctamente y luego se puede renderizar
-          //const responsePdfUpload = await axios.put(`${baseUrl}restaurants/uploadpdf/?userName=${this.username}`, formData);
           const responsePdfUpload = {status: 201};
-          // Añade la imagen al contenedor
+
           if (response.status === 201 && responsePdfUpload.status === 201) {
-            //this.$router.push('/login');
-            //console.log('Restaurante registrado correctamente');
             this.userRegistered = true;
             const authStore = useAuthStore();
             return authStore.login(this.username, this.password).catch(error => console.log(error));
@@ -646,15 +624,11 @@
           const textContainer = this.$refs.textContainer as HTMLElement;
           const textElement = document.createElement('h3');
   
-          //console.error('Error al realizar la solicitud:', response.status, response.statusText);
-          //console.error('Código de error:', response.data.code);
           if (response.status === 400) {
             if (response.data.code === 1) {
-              //console.error('Faltan campos obligatorios');
               textElement.innerText = 'Faltan campos obligatorios';
             } 
             else if (response.data.code === 2) {
-              //console.error('El nombre de usuario ya existe');
               this.validUserName = false;
             } 
             else if (response.data.code === 3) {
@@ -665,15 +639,9 @@
               this.validPhone = false;
             } 
             else {
-            //console.error('Error desconocido:', response.status);
             textElement.innerText = 'Error desconocido';
             }
           } 
-          else {
-            //console.error('Error al realizar la solicitud:', error.message);
-          }
-  
-          // Añade el elemento de texto al contenedor
           textContainer.innerHTML = '';
           textContainer.appendChild(textElement);
           }
@@ -682,9 +650,6 @@
       },
   
       validateForm() {
-        // Lógica para validar cada campo según las reglas definidas
-        // Devuelve true si el formulario es válido, false de lo contrario
-        // También puedes actualizar el estado "valid" si es necesario
         
         this.emailError = '';
         this.phoneError = '';
@@ -767,7 +732,6 @@
 
 
         // menú, tamaño no debe exceder 10mb
-        // exceedsSizeLimit.value = true;
         // utilizar menuRules para comprobar si el menu es valido o no
         const rule = this.menuRules[0];
         this.validMenu = true;
@@ -775,7 +739,6 @@
         if (!isValid2) {
           this.menuError = rule(this.menu[0]) as unknown as string;
           this.validMenu = false;
-          //console.log('Fallo, el menú supera los 4mb');
         }
         
 
@@ -787,14 +750,12 @@
         if (!isValid) {
           this.profilePictureError = rule2(this.profilePicture[0]) as unknown as string;
           this.validProfilePicture = false;
-          //console.log('Fallo, la foto de perfil supera los 2mb');
         }
 
         // imágenes, tamaño no debe exceder 5mb, pero no es obligatoria y no deben de ser más de 5 archivos
         this.validPictures = true;
         if (this.pictures.length > 4) {
           this.validPictures = false;
-          //console.log('Fallo, el número de imágenes está limitado a 4');
         }
         else {
           for (let i = 0; i < this.pictures.length; i++) {
@@ -803,7 +764,6 @@
             if (!isValid3) {
               this.picturesError = rule3(this.pictures[i]) as unknown as string;
               this.validPictures = false; // si alguna imagen no es válida, el formulario ya no es válido
-              //console.log('Fallo, alguna/s imagen/es superan los 2mb');
             }
           }
         }

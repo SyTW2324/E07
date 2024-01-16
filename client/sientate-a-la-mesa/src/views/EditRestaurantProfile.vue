@@ -448,9 +448,6 @@
             profilePicture.values = response.data.message.profilePicture;
             pictures.values = response.data.message.pictures;
 
-            // password.value = useAuthStore().user.username
-            // passwordModified.value = password.value;
-
             // Atributos modificables
             passwordModified.value = password.value;
             restaurantnameModified.value = restaurantname.value;
@@ -618,7 +615,7 @@
       }
 
       if ((selectedDaysModified.value !== selectedDays.value) || (startingHourModified.value !== startingHour.value) || (finishingHourModified.value !== finishingHour.value)) {
-        // necesito construir time table comprobando si los valores se han modificado o no
+
         const timeTableModified: timeTable = {
           selectedDays: selectedDaysModified.value,
           startingHour: startingHourModified.value,
@@ -638,13 +635,11 @@
         }
         
         if (validWeekDays.value === true || validStartingHour.value === true || validFinishingHour.value === true) {
-          // ordenamos los días de la semana, los tenemos en daysOfWeek bien ordenados
+
           timeTableModified.selectedDays.sort((a, b) => {
             return daysOfWeek.indexOf(a) - daysOfWeek.indexOf(b);
           });
           
-
-
           modifiedRestaurant = {
             ...modifiedRestaurant,
             timeTable: [timeTableModified]

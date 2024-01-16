@@ -6,19 +6,14 @@
 import express from 'express';
 
 import { validateRestaurantSchema, validateRestaurantSchemaEdit } from '../../models/restaurants/restaurants-models.js';
-//import { restaurantInterface } from '../../models/restaurants/restaurants.js';
 import { RestaurantModel } from '../../models/restaurants/restaurants-models.js';
 import jsonwebtoken from 'jsonwebtoken';
 import { jwtDecode } from 'jwt-decode';
 import { secretKey } from '../../env-variables.js';
 import { addHistoricReservations } from '../../models/restaurants/restaurants.js';
-
-import multer from 'multer';
-import path from 'path';
  
 export const restaurantsRouter = express.Router();
 
-// Ruta asociada con el registro de un nuevo restaurante
 restaurantsRouter.post('/restaurants', async (req, res) => {
 
 
@@ -213,7 +208,6 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
           if (upDateHistoricReservations  === false) {
             return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
           }
-          // const atributesModifiedEnable = ['password', 'email', 'phoneNumber', 'address', 'profilePhoto'];
           const atributesModifiedEnable = [
             'passwd',
             'email',
@@ -228,7 +222,6 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
             'menu',
             'availability',
           ];
-          // console.log(req.body);
           const modifiedAtributes = Object.keys(req.body);
           const isValidOperation = modifiedAtributes.every((atribute) => atributesModifiedEnable.includes(atribute));
           if (!isValidOperation) {
@@ -275,7 +268,6 @@ restaurantsRouter.put('/restaurants', async (req, res) => {
             const email = req.body.email ? true : false;
             const phoneNumber = req.body.phoneNumber ? true : false;
             const RestaurantSchemaValidation = await validateRestaurantSchemaEdit(restaurant, email, phoneNumber);
-            // console.log(RestaurantSchemaValidation);
             if (RestaurantSchemaValidation.code !== 0) {
               return res.status(400).send(RestaurantSchemaValidation);
             }

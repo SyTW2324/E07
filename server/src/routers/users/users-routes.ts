@@ -15,7 +15,6 @@ import { addHistoricReservations } from '../../models/users/users.js';
 
 export const usersRouter = express.Router();
 
-// Ruta asociada con el registro de un nuevo usuario
 usersRouter.post('/users', async (req, res) => {
 
   try {
@@ -72,7 +71,6 @@ usersRouter.get('/users', async (req, res) => {
               return res.status(500).send({code: 6, message: "Error al actualizar las reservas históricas"});
             }
             const user = await UserModel.findOne({userName: req.query.userName});
-            // renderizar la página de perfil de usuario y guardarla en una carpeta
             const userSend = {
               name: user?.name,
               surname: user?.surname,

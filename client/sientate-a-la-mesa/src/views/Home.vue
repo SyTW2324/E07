@@ -14,8 +14,6 @@
   </template>
     <v-app-bar-title></v-app-bar-title>
 
-    <!-- <v-btn density="default" color="teal">Acceso restaurantes</v-btn> -->
-
   </v-app-bar>
 
   <v-main>
@@ -23,7 +21,6 @@
    
     <v-container style="padding-bottom: 3em; padding-top: 3em;">
     <v-card color="teal" align-center >
-      <!-- Utiliza las clases de Vuetify para centrar la imagen -->
       <v-img class="mx-auto" style="height: 20%; width: 40%;" :src="imgPresentacion"></v-img>
     </v-card>
   </v-container>

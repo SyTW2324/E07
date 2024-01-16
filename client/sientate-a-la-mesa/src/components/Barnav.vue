@@ -160,27 +160,6 @@
               </v-menu>  
           </v-avatar>
         </v-btn>
-        
-        <!-- <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-          <v-menu activator="parent">
-          <v-list>
-          <v-list-item>
-            <v-btn
- 
-              block
-              color="wihite"
-              size="large"
-              type="submit"
-      
-              variant="elevated"
-              >
-              <p style="color: teal;">  Salir!</p>
-              </v-btn>
-          </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-btn> -->
       </v-app-bar>
   
 </template>
