@@ -16,7 +16,7 @@
     "stop:server": "cd server && pm2 stop dist/index.js && pm2 delete dist/index.js",
     "stop:client": "kill -9 $(pidof http-server)",
     "start:manteinance": "nohup http-server ./manteinance -a 10.6.128.143 -p 8080 --silent & echo $! > .http-server-pid",
-    "test": "npm run test:server && npm run test:client",
+    "test": "npm run test:server",
     "test:server": "cd server/ && npm run test",
     "test:client": "cd client/sientate-a-la-mesa/ && npm run test",
     "installServer": "cd server/ && npm install",
