@@ -1,6 +1,7 @@
 # Plataforma de gestión de reservas en restaurantes
 [![Tests](https://github.com/SyTW2324/E07/actions/workflows/node.js.yml/badge.svg)](https://github.com/SyTW2324/E07/actions/workflows/node.js.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SyTW2324_E07&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SyTW2324_E07)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=SyTW2324_E07&metric=coverage)](https://sonarcloud.io/summary/new_code?id=SyTW2324_E07)
 
 ## Sistemas y Tecnologías Web
 ### Grado Ingeniería Informática ULL
