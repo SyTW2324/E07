@@ -34,8 +34,7 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
       const restaurant = await RestaurantModel.findOne({restaurantName: req.query.RestaurantName});
       
       let availableHours; //array de strings con los periodos disponibles
-      
-      //el day es 00/00/0000
+
       const day = new Date(req.query.day as string);
 
 
@@ -64,14 +63,8 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
           const reservation = reservations[i];
           const reservationDay = reservation.day as Date
 
-
-
-
-          //si el dia de la reserva es el mismo que el que me han pasado por query 
-
           if (reservationDay.getDate() === day.getDate() && reservationDay.getMonth() === day.getMonth() && reservationDay.getFullYear() === day.getFullYear()) {
             
-            //Buscar cuantas reservas hay para esa hora
             const reservationHour = reservationDay.getHours();
             const reservationMinutes = reservationDay.getMinutes();
             // los junto en este formato 00:00
@@ -89,10 +82,6 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) => {
                 numberOfReservations++;
               }
             }
-            console.log("numero de reservas para esa hora: " + numberOfReservations);
-            console.log("mesas disponibles: " + tableAvailable);
-            console.log("hora de la reserva: " + reservationHourString );
-
             //si hay mas reservas que mesas disponibles, elimino el periodo de disponibilidad
 
             if (numberOfReservations >= tableAvailable) {

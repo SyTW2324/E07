@@ -18,7 +18,6 @@ else if (process.argv[2] === 'teste2e') {
 
 
 try {
-  console.log(bbdd)
   await connect(bbdd);
 } catch (error) {
   console.error(error);
