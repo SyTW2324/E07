@@ -35,5 +35,4 @@ jobs:
     - name: Coveralls
       uses: coverallsapp/github-action@v1
       with:
-        file: ./server/coverage/lcov.info
         github-token: ekpZxlRFVw1x0LzudjueD4qr8p8BN1Mre

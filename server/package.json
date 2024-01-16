@@ -13,7 +13,7 @@
     "startTeste2e": "npm run build && node dist/index.js teste2e",
     "doc": "typedoc",
     "test": "mocha --exit",
-    "coverage": "c8 npm test && c8 report --reporter=lcov"
+    "coverage": "c8 npm test && c8 report --reporter=lcov --report-dir=../coverage"
   },
   "keywords": [],
   "author": "",
