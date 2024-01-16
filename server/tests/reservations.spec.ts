@@ -1,14 +1,14 @@
 import 'mocha';
 import request from 'supertest';
-import { app } from '../../src/app.js';
+import { app } from '../src/app.js';
 import { expect } from 'chai';
-import { UserModel } from '../../src/models/users/users-model.js';
-import { RestaurantModel } from '../../src/models/restaurants/restaurants-models.js';
-import { reservationModel } from '../../src/models/reservations/reservantions-models.js';
+import { UserModel } from '../src/models/users/users-model.js';
+import { RestaurantModel } from '../src/models/restaurants/restaurants-models.js';
+import { reservationModel } from '../src/models/reservations/reservantions-models.js';
 import jsonwebtoken from 'jsonwebtoken';
-import {Reservation} from '../../src/models/reservations/reservation.js';
+import {Reservation} from '../src/models/reservations/reservation.js';
 
-import { calcularPeriodosDisponibles } from '../../src/models/reservations/reservation.js';
+import { calcularPeriodosDisponibles } from '../src/models/reservations/reservation.js';
  
 interface Timetable {
   selectedDays: string[]; // Array de días seleccionados (por ejemplo, ['Lunes', 'Miércoles'])
@@ -281,7 +281,7 @@ describe('Reservations', () => {
     });
 
     it('should not delete a reservation', async () => {
-      const response = await request(app).delete(`/reservations/?token=${"token"}&userName=${user1.userName}&reservationId=${reservationId}`).expect(200);
+      const response = await request(app).delete(`/reservations/?token=${"token"}&userName=${user1.userName}&reservationId=${reservationId}`).expect(500);
       expect(response.status).to.eql(500);
     });
 
