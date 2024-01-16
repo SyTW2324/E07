@@ -38,7 +38,7 @@
               <p><strong>Categoría: </strong>{{ category }}</p>
               <br/>
               <router-link to="/edit-restaurant-profile">
-                <v-btn color="teal">Editar perfil</v-btn>
+                <v-btn id='editarPerfilRestaurante' color="teal">Editar perfil</v-btn>
               </router-link>
             </v-col>
           </v-row>

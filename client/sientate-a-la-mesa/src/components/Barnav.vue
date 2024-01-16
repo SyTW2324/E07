@@ -30,7 +30,7 @@
           block
           color="#ffbd59"
           size=""
-          
+          id="InicioBoton"
           type="submit"
 
         
@@ -45,6 +45,7 @@
           block
           color="#ffbd59"
           size=""
+          id="InicioBoton2"
           
           type="submit"
 
@@ -63,7 +64,7 @@
             <img :src="usuario" alt="Profile Photo">
           </v-avatar>
         </v-btn>
-        <v-btn v-else-if="userLogged.getProfilePhoto() ===' '">
+        <v-btn id="AbrirNavegacionPerfil" v-else-if="userLogged.getProfilePhoto() ===' '">
           {{ userLogged.user.username }}
           <v-menu activator="parent">
           <v-list>
@@ -75,7 +76,8 @@
               color="wihite"
               size="large"
               type="submit"
-      
+              id="MiPerfilUsuario"
+              
               variant="elevated"
               @click=" router.push('/my-profile')"
               >
@@ -88,6 +90,8 @@
               color="wihite"
               size="large"
               type="submit"
+              id="MiPerfilEstablecimiento"
+
       
               variant="elevated"
               @click=" router.push('/my-profile-restaurants')"
@@ -104,6 +108,7 @@
               color="wihite"
               size="large"
               type="submit"
+              id="CerrarSesionBoton"
               
               variant="elevated"
               >
@@ -126,6 +131,7 @@
                   color="wihite"
                   size="large"
                   type="submit"
+                  id="irAMiPerfil"
           
                   variant="elevated"
                   >

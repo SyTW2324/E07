@@ -2,20 +2,17 @@ import axios from 'axios';
 import { baseUrl } from '../../src/env/env-variables';
 
 describe('Registro de usuario', () => {
-  // beforeEach(async () => {
-    
-  //   const userDelete = {
-  //     userName: "peter",
-  //   }
-    
-  //   const response = await axios.delete(`${baseUrl}users?userName=${userDelete.userName}`);    
-    
-
-  // })
+  beforeEach(async () => {
+    const userDelete = {
+      userName: "peter",
+    }
+    const response = await axios.delete(`${baseUrl}users/?userName=${userDelete.userName}`);    
+  })
 
   it('Registro de usuario', () => {
     
     cy.visit('http://localhost:5173')
+    cy.wait(5000)
     cy.get('#botonRegistro').click()
     cy.get('#botonRegistroUsuario').click()
     cy.get('#firstname').type('Peter')
@@ -26,6 +23,9 @@ describe('Registro de usuario', () => {
     cy.get('#password').type('peter200A')
     cy.get('#address').type('Calle falsa 123')
     cy.get('#enviarRegistroUsuario').click()
+
+    cy.get('#AbrirNavegacionPerfil').click()
+    cy.get('#CerrarSesionBoton').click()
 
   })
 })
