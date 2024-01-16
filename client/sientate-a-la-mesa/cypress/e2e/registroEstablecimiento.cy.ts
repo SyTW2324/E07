@@ -2,24 +2,24 @@ import axios from 'axios';
 import { baseUrl } from '../../src/env/env-variables';
 
 describe('Registro de establecimiento', () => {
-  // beforeEach(async () => {
+  beforeEach(async () => {
     
-  //   const userDelete = {
-  //     userName: "establecimientoPrueba",
-  //   }
+    const userDelete = {
+      userName: "establecimientoPrueba",
+    }
     
-  //   const response = await axios.delete(`${baseUrl}restaurants?userName=${userDelete.userName}`);    
+    const response = await axios.delete(`${baseUrl}restaurants/?userName=${userDelete.userName}`);   
+    console.log(response.data); 
     
-  // })
+  })
 
-    
 
   it('Registro de establecimiento', () => {
     cy.visit('http://localhost:5173')
 
     // hace click en boton de registro
+    cy.wait(10000)
     cy.get('#botonRegistro').click()
-
     cy.get('#botonRegistroEstablecimiento').click();
 
     cy.get('#restaurantname').type('Establecimiento de prueba')
@@ -47,16 +47,16 @@ describe('Registro de establecimiento', () => {
     cy.contains('pizzeria').click()  // Seleccionar la categoría deseada
 
     cy.get('#email').type('establecimientoPrueba@gmail.com')
-    cy.get('#phone').type('666666666')
+    cy.get('#phone').type('632234567')
     cy.get('#username').type('establecimientoPrueba')
     cy.get('#password').type('establecimientoPrueba1')
 
 
     //  ? franja elegir hora
     cy.get('#franjaTiempo').type('30');
-    cy.get('#numberOfPeople').type('4')
+    cy.get('#numberOfTables').type('4')
    
     cy.get('#enviarRegistroEstablecimiento').click()
-
+    cy.get('#Salir').click()
   })
 })
