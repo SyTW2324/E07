@@ -1,14 +1,14 @@
 import 'mocha';
 import request from 'supertest';
-import { app } from '../../src/app.js';
+import { app } from '../src/app.js';
 import { expect } from 'chai';
-import { UserModel } from '../../src/models/users/users-model.js';
-import { RestaurantModel } from '../../src/models/restaurants/restaurants-models.js';
-import { reservationModel } from '../../src/models/reservations/reservantions-models.js';
+import { UserModel } from '../src/models/users/users-model.js';
+import { RestaurantModel } from '../src/models/restaurants/restaurants-models.js';
+import { reservationModel } from '../src/models/reservations/reservantions-models.js';
 import jsonwebtoken from 'jsonwebtoken';
-import { addHistoricReservations } from '../../src/models/users/users.js';
-import { Timetable } from '../../src/timeTable.js';
-import { Available } from '../../src/available.js';
+import { addHistoricReservations } from '../src/models/users/users.js';
+import { Timetable } from '../src/timeTable.js';
+import { Available } from '../src/available.js';
 
 // userName: req.body.userName,
 // passwd: req.body.passwd,

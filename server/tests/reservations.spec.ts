@@ -1,14 +1,14 @@
 import 'mocha';
 import request from 'supertest';
-import { app } from '../../src/app.js';
+import { app } from '../src/app.js';
 import { expect } from 'chai';
-import { UserModel } from '../../src/models/users/users-model.js';
-import { RestaurantModel } from '../../src/models/restaurants/restaurants-models.js';
-import { reservationModel } from '../../src/models/reservations/reservantions-models.js';
+import { UserModel } from '../src/models/users/users-model.js';
+import { RestaurantModel } from '../src/models/restaurants/restaurants-models.js';
+import { reservationModel } from '../src/models/reservations/reservantions-models.js';
 import jsonwebtoken from 'jsonwebtoken';
-import {Reservation} from '../../src/models/reservations/reservation.js';
+import {Reservation} from '../src/models/reservations/reservation.js';
 
-import { calcularPeriodosDisponibles } from '../../src/models/reservations/reservation.js';
+import { calcularPeriodosDisponibles } from '../src/models/reservations/reservation.js';
  
 interface Timetable {
   selectedDays: string[]; // Array de días seleccionados (por ejemplo, ['Lunes', 'Miércoles'])
