@@ -40,7 +40,7 @@
                 <p><strong>Telefono: </strong>{{ phoneNumber }}</p>
                 <br>
                 <router-link to="/edit-user-profile">
-                  <v-btn color="teal">Editar perfil</v-btn>
+                  <v-btn id="editarPerfilUsuario" color="teal">Editar perfil</v-btn>
                 </router-link>
               </v-col>
             </v-row>
