@@ -45,6 +45,7 @@
           block
           color="#ffbd59"
           size=""
+          id="InicioBoton2"
           
           type="submit"
 
@@ -75,6 +76,7 @@
               color="wihite"
               size="large"
               type="submit"
+              id="MiPerfilUsuario"
               
               variant="elevated"
               @click=" router.push('/my-profile')"
