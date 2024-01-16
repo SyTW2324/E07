@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.45% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>218/241</span>
+                <span class='fraction'>207/230</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.45% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>218/241</span>
+                <span class='fraction'>207/230</span>
             </div>
         
             
@@ -295,18 +295,7 @@
 <a name='L230'></a><a href='#L230'>230</a>
 <a name='L231'></a><a href='#L231'>231</a>
 <a name='L232'></a><a href='#L232'>232</a>
-<a name='L233'></a><a href='#L233'>233</a>
-<a name='L234'></a><a href='#L234'>234</a>
-<a name='L235'></a><a href='#L235'>235</a>
-<a name='L236'></a><a href='#L236'>236</a>
-<a name='L237'></a><a href='#L237'>237</a>
-<a name='L238'></a><a href='#L238'>238</a>
-<a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L233'></a><a href='#L233'>233</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -347,7 +336,6 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -373,12 +361,6 @@
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -397,10 +379,6 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -585,8 +563,7 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) =&gt; {
       const restaurant = await RestaurantModel.findOne({restaurantName: req.query.RestaurantName});
       
       let availableHours; //array de strings con los periodos disponibles
-      
-      //el day es 00/00/0000
+&nbsp;
       const day = new Date(req.query.day as string);
 &nbsp;
 &nbsp;
@@ -615,14 +592,8 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) =&gt; {
           const reservation = reservations[i];
           const reservationDay = reservation.day as Date
 &nbsp;
-&nbsp;
-&nbsp;
-&nbsp;
-          //si el dia de la reserva es el mismo que el que me han pasado por query 
-&nbsp;
           if (reservationDay.getDate() === day.getDate() &amp;&amp; reservationDay.getMonth() === day.getMonth() &amp;&amp; reservationDay.getFullYear() === day.getFullYear()) {
             
-            //Buscar cuantas reservas hay para esa hora
             const reservationHour = reservationDay.getHours();
             const reservationMinutes = reservationDay.getMinutes();
             // los junto en este formato 00:00
@@ -640,10 +611,6 @@ reservationsRouter.get('/reservationsAvailable/', async (req, res) =&gt; {
                 numberOfReservations++;
               }
             }
-            console.log("numero de reservas para esa hora: " + numberOfReservations);
-            console.log("mesas disponibles: " + tableAvailable);
-            console.log("hora de la reserva: " + reservationHourString );
-&nbsp;
             //si hay mas reservas que mesas disponibles, elimino el periodo de disponibilidad
 &nbsp;
             if (numberOfReservations &gt;= tableAvailable) {
@@ -799,7 +766,7 @@ reservationsRouter.delete('/reservations/', async (req, res) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-01-16T17:29:30.905Z
+                at 2024-01-16T19:40:34.206Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
