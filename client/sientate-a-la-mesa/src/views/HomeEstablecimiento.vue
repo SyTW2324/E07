@@ -167,10 +167,7 @@ async function getRestaurant() {
                 reservationId: reservations[i] as string
               }
               nextReservations.value.push(newReservation);
-            } else {
-              console.log("Error al obtener las reservas");
-
-            }
+            } 
           }
         } 
         

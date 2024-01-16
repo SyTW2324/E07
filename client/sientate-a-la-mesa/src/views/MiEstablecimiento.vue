@@ -185,8 +185,6 @@
 
           if (response.data.message.historicReservations.length > 0) {
             historicReservationsFlag.value = true
-            console.log("dentro de historicReservations");
-            console.log(response.data.message.historicReservations);
             reservations = response.data.message.historicReservations;
             for (let i in reservations) {
               const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);

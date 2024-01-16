@@ -211,7 +211,6 @@ async function getUser() {
     if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
       const response = await axios.get(`${baseUrl}users/?token=${userToken}&userName=${authStore.user.username}`)
-      console.log(response);
       if (response.data.code === 0) {
         username.value = response.data.message.userName;
         name.value = response.data.message.name;
@@ -243,10 +242,8 @@ getUser();
 
 function checkPassword(): boolean {
   if (modifiedPassword.value !== " " && modifiedPassword.value.length >= 8 && (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/).test(modifiedPassword.value)) {
-    console.log("contraseña válida");
     return true;
   } else {
-    console.log("contraseña no válida");
     return false;
   }
 }
@@ -327,7 +324,6 @@ async function submitForm() {
     } else {
       validProfilePhoto.value = true;
       const base64: string  = await convertFileToBase64(modifiedProfilePhoto.value[0]) as string;
-      console.log(base64);
       if (base64) {
         modifiedUser = {
           ...modifiedUser,

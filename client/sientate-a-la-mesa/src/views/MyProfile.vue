@@ -179,7 +179,6 @@ async function getUser() {
   if (authStore.isExpired() === true) {
       const userToken = authStore.getToken();
       const response = await axios.get(`${baseUrl}users/?token=${userToken}&userName=${authStore.user.username}`)
-      console.log(response.data);
       if (response.data.code === 0) {
         username.value = response.data.message.userName;
         name.value = response.data.message.name;
@@ -191,9 +190,6 @@ async function getUser() {
         if (response.data.message.nextReservations.length > 0) {
           nextReservationsFlag.value = true
           for (let i in reservations) {
-            console.log("aqui");
-            console.log(reservations[i]);
-            console.log("aqui");
             const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
             
             if (response.data.code === 0) {
@@ -212,15 +208,12 @@ async function getUser() {
               }
               nextReservations.value.push(newReservation);
             } else {
-              console.log("Error al obtener las reservas");
               allInfoIsLoaded.value = 2;
             }
           }
         } 
         if (response.data.message.historicReservations.length > 0) {
           historicReservationsFlag.value = true
-          console.log("dentro de historicReservations");
-          console.log(response.data.message.historicReservations);
           reservations = response.data.message.historicReservations;
           for (let i in reservations) {
             const response = await axios.get(`${baseUrl}reservations/?id=${reservations[i]}`);
@@ -240,7 +233,6 @@ async function getUser() {
               }
               historicReservations.value.push(newReservation);
             } else {
-              console.log("Error al obtener las reservas");
               allInfoIsLoaded.value = 2;
             }
           }

@@ -541,8 +541,6 @@
         const isValid = this.validateForm();
   
         if (isValid) {
-          // Aquí puedes enviar el formulario, por ejemplo, hacer una llamada a la API
-          //console.log('Formulario válido. Enviar datos.');
           this.RegisterRestaurantApi();
         }
       },
@@ -614,7 +612,7 @@
           if (response.status === 201 && responsePdfUpload.status === 201) {
             this.userRegistered = true;
             const authStore = useAuthStore();
-            return authStore.login(this.username, this.password).catch(error => console.log(error));
+            return authStore.login(this.username, this.password).catch(error => console.error(error));
           
           }
         } catch (error) {

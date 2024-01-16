@@ -80,7 +80,6 @@ export const useAuthStore = defineStore({
                 localStorage.removeItem('user');
                 localStorage.removeItem('profilePhoto');
                 const result = await axios.post(`${baseUrl}login/authenticate`, { userName: username, password: passwordInput });
-                console.log(result);
                 if (result.data.code == 0) {
                     // {username: data.message.username, token: data.message.accessToken, tipo: data.message.tipo, profilePhoto: data.message.profilePhoto, pictures: data.message.pictures}
                     const resultUser = {
