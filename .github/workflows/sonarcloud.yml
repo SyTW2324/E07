@@ -1,10 +1,10 @@
-# name: Sonar-Cloud 
+name: Sonar-Cloud 
 
-# on:
-#   push:
-#     branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
-#   pull_request:
-#     branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
+on:
+  push:
+    branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
+  pull_request:
+    branches: [ "main", "backend-dev-imh", "backend-dev-marco", "frontend-dev-al"]
 
 jobs:
   sonarcloud:
