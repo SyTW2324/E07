@@ -20,14 +20,12 @@ jobs:
         with:
           node-version: 19.x
       - name: Installing dependencies
-        run: npm install
+        run: npm run installServer
       - name: Generating coverage report
-        run: npm run coverage
+        run: npm run coverage-server
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env: 
           GITHUB_TOKEN: cf739f96b33fdeb4fd8f7274b14543d5b9bcdd4a   # Needed to get PR information, if any
           SONAR_TOKEN: cf739f96b33fdeb4fd8f7274b14543d5b9bcdd4a
-        with:
-          projectBaseDir: server/
           
