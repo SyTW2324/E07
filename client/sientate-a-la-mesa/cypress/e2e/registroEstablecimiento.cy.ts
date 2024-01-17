@@ -58,7 +58,7 @@ describe('Registro de establecimiento', () => {
    
     cy.get('#enviarRegistroEstablecimiento').click()
 
-
+    cy.wait(3000)
     cy.get('#AbrirNavegacionPerfil').click()
     cy.get('#CerrarSesionBoton').click()
   })
