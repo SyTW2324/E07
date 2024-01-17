@@ -6,7 +6,7 @@ describe('Registro de usuario', () => {
     const userDelete = {
       userName: "peter",
     }
-    const response = await axios.delete(`${baseUrl}users/?userName=${userDelete.userName}`);    
+    await axios.delete(`${baseUrl}users/?userName=${userDelete.userName}`);    
   })
 
   it('Registro de usuario', () => {

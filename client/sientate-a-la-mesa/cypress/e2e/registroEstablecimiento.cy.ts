@@ -8,8 +8,7 @@ describe('Registro de establecimiento', () => {
       userName: "establecimientoPrueba",
     }
     
-    const response = await axios.delete(`${baseUrl}restaurants/?userName=${userDelete.userName}`);   
-    console.log(response.data); 
+    await axios.delete(`${baseUrl}restaurants/?userName=${userDelete.userName}`);   
     
   })
 
