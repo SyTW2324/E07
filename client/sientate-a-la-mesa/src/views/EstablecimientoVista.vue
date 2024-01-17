@@ -278,11 +278,10 @@ function onClick() {
                           </v-carousel>
                         <v-card-title> Sobre nosotros</v-card-title>
                         <v-card-text>
-                          <p>{{ email }} </p>
-                          <p>{{ phoneNumber }} </p>
-                          <p>{{ restaurantAddress }} </p>
-                          <p>{{ category }} </p>
-                          
+                          <p><strong>Correo Electrónico: </strong>{{ email }} </p>
+                          <p><strong>Teléfono: </strong>{{ phoneNumber }} </p>
+                          <p><strong>Dirección: </strong>{{ restaurantAddress }} </p>
+                          <p><strong>Categoría: </strong>{{ category }} </p>
                         </v-card-text>
                       </v-card>
                     </v-col>
